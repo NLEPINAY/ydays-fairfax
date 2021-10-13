@@ -49,6 +49,23 @@ func (user *User) InsertIntoDatabase() error {
 	return nil
 }
 
+//
+func (user *User) IsAuthor(id string, str string) bool {
+	var i Post
+	query := "SELECT author_id FROM " + str + " WHERE id = " + id
+	rows, err := Db.Query(query)
+	if err != nil {
+		fmt.Println("ERROR NOT FOUND")
+	}
+	for rows.Next() {
+		err = rows.Scan(&i.AuthorID)
+	}
+	if err != nil {
+		fmt.Println("ERROR NOT FOUND")
+	}
+	return i.AuthorID == user.ID
+}
+
 // ⭐ Méthode pour modifier un champ de l'utilisateur dans la base de données :
 func (user *User) UpdateInDatabase(column string) error {
 
