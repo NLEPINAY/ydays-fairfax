@@ -1,0 +1,95 @@
+{{define "header" }}
+
+<header>
+    <div class="columnLeft">
+        <div class="menu">
+            <nav role="navigation">
+                <div id="menuToggle">
+                    <input type="checkbox" />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <ul id="menu">
+                        <a href="/category/1">
+                            <li>Café</li>
+                        </a>
+                        <a href="/category/2">
+                            <li>Men's Club</li>
+                        </a>
+                        <a href="/category/3">
+                            <li>Women's Club</li>
+                        </a>
+                        <a href="/category/4">
+                            <li>Theater</li>
+                        </a>
+                        <a href="/category/5">
+                            <li>Arcade</li>
+                        </a>
+                        <a href="/category/6">
+                            <li>Library</li>
+                        </a>
+                        <a href="/category/7">
+                            <li>Vinyl Shop</li>
+                        </a>
+                        <a href="/category/8">
+                            <li>Museum</li>
+                        </a>
+                        <a href="/category/9">
+                            <li>Academy</li>
+                        </a>
+                        <a href="/category/10">
+                            <li>Stadium</li>
+                        </a>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+
+        {{ if gt .Role 0 }}
+        <a class="ticket" href="/ticket">
+            <img id="ticket-img" src="/static/images/ticket.png" title="Contact us">
+        </a>
+        {{ end }}
+    </div>
+
+    <div class="columnCenter">
+        <a href="/">
+            <img id="logo" src="/static/images/main_logo.png" title="Home">
+        </a>
+    </div>
+
+    {{ if and (eq .Role 0) (eq .State 0) }}
+
+    <div class="columnRight">
+        <a class="active login" href="/login">Login</a>
+    </div>
+
+    {{ else }}
+
+    <div class="columnRight">
+
+        <!-- Si le user est un modo/admin/dev : -->
+        {{ if and (gt .Role 2) (eq .State 0) }}
+        <a class="manage" href="/moderation">
+            <img id="logo" src="/static/images/profile/settings.svg" title="Forum management">
+        </a>
+        {{ end }}
+
+        <a class="new-post" href="/new-post">
+            <img class="new-post-img" src="../static/images/plus_sign.png" title="Publish a new fax">
+        </a>
+
+        <a class="profile" href="/Profile?user={{ .Username }}">
+            <img class="profile-img" src="../static/images/profile.png" title="Your profile page">
+        </a>
+
+        <a class="active logout" href="/logout">Logout</a>
+    </div>
+
+    {{ end }}
+
+</header>
+
+{{end}}

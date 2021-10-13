@@ -1,0 +1,53 @@
+{{ define "discover-your-house" }}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/discover-your-house.css">
+    <link rel="icon" href="../static/images/web_favicon.png" type="image/icon type">
+    <title>Your club is...</title>
+</head>
+
+<body>
+
+    <div class="slidershow middle">
+        <div class="slides">
+            <input type="radio" name="r" id="r1" checked>
+            <input type="radio" name="r" id="r2">
+
+            <div class="slide" id="s1">
+                <img src="../static/images/join-house/final.webp" class="background-img">
+                <img src="../static/images/join-house/q5.webp" class="background-img" id="overlay-img">
+                <div class="text">
+                    <p class="council">The Fairfax Council is ready to make its decision.</p>
+                    <button class="btn" onclick="slide();">Find out your club</button>
+                </div>
+            </div>
+
+
+            <div class="slide">
+                <img src="../static/images/profile/background-{{ .House.ID }}.webp" class="background-img">
+                <div class="text">
+                    <p class="wanted">You are wanted by the...</p>
+                    <p class="house-name">{{ .House.Name }}</p>
+
+                    <a href="/" class="home-btn">Home</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+
+<script>
+    function slide() {
+        document.getElementById("r2").checked = true;
+    }
+</script>
+
+</html>
+
+{{ end }}
