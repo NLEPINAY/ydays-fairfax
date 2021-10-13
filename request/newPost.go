@@ -40,7 +40,7 @@ func NewPost(w http.ResponseWriter, r *http.Request, user database.User) {
 		title = toolbox.FormatString(title) // Formattage du titre
 
 		content := r.FormValue("content")
-		content = toolbox.FormatString(content) // Formattage du contenu
+		//content = toolbox.FormatString(content) // Formattage du contenu
 
 		categoryID, err := strconv.Atoi(r.FormValue("category"))
 		if err != nil {
