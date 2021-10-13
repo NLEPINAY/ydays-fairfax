@@ -60,7 +60,7 @@ func performAction(r database.ReceivedData) {
 	var query string
 	switch r.Action {
 	case "UPDATE":
-		query = "UPDATE " + r.Table + " SET " + r.What + " = \"" + r.NewValue + "\""
+		query = "UPDATE " + r.Table + " SET " + r.What + " = \"" + r.NewValue + "\" WHERE id" + " = \"" + r.ID + "\""
 		break
 	case "DELETE":
 		if r.Is == "cell" { //si c'est une cellule c'est un update sur une valeur null
