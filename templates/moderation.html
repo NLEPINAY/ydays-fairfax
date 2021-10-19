@@ -1,13 +1,15 @@
 {{define "moderation"}}
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr-FR">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMINISTRATION BDD</title>
     <link rel="stylesheet" type="text/css" href="/static/css/header.css">
     <link rel="stylesheet" type="text/css" href="/static/css/moderation.css">
-    <title>ADMINISTRATION BDD</title>
+    <link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css" />
 </head>
 
 <body style="width:100%">
@@ -15,10 +17,10 @@
     {{template "header" .Self }}
 
     <div class="tableList">
-        <input type="button" value="Comments" id="comment" onclick="showComments()" />
-        <input type="button" value="Posts" id="post" onclick="showPosts()" />
-        <input type="button" value="Users" id="user" onclick="showUsers()" />{{ if gt .Self.Role 2 }}
-        <input type="button" value="Categories" id="categories " onclick="showCategory()" />{{end}}
+        <input type="button" class="catBtn" value="Comments" id="comment"/>
+        <input type="button" class="catBtn" value="Posts" id="post"/>
+        <input type="button" class="catBtn" value="Users" id="user"/>{{ if gt .Self.Role 2 }}
+        <input type="button" class="catBtn" value="Categories" id="categories"/>{{end}}
     </div>
     <div class="selectOption">
         <select id="select">
@@ -196,6 +198,8 @@
             </tr>
         </table>
 
+        <table id="tableAdmin"></table>
+
 
         <table id="users" class="Invisible">
             <tr>
@@ -332,12 +336,16 @@
             <input type="button" value="Next page" onClick="NextPage()" />
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../static/js/moderation/aLotOfGetElement.js"></script>
+    <script src="../static/js/moderation/outils.js"></script>
+    <script src="../static/js/moderation/affichageDesPages.js"></script>
+    <script src="../static/js/moderation/pageSystem.js"></script>
+    <script src="../static/js/moderation/databaseCallViaPOSTrequest.js"></script>
+    <script type="text/javascript" src="../static/lib/DataTables/datatables.min.js"></script>
 </body>
-<script src="../static/js/moderation/aLotOfGetElement.js"></script>
-<script src="../static/js/moderation/outils.js"></script>
-<script src="../static/js/moderation/affichageDesPages.js"></script>
-<script src="../static/js/moderation/pageSystem.js"></script>
-<script src="../static/js/moderation/databaseCallViaPOSTrequest.js"></script>
+
 
 </html>
 {{end}}
