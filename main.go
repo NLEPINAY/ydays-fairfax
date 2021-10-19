@@ -77,7 +77,7 @@ func main() {
 	http.HandleFunc("/Profile", request.Auth(request.ProfilePage, "everybody"))
 
 	// ⭐ Accès à la page de modification du compte :
-	// http.HandleFunc("/edit-account", request.Auth(request.Account, "active members only"))
+	http.HandleFunc("/edit-account", request.Auth(request.Account, "active members only"))
 
 	// ⭐ modification d'un post :
 	// http.HandleFunc("/edit-post", request.Auth(request.EditPost, "active members only"))

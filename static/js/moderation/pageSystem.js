@@ -1,3 +1,4 @@
+/*
 //----------------------------------INIT----------------------------------\\\
 
                     //Je chope l'URL ici
@@ -160,3 +161,4 @@ function initialize() {
     actualTable = temp
 }
 initialize()       
+*/
