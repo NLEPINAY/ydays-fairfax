@@ -12,61 +12,155 @@ $(document).ready(function () {
   var tableAdmin = null;
 
   function initDatatable(table) {
-    $.ajax({
-      url: "../admin/admin.go", // on appelle le fichier de traitement
-      type: "get",
-      dataType: "json",
-      data: {
-        param: table,
-      },
-      success: function (data) {
-        if (tableAdmin != null) {
-          tableAdmin.clear().rows.add(data).draw(false);
+    // $.ajax({
+    //   url: "/fetching", // on appelle le fichier de traitement
+    //   type: "POST",
+    //   //dataType: "json",
+    //   data: {
+    //     //param: table,
+    //     action:"get",
+    //   },
+    //   contentType: false,
+    //   processData: false,
+    //   success: function (data) {
+    //     if (tableAdmin != null) {
+    //       tableAdmin.clear().rows.add(data).draw(false);
+    //     } else {
+    //       tableAdmin = $("#tableAdmin").DataTable({
+    //         columns: [
+    //           {
+    //             title: "ID",
+    //             data: "id",
+    //           },
+    //           {
+    //             title: "TITLE",
+    //             data: "titre",
+    //           },
+    //           {
+    //             title: "AUTHOR",
+    //             data: "titre",
+    //           },
+    //           {
+    //             title: "CONTENT",
+    //             data: "titre",
+    //           },
+    //           {
+    //             title: "CATEGORY",
+    //             data: "titre",
+    //           },
+    //           {
+    //             title: "DATE",
+    //             data: "titre",
+    //           },
+    //           {
+    //             title: "STATE",
+    //             data: "titre",
+    //           },
+    //         ],
+    //         data: data,
+    //         order: [[0, "desc"]],
+    //       });
+    //     }
+    //   },
+    //   error: function (data) {
+    //     console.log("error");
+    //     console.log(data);
+    //   },
+    // });
+    var params = new Object()
+    params.action = "get"
+    fetch("/fetching", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: "application/json"
+            },
+            body: JSON.stringify(params)
+        }).then(x => x.json()).then(x=>{
+          if (tableAdmin != null) {
+          tableAdmin.clear().rows.add(x.Post).draw(false);
         } else {
           tableAdmin = $("#tableAdmin").DataTable({
             columns: [
               {
                 title: "ID",
-                data: "id",
+                data: "ID",
               },
               {
                 title: "TITLE",
-                data: "titre",
+                data: "Title",
               },
               {
                 title: "AUTHOR",
-                data: "titre",
+                data: "AuthorID",
               },
               {
                 title: "CONTENT",
-                data: "titre",
+                data: "Content",
               },
               {
                 title: "CATEGORY",
-                data: "titre",
+                data: "CategoryID",
               },
               {
                 title: "DATE",
-                data: "titre",
+                data: "Date",
+                render: function (data) {return data+"fuck"}
               },
               {
                 title: "STATE",
-                data: "titre",
+                data: "State",
+              },
+              {
+                title : "",
+                data: "ID",
+                render: function (data) {return data+"IconEdit"}
               },
             ],
-            data: data,
-            order: [[0, "desc"]],
+            data: x.Post,
+            order: [[0, "asc"]],
           });
         }
-      },
-      error: function (data) {
-        console.log("error");
-        console.log(data);
+    
+  })
+  }
+  initDatatable(table);
+   //Initialisation de dataTable avec des paramètres personnalisés
+   if ($.fn.dataTable) {
+    $.extend($.fn.dataTable.defaults, {
+      language: {
+        sEmptyTable: "Aucune donnée disponible dans le tableau",
+        sInfo: "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+        sInfoEmpty: "Affichage de l'élément 0 à 0 sur 0 élément",
+        sInfoFiltered: "(filtré à partir de _MAX_ éléments au total)",
+        sInfoPostFix: "",
+        sInfoThousands: ",",
+        sLengthMenu: "Afficher _MENU_ éléments",
+        sLoadingRecords: "Chargement...",
+        sProcessing: "Traitement...",
+        sSearch: "Rechercher :",
+        sZeroRecords: "Aucun élément correspondant trouvé",
+        oPaginate: {
+          sFirst: "Premier",
+          sLast: "Dernier",
+          sNext: "Suivant",
+          sPrevious: "Précédent",
+        },
+        oAria: {
+          sSortAscending: ": activer pour trier la colonne par ordre croissant",
+          sSortDescending:
+            ": activer pour trier la colonne par ordre décroissant",
+        },
+        select: {
+          rows: {
+            _: "%d lignes sélectionnées",
+            0: "Aucune ligne sélectionnée",
+            1: "1 ligne sélectionnée",
+          },
+        },
       },
     });
   }
-
-  initDatatable(table);
 });
 
 /*
