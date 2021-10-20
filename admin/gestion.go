@@ -22,7 +22,7 @@ type Data struct {
 
 type DataForChart struct {
 	/*DataUser     []database.User*/
-	DataPost []database.MonthChart
+	DataChart []database.CritereChart
 	/*DataComment  []database.Comment
 	DataCategory []database.Category*/
 }
@@ -165,15 +165,30 @@ func GetPostList(Data Data) Data {
 
 //Compte les posts par mois
 func GetPostChart(Data DataForChart) DataForChart {
-	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Month FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
 	defer rows.Close()
 	for rows.Next() {
-		var newDataPost database.MonthChart
-		err := rows.Scan(&newDataPost.Count, &newDataPost.Month)
+		var newDataPost database.CritereChart
+		err := rows.Scan(&newDataPost.Count, &newDataPost.Critere)
 		if err != nil {
 			panic(err)
 		}
-		Data.DataPost = append(Data.DataPost, newDataPost)
+		Data.DataChart = append(Data.DataChart, newDataPost)
+	}
+	return Data
+}
+
+//Compte les posts par categorie
+func GetCategoriesChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, category_id as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY category_id")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataPost database.CritereChart
+		err := rows.Scan(&newDataPost.Count, &newDataPost.Critere)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataChart = append(Data.DataChart, newDataPost)
 	}
 	return Data
 }

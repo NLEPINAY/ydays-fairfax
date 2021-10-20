@@ -80,9 +80,9 @@ type Post struct {
 	Count      int
 }
 
-type MonthChart struct {
-	Count int
-	Month int
+type CritereChart struct {
+	Count   int
+	Critere int
 }
 
 type Comment struct {

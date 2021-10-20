@@ -21,21 +21,24 @@ $(document).ready(function () {
   $(document).on("click", "#topCont .card", function () {
     $("#topCont .card").removeClass("activeChart");
     $(this).addClass("activeChart");
+    const type = $(this).attr('data-chart')
 
-    var params = new Object();
-    params.action = "getStats";
-    fetch("/fetching", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(params),
-    })
-      .then((x) => x.json())
-      .then((x) => {
-        generateChart(x);
-      });
+      var params = new Object();
+      params.action = "getStats";
+      params.what = type;
+      fetch("/fetching", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(params),
+      })
+        .then((x) => x.json())
+        .then((x) => {
+          generateChart(x,type);
+        });
+    
   });
 
   //Initialisation menu actif
@@ -57,10 +60,34 @@ $(document).ready(function () {
    * Génération des graphiques avec Chart.js
    * Documentation : https://www.chartjs.org/docs/latest/getting-started/
    */
-  function generateChart(data) {
-    console.log(data);
-    var month = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-    data.forEach((element) => (month[element] = element));
+  async function generateChart(data, type) {
+
+    console.log("data:",data);
+    var dataC = [];
+    var titleText = "";
+    if(type == "Post") {
+      dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+      var lab = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      titleText = "PUBLISHED POSTS PER MONTH";
+    } else if (type = "Category") {
+      data.DataChart.forEach((element) => (dataC.push(element.Critere)));
+      var lab = dataC;
+      titleText = "PUBLISHED POSTS PER CATEGORIES";
+    }
+    data.DataChart.forEach((element) => (dataC[element.Critere] = element.Count));
     $("#chartCont").html(
       '<canvas id="myChart" width="825" height="400"></canvas>'
     );
@@ -68,25 +95,11 @@ $(document).ready(function () {
     var myMonthlyChart = new Chart(chart, {
       type: "bar",
       data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ],
+        labels: lab,
         datasets: [
           {
-            label: false,
             stack: 0,
-            data: month,
+            data: dataC,
             backgroundColor: ["rgba(0,243,255,1)"],
             borderColor: ["rgba(2,216,227, 1)"],
             borderWidth: 1,
@@ -94,16 +107,20 @@ $(document).ready(function () {
         ],
       },
       options: {
+        plugins: {
         legend: {
-          display: true,
-          align: "start",
+          display: false,
         },
         title: {
           display: true,
-          text: "repartition per month",
+          text: titleText,
           fontColor: "rgba(0,243,255,1)",
-          fontSize: "20",
+          font: {
+            size: 20
+        }
         },
+      },
+        
         tooltips: {},
         scales: {
           xAxes: [

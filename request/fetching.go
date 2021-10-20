@@ -63,10 +63,17 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			w.Write(ok)
 		case "getStats":
 			var Data admin.DataForChart
+			switch received.What {
+			case "Category":
+				Data = admin.GetCategoriesChart(Data)
+			case "Post":
+				Data = admin.GetPostChart(Data)
+			}
+
 			/*Data = admin.GetClientChart(Data)
-			Data = admin.GetCommentChart(Data)*/
+			Data = admin.GetCommentChart(Data)
 			Data = admin.GetPostChart(Data)
-			/*Data.Category = database.GetCategoriesChart()*/
+			Data.Category = database.GetCategoriesChart()*/
 			ok, _ := json.Marshal(Data)
 			w.Write(ok)
 		}
