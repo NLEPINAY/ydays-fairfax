@@ -1,304 +1,256 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-@import url(https://fonts.googleapis.com/css?family=Oswald:400|Raleway:400,700,400italic,700italic);
-html {
-    background-image: url("../images/profile/dark_sky1.webp");
-    background-size: contain;
-    background-repeat: repeat-y;
-    overflow-x: hidden;
+.dataTable tbody > tr.selected,
+.dataTable tbody > tr > .selected {
+  background-color: #ffe9dc;
 }
 
-div {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    table-layout: fixed;
+.dataTable .group,
+.dataTable .group:hover {
+  background-color: #eee;
 }
 
-td div {
-    max-height: 50vh;
-    overflow-y: auto;
+.dataTable.collapsed tr.parent {
+  border-top: solid 2px rgb(36, 36, 36);
 }
 
-.selected {
-    background-color: rgba(255, 255, 255, 0.2);
+.dataTables_filter > label:after {
+  pointer-events: none;
+}
+.datatable-header .search-trigger {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 32px;
+  height: 100%;
+}
+.datatable-header > .dt-buttons {
+  margin: 0;
+}
+.datatable-header > .dt-buttons > .dt-button {
+  margin-bottom: 1rem;
+}
+.datatable-header > .dt-buttons > .dt-button-collection {
+  margin-top: -1rem;
+}
+.fixedHeader-floating {
+  z-index: 2;
 }
 
-.tableList {
-    margin-top: 6.5em;
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  background-color: #f5f5f5;
+  color: #3c3c3c;
 }
 
-.selectOption {
-    margin-top: 0.5em;
+main {
+  margin-top: 65px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80vw;
 }
 
-.right {
-    position: absolute;
-    left: 85%;
-    top: 6.75em;
-    background-image: radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -webkit-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -moz-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -ms-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -o-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -moz-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    color: transparent;
-    -webkit-background-clip: text;
+main h1 {
+  margin: 10px 0 20px 0;
 }
 
-.Invisible,
-.tempInvi {
-    border: none;
-    display: none;
+#contentContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100vh;
 }
 
-table.tempVisi {
-    display: table;
+#contentContainer #catList {
+  list-style-type: none;
+  padding-inline-start: 0;
+  margin-right: 1.25rem;
+  min-width: 150px;
 }
 
-tr.tempVisi {
-    display: table-row;
+#contentContainer #catList li {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 2px;
 }
 
-td img {
-    height: 100%;
-    width: 100%;
+#contentContainer #catList li p {
+  width: 100%;
+  text-transform: uppercase;
+  text-align: left;
+  color: #3c3c3c;
+  margin-bottom: 0;
+  font-weight: bold;
 }
 
-textarea {
-    width: 97.5%;
-    height: auto;
+#contentContainer #catList li.activeCat,
+#contentContainer #catList li.activeCat:hover {
+  background-color: #00f3ff;
 }
 
-table {
-    border-spacing: 0;
-    width: 95vw;
-    table-layout: initial;
-    margin-right: 1px;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 10px;
+#contentContainer #catList li.activeCat > *,
+#contentContainer #catList li.activeCat:hover > * {
+  color: white;
 }
 
-
-/*** HEADER ***/
-
-table thead {
-    border-bottom: 2px solid #e5e5e5;
+#contentContainer #catList li:hover {
+  cursor: pointer;
+  background-color: #3c3c3c;
 }
 
-table th,
-table td {
-    padding: 1em 0.5em;
-    position: relative;
+#contentContainer #catList li:hover > * {
+  color: white;
 }
 
-table th {
-    font: 400 1.25em/1 "Oswald", sans-serif;
-    letter-spacing: 0.025em;
-    outline: none;
-    padding-right: 2em;
-    text-align: left;
-    text-transform: uppercase;
-    transition: color 0.2s ease-in-out;
+#cardsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
 }
 
-
-/*** BODY ***/
-
-table tbody>tr {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+#table {
+  width: 100%;
 }
 
-table tbody tr th div {
-    background-image: radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -webkit-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -moz-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -ms-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -o-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    background-image: -moz-radial-gradient(circle, #ded0a0 0%, #a79666 100%);
-    color: transparent;
-    color: transparent;
-    -webkit-background-clip: text;
-    font-size: 1.33em;
+#topCont {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 1.25rem;
 }
 
-table tbody tr td div {
-    background-image: radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    background-image: -webkit-radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    background-image: -moz-radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    background-image: -ms-radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    background-image: -o-radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    background-image: -moz-radial-gradient(circle, #BFC1C2 0%, #B0B2B3 100%);
-    color: transparent;
-    -webkit-background-clip: text;
-    font-size: 1.5em;
-    overflow-x: auto;
+#topCont .card {
+  width: 24%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
-table tbody>tr:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    border-color: white;
-    color: #fff;
+#topCont .card:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
 }
 
-
-/* Primary Color */
-
-table tbody>tr:nth-of-type(6n+1) {
-    border-color: rgba(162, 237, 86, 0.5);
+#topCont .activeChart,
+#topCont .activeChart:hover {
+  background-color: #00f3ff;
+  color: white;
 }
 
-table tbody>tr:nth-of-type(6n+1):hover {
-    background-color: rgba(162, 237, 86, 0.25);
-    border-color: #a2ed56;
+.activeChart .rounded-icon {
+  background-color: white;
+  color: #00f3ff;
 }
 
-
-/* Secondary Color */
-
-table tbody>tr:nth-of-type(6n+2) {
-    border-color: rgba(131, 228, 226, 0.5);
+div.rounded-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00f3ff;
+  color: white;
 }
 
-table tbody>tr:nth-of-type(6n+2):hover {
-    background-color: rgba(131, 228, 226, 0.25);
-    border-color: #83e4e2;
+div.rounded-icon i {
+  margin: 0;
+  color: white;
+  font-size: 30px;
 }
 
-
-/* Tertiary Color */
-
-table tbody>tr:nth-of-type(6n+3) {
-    border-color: rgba(253, 100, 112, 0.5);
+.activeChart .rounded-icon i {
+  color: #00f3ff;
 }
 
-table tbody>tr:nth-of-type(6n+3):hover {
-    background-color: rgba(253, 100, 112, 0.25);
-    border-color: #fd6470;
+#topCont .card div p {
+  font-size: 1.1rem;
 }
 
-
-/* Quaternary Color */
-
-table tbody>tr:nth-of-type(6n+4) {
-    border-color: rgba(252, 168, 88, 0.5);
+#topCont .card div p:first-child {
+  color: #00f3ff;
+  font-weight: bold;
+  font-size: 3rem;
 }
 
-table tbody>tr:nth-of-type(6n+4):hover {
-    background-color: rgba(252, 168, 88, 0.25);
-    border-color: #fca858;
+#topCont .activeChart div p:first-child {
+  color: white;
+  font-weight: bold;
+  font-size: 3rem;
 }
 
-
-/* Quinary Color */
-
-table tbody>tr:nth-of-type(6n+5) {
-    border-color: rgba(253, 220, 50, 0.5);
+#topCont .card div p {
+  text-align: center;
+  margin-bottom: 0;
 }
 
-table tbody>tr:nth-of-type(6n+5):hover {
-    background-color: rgba(253, 220, 50, 0.25);
-    border-color: #fddc32;
+#topCont .card div:not(.rounded-icon) {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-
-/* Name Cell */
-
-table td[data-label=Name] {
-    font-weight: 700;
-    letter-spacing: 0.05em;
+.card {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  background-color: white;
+  padding: 1.25rem;
 }
 
-
-/* Check and Cross Marks */
-
-table tr span.yes,
-table tr span.no {
-    transition: all 0.2s ease-in-out;
+header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: #3c3c3c;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
 }
 
-table tr:hover span.yes,
-table tr:hover span.no {
-    color: #fff;
+header a {
+  color: white !important;
+  padding: 0 20px;
+  border-bottom: 1px solid #3c3c3c;
+  text-transform: uppercase;
 }
 
-table span.yes {
-    color: #a2ed56;
-    font-size: 1.25em;
+header a.link:hover {
+  color: #00f3ff !important;
+  border-bottom: 1px solid #00f3ff;
 }
 
-table span.no {
-    color: #fd6470;
-    font-size: 0.875em;
+i {
+  margin-right: 12px;
 }
 
-@media (max-width: 50em) {
-    /*** TABLE ***/
-    table tr,
-    table td {
-        display: block;
-    }
-    table tr {
-        padding: 0.75em 0;
-    }
-    /* Header */
-    table thead tr {
-        text-align: center;
-    }
-    table th {
-        display: block;
-        padding: 0.25em 0.5em;
-    }
-    /* Body */
-    table td {
-        padding: 0.25em 0.5em 0.25em 6.5em;
-    }
-    table td:before {
-        content: attr(data-label);
-        font: 400 1.125em/1 "Oswald", sans-serif;
-        left: 0.5em;
-        position: absolute;
-        top: 0.125em;
-    }
-    /* Check and Cross Marks */
-    table span.yes {
-        line-height: 0.875;
-    }
+.hidden {
+  display: none !important;
 }
 
-.bottom {
-    margin-top: 0.33em;
+#chartCont {
+  width: 100%;
 }
 
-input[type=button] {
-    cursor: pointer;
-    margin: 10px auto;
-    -webkit-appearance: none;
-    padding: 10px 30px;
-    -webkit-transition: background 0.5s;
-    background: #6b63b5;
-    color: #ffffff;
-    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-    font-size: 9px;
-    letter-spacing: 2px;
-    border-radius: 50px;
-    border: none;
-    outline: inherit;
-    transition: 0.3s ease-in-out;
-}
-
-input[type=button]:hover {
-    background: #514a92;
-}
-
-td {
-    font-family: "Poppins", sans-serif;
-    font-weight: 800;
+#defaultMessage {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  font-size: 18px;
 }

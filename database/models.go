@@ -43,6 +43,7 @@ type User struct {
 	SecretAnswer   string
 	Badges         []Badge
 	House          House
+	Count          int
 }
 
 type Session struct {
@@ -57,6 +58,7 @@ type Category struct {
 	Name        string
 	Theme       string
 	Description string
+	Count       int
 }
 
 type Post struct {
@@ -75,6 +77,12 @@ type Post struct {
 	Likes      []PostLike
 	Dislikes   []PostLike
 	Reason     string
+	Count      int
+}
+
+type MonthChart struct {
+	Count int
+	Month int
 }
 
 type Comment struct {
@@ -93,6 +101,7 @@ type Comment struct {
 	Likes     []CommentLike
 	Dislikes  []CommentLike
 	Reason    string
+	Count     int
 }
 
 // Stocke l'ID et le titre d'un post, et les users l'ayant liké ou disliké :

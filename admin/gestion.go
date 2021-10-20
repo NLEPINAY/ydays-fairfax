@@ -20,6 +20,13 @@ type Data struct {
 	Self     database.User
 }
 
+type DataForChart struct {
+	/*DataUser     []database.User*/
+	DataPost []database.MonthChart
+	/*DataComment  []database.Comment
+	DataCategory []database.Category*/
+}
+
 type ReceivedData struct {
 	ID       string `json:"id"`
 	Category string `json:"cat"`
@@ -113,11 +120,11 @@ func isDatabaseTable(table string) bool {
 
 //Récupère tout les users
 func GetClientList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM users")
+	rows, _ := database.Db.Query("SELECT *, COUNT(*) AS Count FROM users")
 	defer rows.Close()
 	for rows.Next() {
 		var newUser database.User
-		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID)
+		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID, &newUser.Count)
 		if err != nil {
 			panic(err)
 		}
@@ -128,11 +135,11 @@ func GetClientList(Data Data) Data {
 
 //Récupère tout les commentaires
 func GetCommentList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM comments")
+	rows, _ := database.Db.Query("SELECT *, COUNT(*) AS Count FROM comments")
 	defer rows.Close()
 	for rows.Next() {
 		var newComment database.Comment
-		err := rows.Scan(&newComment.ID, &newComment.AuthorID, &newComment.PostID, &newComment.Content, &newComment.Gif, &newComment.Date, &newComment.State, &newComment.Reason)
+		err := rows.Scan(&newComment.ID, &newComment.AuthorID, &newComment.PostID, &newComment.Content, &newComment.Gif, &newComment.Date, &newComment.State, &newComment.Reason, &newComment.Count)
 		if err != nil {
 			panic(err)
 		}
@@ -143,15 +150,30 @@ func GetCommentList(Data Data) Data {
 
 //Récupère tout les posts
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM posts")
+	rows, _ := database.Db.Query("SELECT *, COUNT(ID) AS Count FROM posts")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
-		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason)
+		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count)
 		if err != nil {
 			panic(err)
 		}
 		Data.Post = append(Data.Post, newPost)
+	}
+	return Data
+}
+
+//Compte les posts par mois
+func GetPostChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Month FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataPost database.MonthChart
+		err := rows.Scan(&newDataPost.Count, &newDataPost.Month)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataPost = append(Data.DataPost, newDataPost)
 	}
 	return Data
 }

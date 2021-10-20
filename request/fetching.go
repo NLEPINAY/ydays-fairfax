@@ -14,6 +14,7 @@ var userCanAlterate = []string{"posts", "comments", "users", "tickets", "ticket_
 
 //requete de modification de la bdd
 func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
+	fmt.Println(r.Body, "ttttttt")
 	switch r.Method {
 	//savoir quelle action est demander
 	case "POST":
@@ -51,7 +52,25 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				ok, _ := json.Marshal(received)
 				w.Write(ok)
 			}
+		case "get":
+			var Data admin.Data
+			Data = admin.GetClientList(Data)
+			Data = admin.GetCommentList(Data)
+			Data = admin.GetPostList(Data)
+			Data.Self = user
+			Data.Category = database.GetCategoriesList()
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
+		case "getStats":
+			var Data admin.DataForChart
+			/*Data = admin.GetClientChart(Data)
+			Data = admin.GetCommentChart(Data)*/
+			Data = admin.GetPostChart(Data)
+			/*Data.Category = database.GetCategoriesChart()*/
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
 		}
+
 	}
 }
 
