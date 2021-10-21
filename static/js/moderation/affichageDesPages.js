@@ -2,7 +2,7 @@ $(document).ready(function () {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   let tableParam = urlParams.get("table");
-  const table = tableParam ? tableParam : "Charts";
+  var table = tableParam ? tableParam : "Charts";
 
   $(document).on("click", ".catBtn", function () {
     $(".catBtn").removeClass("activeCat");
@@ -65,6 +65,7 @@ $(document).ready(function () {
     console.log("data:",data);
     var dataC = [];
     var titleText = "";
+    var typeChart = "";
     if(type == "Post") {
       dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
       var lab = [
@@ -82,10 +83,30 @@ $(document).ready(function () {
         "December",
       ];
       titleText = "PUBLISHED POSTS PER MONTH";
-    } else if (type = "Category") {
+      typeChart = "line";
+    } else if (type == "Category") {
       data.DataChart.forEach((element) => (dataC.push(element.Critere)));
       var lab = dataC;
       titleText = "PUBLISHED POSTS PER CATEGORIES";
+      typeChart = "bar";
+    } else if (type == "User") {
+      dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+      var lab = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      titleText = "USERS REGISTRATION PER MONTH";
+      typeChart = "line";
     }
     data.DataChart.forEach((element) => (dataC[element.Critere] = element.Count));
     $("#chartCont").html(
@@ -93,16 +114,19 @@ $(document).ready(function () {
     );
     var chart = document.getElementById("myChart");
     var myMonthlyChart = new Chart(chart, {
-      type: "bar",
+      type: typeChart,
       data: {
         labels: lab,
         datasets: [
           {
-            stack: 0,
+            //stack: 0,
             data: dataC,
             backgroundColor: ["rgba(0,243,255,1)"],
-            borderColor: ["rgba(2,216,227, 1)"],
+            borderColor: ["rgba(5,170,223,1)"],
             borderWidth: 1,
+            pointBackgroundColor: 'rgba(92, 145, 249, 1)',
+            lineTension: 0.4,  
+            fill:true,
           },
         ],
       },
@@ -121,7 +145,7 @@ $(document).ready(function () {
         },
       },
         
-        tooltips: {},
+        tooltips: {mode: 'point'},
         scales: {
           xAxes: [
             {
@@ -153,6 +177,7 @@ $(document).ready(function () {
   var tableAdmin = null;
 
   function initDatatable(table) {
+
     var params = new Object();
     params.action = "get";
     params.table = table;
@@ -167,57 +192,49 @@ $(document).ready(function () {
       .then((x) => x.json())
       .then((x) => {
         if (table != "Charts") {
-          if (tableAdmin != null) {
-            tableAdmin.clear().rows.add(x.Post).draw(false);
-          } else {
-            tableAdmin = $("#tableAdmin").DataTable({
-              columns: [
-                {
-                  title: "ID",
-                  data: "ID",
-                },
-                {
-                  title: "TITLE",
-                  data: "Title",
-                },
-                {
-                  title: "AUTHOR",
-                  data: "AuthorID",
-                },
-                {
-                  title: "CONTENT",
-                  data: "Content",
-                  render: function (data) {
-                    return "";
-                  },
-                },
-                {
-                  title: "CATEGORY",
-                  data: "CategoryID",
-                },
-                {
-                  title: "DATE",
-                  data: "Date",
-                  render: function (data) {
-                    return data + "fuck";
-                  },
-                },
-                {
-                  title: "STATE",
-                  data: "State",
-                },
-                {
-                  title: "",
-                  data: "ID",
-                  render: function (data) {
-                    return data + "IconEdit";
-                  },
-                },
-              ],
-              data: x.Post,
-              order: [[0, "asc"]],
-            });
-          }
+          const dataArray = [];
+          const columnsToExclude = ['Liked', 'Disliked','Image','Gif','Password','SecretQuestion','SecretAnswer','Count','Author','Reason','Content'];
+          Object.entries(x[table][0]).forEach(([key, value]) => {
+            if(!columnsToExclude.includes(key)) {
+              var column = {};
+                column.title = key.toUpperCase().replace(/_/g, " ");
+                column.data = key;  
+                // Paramètres spécifiques   
+                if(key == "Date") {
+                  column.render = function (data) {
+                    return convertirDate(data);
+                  }
+                }                      
+              dataArray.push(column);
+            }
+          });
+          // Paramètres globaux
+          dataArray.push(
+            {
+              class: "action",
+              title: "ACTIONS",
+              orderable: false,
+              render: function (data, type, row, meta) {
+                return (
+                  '<a href="#" class="infoLien editLink" data-id="' +
+                  row.ID +
+                  '" data-toggle="modal" data-target="#updateModal"><i class="far fa-edit"></i><span>Update</span></a><a href="#" class="infoLien deleteLink" data-id="' +
+                  row.ID +
+                  '"><i class="far fa-trash-alt"></i><span>Delete</span></a>'
+                );
+              },
+            }
+          );
+            if (tableAdmin != null) {
+              tableAdmin.destroy();
+              $("#tableAdmin").empty();
+            }
+              tableAdmin = $("#tableAdmin").DataTable({
+                columns: dataArray,
+                data: x[table],
+                order: [[0, "desc"]],
+              });
+            
         } else {
           // Si onglet actif = Charts
           countElements(x);
@@ -225,7 +242,44 @@ $(document).ready(function () {
         }
       });
   }
+
+  function convertirDate(date) {
+    var monthName = [
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre",
+    ];
+    var dayName = [
+      "Dimanche",
+      "Lundi",
+      "Mardi",
+      "Mercredi",
+      "Jeudi",
+      "Vendredi",
+      "Samedi",
+    ];
+
+    var maDate = new Date(date);
+    var jour = maDate.getDay(); //Jour
+    var njour = maDate.getDate(); //Numéro du jour
+    var mois = maDate.getMonth(); //Mois (commence à 0, donc +1)
+    var annee = maDate.getFullYear(); //Année sur 2 chiffres ou getFullYear sur 4
+
+    var resultDate = njour + " " + monthName[mois] + " " + annee;
+    return resultDate;
+  }
+
   initDatatable(table);
+  
   //Initialisation de dataTable avec des paramètres personnalisés
   if ($.fn.dataTable) {
     $.extend($.fn.dataTable.defaults, {

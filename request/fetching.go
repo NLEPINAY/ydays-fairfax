@@ -68,6 +68,8 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				Data = admin.GetCategoriesChart(Data)
 			case "Post":
 				Data = admin.GetPostChart(Data)
+			case "User":
+				Data = admin.GetUserChart(Data)
 			}
 
 			/*Data = admin.GetClientChart(Data)

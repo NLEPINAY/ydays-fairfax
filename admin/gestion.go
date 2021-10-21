@@ -150,7 +150,7 @@ func GetCommentList(Data Data) Data {
 
 //Récupère tout les posts
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT *, COUNT(ID) AS Count FROM posts")
+	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts)")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
@@ -189,6 +189,21 @@ func GetCategoriesChart(Data DataForChart) DataForChart {
 			panic(err)
 		}
 		Data.DataChart = append(Data.DataChart, newDataPost)
+	}
+	return Data
+}
+
+//Evolution du nombre des utilisateurs
+func GetUserChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM users WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataUser database.CritereChart
+		err := rows.Scan(&newDataUser.Count, &newDataUser.Critere)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataChart = append(Data.DataChart, newDataUser)
 	}
 	return Data
 }
