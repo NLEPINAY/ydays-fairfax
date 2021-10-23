@@ -120,22 +120,27 @@ func isDatabaseTable(table string) bool {
 
 //Récupère tout les users
 func GetClientList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT *, COUNT(*) AS Count FROM users")
+	rows, _ := database.Db.Query("SELECT * FROM users CROSS JOIN (SELECT COUNT(*) AS Count FROM users) LEFT JOIN houses ON houses.id = users.house_id")
+
 	defer rows.Close()
 	for rows.Next() {
 		var newUser database.User
-		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID, &newUser.Count)
+
+		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID, &newUser.Count, &newUser.House.ID, &newUser.House.Name, &newUser.House.Image)
 		if err != nil {
 			panic(err)
 		}
+		//newUser.House = database.GetHouseByID(newUser.House.ID)
 		Data.User = append(Data.User, newUser)
+
 	}
+
 	return Data
 }
 
 //Récupère tout les commentaires
 func GetCommentList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT *, COUNT(*) AS Count FROM comments")
+	rows, _ := database.Db.Query("SELECT * FROM comments CROSS JOIN (SELECT COUNT(*) AS Count FROM comments)")
 	defer rows.Close()
 	for rows.Next() {
 		var newComment database.Comment

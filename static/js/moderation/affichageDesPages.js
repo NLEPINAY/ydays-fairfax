@@ -66,7 +66,7 @@ $(document).ready(function () {
     var dataC = [];
     var titleText = "";
     var typeChart = "";
-    if(type == "Post") {
+    if((type == "Post")||(type == "User")) {
       dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
       var lab = [
         "January",
@@ -82,33 +82,15 @@ $(document).ready(function () {
         "November",
         "December",
       ];
-      titleText = "PUBLISHED POSTS PER MONTH";
       typeChart = "line";
+      titleText = type == "Post" ? "PUBLISHED POSTS PER MONTH" : "USERS REGISTRATION PER MONTH";
     } else if (type == "Category") {
       data.DataChart.forEach((element) => (dataC.push(element.Critere)));
       var lab = dataC;
       titleText = "PUBLISHED POSTS PER CATEGORIES";
       typeChart = "bar";
-    } else if (type == "User") {
-      dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-      var lab = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      titleText = "USERS REGISTRATION PER MONTH";
-      typeChart = "line";
     }
-    data.DataChart.forEach((element) => (dataC[element.Critere] = element.Count));
+    data.DataChart.forEach((element) => (dataC[element.Critere-1] = element.Count));
     $("#chartCont").html(
       '<canvas id="myChart" width="825" height="400"></canvas>'
     );
@@ -204,7 +186,16 @@ $(document).ready(function () {
                   column.render = function (data) {
                     return convertirDate(data);
                   }
-                }                      
+                } else if (key == "Avatar") {
+                  column.render = function (data) {
+                    return `<div class="avatar" style="background-image:URL('.`+data+`');"></div>`;
+                  }
+                } else if (key == "House") {
+                  column.render = function (data) {
+                    console.log(data);
+                    return `<div class="house infoLien" style="background-image:URL('..`+data.Image+`');"><span>`+data.Name+`</span></div>`;
+                  }
+                }                
               dataArray.push(column);
             }
           });
@@ -232,12 +223,15 @@ $(document).ready(function () {
               tableAdmin = $("#tableAdmin").DataTable({
                 columns: dataArray,
                 data: x[table],
+                "scrollX":true,
+                "autoWidth": false,
                 order: [[0, "desc"]],
               });
             
         } else {
           // Si onglet actif = Charts
           countElements(x);
+          $("div[data-chart='Post']").click();
           console.log(x);
         }
       });
