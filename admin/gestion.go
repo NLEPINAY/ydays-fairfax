@@ -13,11 +13,12 @@ import (
 var profileTmpl = template.Must(template.ParseGlob("./templates/*"))
 
 type Data struct {
-	User     []database.User
-	Post     []database.Post
-	Comment  []database.Comment
-	Category []database.Category
-	Self     database.User
+	User       []database.User
+	Post       []database.Post
+	Comment    []database.Comment
+	Category   []database.Category
+	Self       database.User
+	CountTable []database.CountTable
 }
 
 type DataForChart struct {
@@ -155,15 +156,29 @@ func GetCommentList(Data Data) Data {
 
 //Récupère tout les posts
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) LEFT JOIN users ON posts.author_id = users.id")
+	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) INNER JOIN users ON posts.author_id = users.id INNER JOIN categories ON posts.category_id = categories.id")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
-		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID)
+		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID, &newPost.Category.ID, &newPost.Category.Name, &newPost.Category.Theme, &newPost.Category.Description)
 		if err != nil {
 			panic(err)
 		}
 		Data.Post = append(Data.Post, newPost)
+	}
+	return Data
+}
+
+func GetLikes(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT post_id, sum(case when type = 'like' then 1 else 0 end) as likes, sum(case when type = 'dislike' then 1 else 0 end) as dislikes FROM post_likes GROUP BY post_id")
+	defer rows.Close()
+	for rows.Next() {
+		var newCount database.CountTable
+		err := rows.Scan(&newCount.PostId, &newCount.CountLikes, &newCount.CountDislikes)
+		if err != nil {
+			panic(err)
+		}
+		Data.CountTable = append(Data.CountTable, newCount)
 	}
 	return Data
 }

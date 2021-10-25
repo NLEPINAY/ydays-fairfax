@@ -65,6 +65,7 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				Data.Category = database.GetCategoriesList()
 			case "Post":
 				Data = admin.GetPostList(Data)
+				Data = admin.GetLikes(Data)
 			case "User":
 				Data = admin.GetClientList(Data)
 			case "Comment":

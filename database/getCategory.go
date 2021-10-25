@@ -12,7 +12,7 @@ func GetCategoryByID(id int) (Category, error) {
 }
 
 func GetCategoriesList() []Category {
-	rows, err := Db.Query("SELECT *, COUNT(*) AS Count FROM categories")
+	rows, err := Db.Query("SELECT * FROM categories CROSS JOIN (SELECT COUNT(*) AS Count FROM categories)")
 	defer rows.Close()
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible de récupérer la liste des catégories.")

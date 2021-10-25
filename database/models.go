@@ -80,11 +80,18 @@ type Post struct {
 	Dislikes   []PostLike
 	Reason     string
 	Count      int
+	Category   Category
 }
 
 type CritereChart struct {
 	Count   int
 	Critere int
+}
+
+type CountTable struct {
+	PostId        int
+	CountLikes    int
+	CountDislikes int
 }
 
 type Comment struct {
