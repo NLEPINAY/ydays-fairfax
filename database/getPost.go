@@ -44,6 +44,17 @@ func GetPostByID(ID int, currentUserID int) (Post, error) {
 	return post, nil
 }
 
+// Récupère un post depuis son ID :
+func GetPostOnlyByID(ID int) (Post, error) {
+	var post Post
+
+	row := Db.QueryRow("SELECT * FROM posts WHERE id = ?", ID) // id, title, author_id, content, category_id, date, image, state
+	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason)
+	author, _ := GetUserByID(post.AuthorID)
+	post.Author = author
+	return post, nil
+}
+
 // Récupère tous les posts likés par un utilisateur dont l'ID est passé en paramètre :
 func GetPostsLikedByUser(userID int) ([]Post, error) {
 	var posts []Post

@@ -1,4 +1,25 @@
+const formInputs = {
+  "Post" : {
+    "Title" : {
+      "type":"text"
+    },
+    "Content" : {
+      "type":"textarea"
+    },
+    "Category" : {
+      "type":"select"
+    },
+    "State" : {
+      "type":"radio"
+    },
+  },
+  "Comment" : {},
+  "User" : {},
+  "Category" : {},
+};
+
 $(document).ready(function () {
+
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   let tableParam = urlParams.get("table");
@@ -21,7 +42,7 @@ $(document).ready(function () {
   $(document).on("click", "#topCont .card", function () {
     $("#topCont .card").removeClass("activeChart");
     $(this).addClass("activeChart");
-    const type = $(this).attr('data-chart')
+    const type = $(this).attr('data-chart');
 
       var params = new Object();
       params.action = "getStats";
@@ -175,8 +196,10 @@ $(document).ready(function () {
       .then((x) => {
         if (table != "Charts") {
           const dataArray = [];
-          const columnsToExclude = ['Liked', 'Disliked','Image','Gif','Password','SecretQuestion','SecretAnswer','Count','Author','Reason','Content'];
+          var dataAttributes = "";
+          const columnsToExclude = ['Liked', 'Disliked','Image','Gif','Password','SecretQuestion','SecretAnswer','Count','AuthorID','Reason','Content'];
           Object.entries(x[table][0]).forEach(([key, value]) => {
+            dataAttributes += 'data-' + key.toLowerCase() + '="'+value+'" ';
             if(!columnsToExclude.includes(key)) {
               var column = {};
                 column.title = key.toUpperCase().replace(/_/g, " ");
@@ -192,10 +215,13 @@ $(document).ready(function () {
                   }
                 } else if (key == "House") {
                   column.render = function (data) {
-                    console.log(data);
                     return `<div class="house infoLien" style="background-image:URL('..`+data.Image+`');"><span>`+data.Name+`</span></div>`;
                   }
-                }                
+                } else if (key == "Author") {
+                  column.render = function (data) {
+                    return data.Username;
+                  }
+                }              
               dataArray.push(column);
             }
           });
@@ -207,11 +233,11 @@ $(document).ready(function () {
               orderable: false,
               render: function (data, type, row, meta) {
                 return (
-                  '<a href="#" class="infoLien editLink" data-id="' +
+                  '<div class="btn btn-outline-blue editLink mr-3" data-id="' +
                   row.ID +
-                  '" data-toggle="modal" data-target="#updateModal"><i class="far fa-edit"></i><span>Update</span></a><a href="#" class="infoLien deleteLink" data-id="' +
+                  '" data-table-type="'+table+'" '+dataAttributes+' data-toggle="modal" data-target="#updateModal"><i class="far fa-edit"></i></div><div class="btn btn-outline-danger deleteLink" data-id="' +
                   row.ID +
-                  '"><i class="far fa-trash-alt"></i><span>Delete</span></a>'
+                  '"><i class="far fa-trash-alt"></i></div>'
                 );
               },
             }
@@ -232,7 +258,6 @@ $(document).ready(function () {
           // Si onglet actif = Charts
           countElements(x);
           $("div[data-chart='Post']").click();
-          console.log(x);
         }
       });
   }
@@ -273,6 +298,48 @@ $(document).ready(function () {
   }
 
   initDatatable(table);
+
+  // Modal Update
+  $(document).on('click', '.editLink', function() {
+    var params = new Object();
+    const tableToUpdate = $(this).attr('data-table-type');
+    params.action = "getForUpdate";
+    params.table = tableToUpdate;
+    params.id = $(this).attr('data-id');
+    fetch("/fetching", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(params),
+    })
+      .then((x) => x.json())
+      .then((x) => {
+        var formContent = "";
+        Object.entries(x).forEach(([key,value]) => {
+          if(Object.keys(formInputs[tableToUpdate]).includes(key)) {
+            console.log( key + " inclue !");
+            var input;          
+            if(formInputs[tableToUpdate][key].type == "textarea"){
+              input = `<textarea class="form-control" name="`+key+`">`+value+`</textarea>`;
+            } else {
+              input = `<input class="form-control" type="`+formInputs[tableToUpdate][key].type+`" name="`+key+`" value="`+value+`">`;
+            }
+            formContent += `
+            <div class="form-group">
+              <label for="`+key+`">`+key+`</label>
+              `+input+`
+            </div>
+            `;
+            console.log("FORM: ",formContent);
+            $('#updateForm').html(formContent);
+          }
+        })       
+      });
+
+    $(".modal-title").html("UPDATE POST N°"+$(this).attr("data-id"));
+  })
   
   //Initialisation de dataTable avec des paramètres personnalisés
   if ($.fn.dataTable) {

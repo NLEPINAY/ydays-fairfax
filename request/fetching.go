@@ -7,6 +7,7 @@ import (
 	"forum/database"
 	"forum/toolbox"
 	"net/http"
+	"strconv"
 )
 
 var userCanDelete = []string{"posts", "comments", "gif", "images", "users", "tickets", "ticket_answers"}
@@ -69,14 +70,35 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			case "Comment":
 				Data = admin.GetCommentList(Data)
 			}
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
+		case "getForUpdate": // Récupere un(e) article / catégorie / utilisateur / commentaire pour remplir automatiquement la modal d'update
+			var Data database.Post
+
+			id, err := strconv.Atoi(received.ID)
+			if err != nil {
+				panic(err)
+			}
+
+			switch received.Table {
+			case "Post":
+				Data, err = database.GetPostOnlyByID(id)
+				if err != nil {
+					ERROR, _ = json.Marshal("ERROR WHILE DECODING JSON")
+					w.Write(ERROR)
+					panic(err)
+				} else {
+					ok, _ := json.Marshal(Data)
+					w.Write(ok)
+				}
+			}
 
 			//Data = admin.GetClientList(Data)
 			//Data = admin.GetCommentList(Data)
 			//Data = admin.GetPostList(Data)
 			//Data.Self = user
 			//Data.Category = database.GetCategoriesList()
-			ok, _ := json.Marshal(Data)
-			w.Write(ok)
+
 		case "getStats":
 			var Data admin.DataForChart
 			switch received.What {

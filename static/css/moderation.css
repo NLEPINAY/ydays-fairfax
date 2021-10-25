@@ -249,6 +249,37 @@ header a.link:hover {
   border-bottom: 1px solid #00f3ff;
 }
 
+.action {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.action .btn i {
+  margin: 0;
+}
+
+.btn-blue {
+  background-color: #15d3dd;
+  color: white;
+}
+
+.btn-blue:hover {
+  background-color: #1eb8c0;
+  color: white;
+}
+
+.btn-outline-blue {
+  color: #15d3dd;
+  background-color: transparent;
+  border-color: #15d3dd;
+}
+
+.btn-outline-blue:hover {
+  color: white;
+  background-color: #15d3dd;
+}
+
 i {
   margin-right: 12px;
 }
@@ -327,4 +358,52 @@ i {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+/* STYLES MODAL */
+.modal-dialog {
+  max-width: 500px;
+  margin: 1.75rem auto;
+}
+
+.fade.show {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-header,
+.modal-footer {
+  background-color: #3c3c3c;
+  color: white;
+}
+
+.modal-header button i {
+  color: #00f3ff;
+}
+
+.modal-header button:hover>i {
+  color: white;
+}
+
+.modal-header .close {
+  text-shadow: none;
+}
+
+.modal-dialog {
+  margin: 0;
+  width: 50vw;
+  max-width: 50vw;
+  max-height: 80vh;
+}
+
+#updateForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#updateForm .form-group {
+  width: 49%;
 }
