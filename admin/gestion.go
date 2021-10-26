@@ -13,11 +13,12 @@ import (
 var profileTmpl = template.Must(template.ParseGlob("./templates/*"))
 
 type Data struct {
-	User     []database.User
-	Post     []database.Post
-	Comment  []database.Comment
-	Category []database.Category
-	Self     database.User
+	User      []database.User
+	Post      []database.Post
+	Comment   []database.Comment
+	Category  []database.Category
+	Self      database.User
+	CountLike []database.CountLike
 }
 
 type DataForChart struct {
@@ -138,6 +139,33 @@ func GetClientList(Data Data) Data {
 	return Data
 }
 
+// Récupère un post depuis son ID :
+func GetPostOnlyByID(ID int, Data Data) Data {
+	var post database.Post
+	id := ID
+	row := database.Db.QueryRow("SELECT * FROM posts INNER JOIN users ON posts.author_id = users.id WHERE posts.id = ?", id) // id, title, author_id, content, category_id, date, image, state
+	//defer rows.Close()
+	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
+	//author, _ := GetUserByID(post.AuthorID)
+	//post.Author = author
+	Data.Post = append(Data.Post, post)
+	return Data
+}
+
+func GetCategoriesList(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT * FROM categories CROSS JOIN (SELECT COUNT(*) AS Count FROM categories)")
+	defer rows.Close()
+	for rows.Next() {
+		var category database.Category
+		err := rows.Scan(&category.ID, &category.Name, &category.Theme, &category.Description, &category.Count)
+		if err != nil {
+			panic(err)
+		}
+		Data.Category = append(Data.Category, category)
+	}
+	return Data
+}
+
 //Récupère tout les commentaires
 func GetCommentList(Data Data) Data {
 	rows, _ := database.Db.Query("SELECT * FROM comments CROSS JOIN (SELECT COUNT(*) AS Count FROM comments)")
@@ -155,15 +183,29 @@ func GetCommentList(Data Data) Data {
 
 //Récupère tout les posts
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) LEFT JOIN users ON posts.author_id = users.id")
+	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) INNER JOIN users ON posts.author_id = users.id INNER JOIN categories ON posts.category_id = categories.id")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
-		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID)
+		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID, &newPost.Category.ID, &newPost.Category.Name, &newPost.Category.Theme, &newPost.Category.Description)
 		if err != nil {
 			panic(err)
 		}
 		Data.Post = append(Data.Post, newPost)
+	}
+	return Data
+}
+
+func GetLikes(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT post_id, sum(case when type = 'like' then 1 else 0 end) as likes, sum(case when type = 'dislike' then 1 else 0 end) as dislikes FROM post_likes GROUP BY post_id")
+	defer rows.Close()
+	for rows.Next() {
+		var newCount database.CountLike
+		err := rows.Scan(&newCount.PostId, &newCount.CountLikes, &newCount.CountDislikes)
+		if err != nil {
+			panic(err)
+		}
+		Data.CountLike = append(Data.CountLike, newCount)
 	}
 	return Data
 }

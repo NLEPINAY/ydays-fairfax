@@ -1,25 +1,25 @@
 const formInputs = {
-  "Post" : {
-    "Title" : {
-      "type":"text"
+  Post: {
+    Title: {
+      type: "text",
+    },    
+    Category: {
+      type: "select",
+      table: "Category",
     },
-    "Content" : {
-      "type":"textarea"
+    State: {
+      type: "radio",
     },
-    "Category" : {
-      "type":"select"
-    },
-    "State" : {
-      "type":"radio"
+    Content: {
+      type: "textarea",
     },
   },
-  "Comment" : {},
-  "User" : {},
-  "Category" : {},
+  Comment: {},
+  User: {},
+  Category: {},
 };
 
 $(document).ready(function () {
-
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   let tableParam = urlParams.get("table");
@@ -42,24 +42,23 @@ $(document).ready(function () {
   $(document).on("click", "#topCont .card", function () {
     $("#topCont .card").removeClass("activeChart");
     $(this).addClass("activeChart");
-    const type = $(this).attr('data-chart');
+    const type = $(this).attr("data-chart");
 
-      var params = new Object();
-      params.action = "getStats";
-      params.what = type;
-      fetch("/fetching", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(params),
-      })
-        .then((x) => x.json())
-        .then((x) => {
-          generateChart(x,type);
-        });
-    
+    var params = new Object();
+    params.action = "getStats";
+    params.what = type;
+    fetch("/fetching", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(params),
+    })
+      .then((x) => x.json())
+      .then((x) => {
+        generateChart(x, type);
+      });
   });
 
   //Initialisation menu actif
@@ -82,12 +81,11 @@ $(document).ready(function () {
    * Documentation : https://www.chartjs.org/docs/latest/getting-started/
    */
   async function generateChart(data, type) {
-
-    console.log("data:",data);
+    console.log("data:", data);
     var dataC = [];
     var titleText = "";
     var typeChart = "";
-    if((type == "Post")||(type == "User")) {
+    if (type == "Post" || type == "User") {
       dataC = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
       var lab = [
         "January",
@@ -104,14 +102,19 @@ $(document).ready(function () {
         "December",
       ];
       typeChart = "line";
-      titleText = type == "Post" ? "PUBLISHED POSTS PER MONTH" : "USERS REGISTRATION PER MONTH";
+      titleText =
+        type == "Post"
+          ? "PUBLISHED POSTS PER MONTH"
+          : "USERS REGISTRATION PER MONTH";
     } else if (type == "Category") {
-      data.DataChart.forEach((element) => (dataC.push(element.Critere)));
+      data.DataChart.forEach((element) => dataC.push(element.Critere));
       var lab = dataC;
       titleText = "PUBLISHED POSTS PER CATEGORIES";
       typeChart = "bar";
     }
-    data.DataChart.forEach((element) => (dataC[element.Critere-1] = element.Count));
+    data.DataChart.forEach(
+      (element) => (dataC[element.Critere - 1] = element.Count)
+    );
     $("#chartCont").html(
       '<canvas id="myChart" width="825" height="400"></canvas>'
     );
@@ -127,28 +130,28 @@ $(document).ready(function () {
             backgroundColor: ["rgba(0,243,255,1)"],
             borderColor: ["rgba(5,170,223,1)"],
             borderWidth: 1,
-            pointBackgroundColor: 'rgba(92, 145, 249, 1)',
-            lineTension: 0.4,  
-            fill:true,
+            pointBackgroundColor: "rgba(92, 145, 249, 1)",
+            lineTension: 0.4,
+            fill: true,
           },
         ],
       },
       options: {
         plugins: {
-        legend: {
-          display: false,
+          legend: {
+            display: false,
+          },
+          title: {
+            display: true,
+            text: titleText,
+            fontColor: "rgba(0,243,255,1)",
+            font: {
+              size: 20,
+            },
+          },
         },
-        title: {
-          display: true,
-          text: titleText,
-          fontColor: "rgba(0,243,255,1)",
-          font: {
-            size: 20
-        }
-        },
-      },
-        
-        tooltips: {mode: 'point'},
+
+        tooltips: { mode: "point" },
         scales: {
           xAxes: [
             {
@@ -180,7 +183,6 @@ $(document).ready(function () {
   var tableAdmin = null;
 
   function initDatatable(table) {
-
     var params = new Object();
     params.action = "get";
     params.table = table;
@@ -197,63 +199,115 @@ $(document).ready(function () {
         if (table != "Charts") {
           const dataArray = [];
           var dataAttributes = "";
-          const columnsToExclude = ['Liked', 'Disliked','Image','Gif','Password','SecretQuestion','SecretAnswer','Count','AuthorID','Reason','Content'];
+          const columnsToExclude = [
+            "Liked",
+            "Disliked",
+            "Image",
+            "Gif",
+            "Password",
+            "SecretQuestion",
+            "SecretAnswer",
+            "Count",
+            "AuthorID",
+            "Reason",
+            "Content",
+            "CategoryID",
+          ];
+          if(table == "Post") {
+            // Ajout du nombre de likes / dislikes pour chaque post
+            x[table].forEach((ind) => { // Boucle sur x.Post
+              ind['Likes'] = 0;    // Valeurs par défaut
+              ind['Dislikes'] = 0;
+              x['CountLike'].forEach((index) => { // Boucle sur x.CountLike
+                if (ind['ID'] == index['PostId']) {
+                  ind['Likes'] = index['CountLikes'] + '<i class="fas fa-heart ml-2 text-danger"></i>';
+                  ind['Dislikes'] = index['CountDislikes'] + '<i class="fas fa-heart-broken ml-2"></i>';
+                }
+              })
+            })           
+          }
           Object.entries(x[table][0]).forEach(([key, value]) => {
-            dataAttributes += 'data-' + key.toLowerCase() + '="'+value+'" ';
-            if(!columnsToExclude.includes(key)) {
+            dataAttributes += "data-" + key.toLowerCase() + '="' + value + '" ';
+            if (!columnsToExclude.includes(key)) {
               var column = {};
-                column.title = key.toUpperCase().replace(/_/g, " ");
-                column.data = key;  
-                // Paramètres spécifiques   
-                if(key == "Date") {
-                  column.render = function (data) {
-                    return convertirDate(data);
-                  }
-                } else if (key == "Avatar") {
-                  column.render = function (data) {
-                    return `<div class="avatar" style="background-image:URL('.`+data+`');"></div>`;
-                  }
-                } else if (key == "House") {
-                  column.render = function (data) {
-                    return `<div class="house infoLien" style="background-image:URL('..`+data.Image+`');"><span>`+data.Name+`</span></div>`;
-                  }
-                } else if (key == "Author") {
-                  column.render = function (data) {
-                    return data.Username;
-                  }
-                }              
+              column.title = key
+                .replace("ID", "Id")
+                .replace(/([A-Z])/g, " $1")
+                .toUpperCase(); //.replace(/_/g, " ") => pour transformer du snake case;
+              column.data = key;
+              // Paramètres spécifiques
+              if (key == "Date") {
+                column.render = function (data) {
+                  return convertirDate(data);
+                };
+              } else if (key == "Avatar") {
+                column.render = function (data) {
+                  return (
+                    `<div class="avatar" style="background-image:URL('.` +
+                    data +
+                    `');"></div>`
+                  );
+                };
+              } else if (key == "House") {
+                column.render = function (data) {
+                  return (
+                    `<div class="house infoLien" style="background-image:URL('..` +
+                    data.Image +
+                    `');"><span>` +
+                    data.Name +
+                    `</span></div>`
+                  );
+                };
+              } else if (key == "Author") {
+                column.render = function (data) {
+                  return data.Username;
+                };
+              } else if (key == "Category") {
+                column.render = function (data) {
+                  return data.Name;
+                };
+              } else if (key.includes("State")) {
+                column.render = function (data) {
+                  var result =
+                    data == 1
+                      ? '<i class="fas fa-eye"></i>'
+                      : '<i class="fas fa-eye-slash"></i>';
+                  return result;
+                };
+              }
               dataArray.push(column);
             }
           });
           // Paramètres globaux
-          dataArray.push(
-            {
-              class: "action",
-              title: "ACTIONS",
-              orderable: false,
-              render: function (data, type, row, meta) {
-                return (
-                  '<div class="btn btn-outline-blue editLink mr-3" data-id="' +
-                  row.ID +
-                  '" data-table-type="'+table+'" '+dataAttributes+' data-toggle="modal" data-target="#updateModal"><i class="far fa-edit"></i></div><div class="btn btn-outline-danger deleteLink" data-id="' +
-                  row.ID +
-                  '"><i class="far fa-trash-alt"></i></div>'
-                );
-              },
-            }
-          );
-            if (tableAdmin != null) {
-              tableAdmin.destroy();
-              $("#tableAdmin").empty();
-            }
-              tableAdmin = $("#tableAdmin").DataTable({
-                columns: dataArray,
-                data: x[table],
-                "scrollX":true,
-                "autoWidth": false,
-                order: [[0, "desc"]],
-              });
-            
+          dataArray.push({
+            class: "action",
+            title: "ACTIONS",
+            orderable: false,
+            render: function (data, type, row, meta) {
+              return (
+                '<div class="btn btn-outline-blue editLink mr-3" data-id="' +
+                row.ID +
+                '" data-table-type="' +
+                table +
+                '" ' +
+                dataAttributes +
+                ' data-toggle="modal" data-target="#updateModal"><i class="far fa-edit"></i></div><div class="btn btn-outline-danger deleteLink" data-id="' +
+                row.ID +
+                '"><i class="far fa-trash-alt"></i></div>'
+              );
+            },
+          });
+          if (tableAdmin != null) {
+            tableAdmin.destroy();
+            $("#tableAdmin").empty();
+          }
+          tableAdmin = $("#tableAdmin").DataTable({
+            columns: dataArray,
+            data: x[table],
+            scrollX: true,
+            autoWidth: false,
+            order: [[0, "desc"]],
+          });
         } else {
           // Si onglet actif = Charts
           countElements(x);
@@ -300,12 +354,12 @@ $(document).ready(function () {
   initDatatable(table);
 
   // Modal Update
-  $(document).on('click', '.editLink', function() {
+  $(document).on("click", ".editLink", function () {
     var params = new Object();
-    const tableToUpdate = $(this).attr('data-table-type');
+    const tableToUpdate = $(this).attr("data-table-type");
     params.action = "getForUpdate";
     params.table = tableToUpdate;
-    params.id = $(this).attr('data-id');
+    params.id = $(this).attr("data-id");
     fetch("/fetching", {
       method: "POST",
       headers: {
@@ -316,31 +370,68 @@ $(document).ready(function () {
     })
       .then((x) => x.json())
       .then((x) => {
+
         var formContent = "";
-        Object.entries(x).forEach(([key,value]) => {
-          if(Object.keys(formInputs[tableToUpdate]).includes(key)) {
-            console.log( key + " inclue !");
-            var input;          
-            if(formInputs[tableToUpdate][key].type == "textarea"){
-              input = `<textarea class="form-control" name="`+key+`">`+value+`</textarea>`;
+        var textarea = "";
+        Object.entries(formInputs[tableToUpdate]).forEach(([input, data]) => {
+            if (formInputs[`${tableToUpdate}`][`${input}`].type == "textarea") {
+              textarea +=
+              `<div class="form-group w-100">
+              <label for="` +
+              input +
+              `">` +
+              input +
+              `</label>
+              <textarea class="form-control" name="` +
+                input +
+                `">` +
+                x[`${tableToUpdate}`][0][`${input}`] +
+                `</textarea></div>`;
+            } else if (formInputs[`${tableToUpdate}`][`${input}`].type == "select") {
+              var options = "";
+              var tableSelect = formInputs[`${tableToUpdate}`][`${input}`].table;
+              x.Category.forEach((element) => {
+                options += `<option value="`+element.Name+`">`+element.Name+`</option>`;
+              })
+              formContent +=
+              `<div class="form-group">
+              <label for="` +
+              input +
+              `">` +
+              input +
+              `</label>
+              <select class="form-control" name="`+input+`">
+              `+options+`
+              </select>
+              </div>`
             } else {
-              input = `<input class="form-control" type="`+formInputs[tableToUpdate][key].type+`" name="`+key+`" value="`+value+`">`;
+              formContent +=
+                `<div class="form-group">
+                <label for="` +
+                input +
+                `">` +
+                input +
+                `</label>
+                <input class="form-control" type="` +
+                formInputs[`${tableToUpdate}`][`${input}`].type +
+                `" name="` +
+                input +
+                `" value="` +
+                x[`${tableToUpdate}`][0][`${input}`] +
+                `"></div>`;
             }
-            formContent += `
-            <div class="form-group">
-              <label for="`+key+`">`+key+`</label>
-              `+input+`
-            </div>
-            `;
-            console.log("FORM: ",formContent);
-            $('#updateForm').html(formContent);
-          }
-        })       
+        })
+
+        formContent += textarea;
+        $("#updateForm").html(formContent);
       });
 
-    $(".modal-title").html("UPDATE POST N°"+$(this).attr("data-id"));
-  })
-  
+    $(".modal-title").html(
+      "UPDATE " + tableToUpdate.toUpperCase() + " N°" + $(this).attr("data-id")
+    );
+  });
+
+
   //Initialisation de dataTable avec des paramètres personnalisés
   if ($.fn.dataTable) {
     $.extend($.fn.dataTable.defaults, {
