@@ -1,5 +1,5 @@
-.dataTable tbody > tr.selected,
-.dataTable tbody > tr > .selected {
+.dataTable tbody>tr.selected,
+.dataTable tbody>tr>.selected {
   background-color: #ffe9dc;
 }
 
@@ -12,7 +12,7 @@
   border-top: solid 2px rgb(36, 36, 36);
 }
 
-.dataTables_filter > label:after {
+.dataTables_filter>label:after {
   pointer-events: none;
 }
 
@@ -25,15 +25,15 @@
   height: 100%;
 }
 
-.datatable-header > .dt-buttons {
+.datatable-header>.dt-buttons {
   margin: 0;
 }
 
-.datatable-header > .dt-buttons > .dt-button {
+.datatable-header>.dt-buttons>.dt-button {
   margin-bottom: 1rem;
 }
 
-.datatable-header > .dt-buttons > .dt-button-collection {
+.datatable-header>.dt-buttons>.dt-button-collection {
   margin-top: -1rem;
 }
 
@@ -126,8 +126,8 @@ main h1 {
   background-color: #00f3ff;
 }
 
-#contentContainer #catList li.activeCat > *,
-#contentContainer #catList li.activeCat:hover > * {
+#contentContainer #catList li.activeCat>*,
+#contentContainer #catList li.activeCat:hover>* {
   color: white;
 }
 
@@ -136,7 +136,7 @@ main h1 {
   background-color: #3c3c3c;
 }
 
-#contentContainer #catList li:hover > * {
+#contentContainer #catList li:hover>* {
   color: white;
 }
 
@@ -339,12 +339,12 @@ i {
 }
 
 .infoLien .fa-edit,
-.infoLien:hover > .fa-edit {
+.infoLien:hover>.fa-edit {
   color: #007bff;
   text-decoration: none;
 }
 
-.infoLien:hover > i {
+.infoLien:hover>i {
   color: #ff6505;
   background-color: white;
   text-decoration: none;
@@ -397,7 +397,7 @@ i {
   color: #00f3ff;
 }
 
-.modal-header button:hover > i {
+.modal-header button:hover>i {
   color: white;
 }
 
@@ -421,4 +421,13 @@ i {
 
 #updateForm .form-group {
   width: 49%;
+}
+
+#updateForm textarea {
+  height: 100%;
+}
+
+.modal-body {
+  max-height: 70vh;
+  overflow-y: scroll;
 }
