@@ -431,7 +431,6 @@ $(document).ready(function () {
     );
   });
 
-
   //Initialisation de dataTable avec des paramètres personnalisés
   if ($.fn.dataTable) {
     $.extend($.fn.dataTable.defaults, {
