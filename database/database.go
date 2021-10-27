@@ -57,7 +57,6 @@ func Initialize() {
 			"gif"					TEXT NOT NULL DEFAULT '',
 			"date_comment"			DATETIME DEFAULT CURRENT_TIMESTAMP,
 			"state_comment"			INTEGER DEFAULT 0,
-			"reason_comment"		TEXT DEFAULT "Supprimer par l'utilisateur lui même",
 			FOREIGN KEY(author_id) REFERENCES "user"(id_user),
 			FOREIGN KEY(post_id) REFERENCES "post"(id_post)
 		)`,

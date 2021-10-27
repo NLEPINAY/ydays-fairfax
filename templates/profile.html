@@ -112,7 +112,7 @@
                     <div class="columns">
                         <!-- post du profile : -->
                         <div class="column" id="column-1">
-                            {{ range .post }}
+                            {{ range .Post }}
                             <div class="post">
                                 <!-- Si le post est publié : -->
                                 {{ if eq .State 0}}
@@ -135,10 +135,10 @@
 
                         <!-- Commentaires du profile : -->
                         <div class="column" id="column-2">
-                            {{ range .comment }}
+                            {{ range .Comment }}
                             <div class="comment">
                                 <!-- Si le post est publié : -->
-                                {{ if eq .posttate 0}}
+                                {{ if eq .PostState 0}}
                                 <a href="/post/{{ .PostID }}">
                                     <p class="title">{{ .PostTitle }}</p>
                                 </a>
@@ -197,7 +197,7 @@
                             {{ range .Likedcomment }}
                             <div class="comment">
                                 <!-- Si le post est publié : -->
-                                {{ if eq .posttate 0}}
+                                {{ if eq .PostState 0}}
                                 <a href="/post/{{ .PostID }}">
                                     <p class="title">{{ .PostTitle }}</p>
                                 </a>
@@ -260,7 +260,7 @@
             {{end}}
             <div> LIST OF POST OF THIS USER :</div>
             <table>
-                {{range .post}}
+                {{range .Post}}
                 <tr>
                     <td>
                         {{if gt .State 0}}
@@ -274,7 +274,7 @@
             </table>
             <div> LIST OF comment OF THIS USER :</div>
             <table>
-                {{range .comment}}
+                {{range .Comment}}
                 <tr>
                     <td>
                         {{if gt .State 0}}

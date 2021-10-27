@@ -5,7 +5,7 @@ import "log"
 func GetCategoryByID(id int) (Category, error) {
 	var myCategory Category
 
-	row := Db.QueryRow("SELECT * FROM category WHERE id = ?", id)
+	row := Db.QueryRow("SELECT * FROM category WHERE id_category = ?", id)
 	row.Scan(&myCategory.ID, &myCategory.Name, &myCategory.Theme, &myCategory.Description)
 
 	return myCategory, nil

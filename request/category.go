@@ -59,7 +59,7 @@ func Category(w http.ResponseWriter, r *http.Request, user database.User) {
 			log.Println("❌ ERREUR | Le nom de la catégorie n°", ID, " est une string vide.")
 			return
 		}
-		dataForCategory.Posts, err = database.GetpostByCategoryID(ID) // Récupération de tous les post appartenant à la catégorie
+		dataForCategory.Post, err = database.GetpostByCategoryID(ID) // Récupération de tous les post appartenant à la catégorie
 		if err != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 			return

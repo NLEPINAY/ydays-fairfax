@@ -49,6 +49,7 @@ func Post(w http.ResponseWriter, r *http.Request, user database.User) {
 				log.Println("❌ ERREUR | Impossible de récupérer le post ou les commentaires du post dont l'ID est ", ID)
 				return
 			}
+			fmt.Println("❌❌❌", ID, user.ID)
 		}
 
 		// Si le post a été supprimé, redirection vers l'index :

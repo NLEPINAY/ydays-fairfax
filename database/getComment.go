@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -8,7 +9,6 @@ import (
 
 func GetcommentByPostID(ID int, currentUserID int) ([]Comment, error) {
 	var comments []Comment
-
 	rows, err := Db.Query("SELECT * FROM comment WHERE post_id = ?", ID) // id, author_id, post_id, content, date, state
 	defer rows.Close()
 	if err != nil {
@@ -18,16 +18,23 @@ func GetcommentByPostID(ID int, currentUserID int) ([]Comment, error) {
 
 	for rows.Next() {
 		var comment Comment
-		rows.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State)
-		post, _ := GetPostByID(comment.PostID, 0)
-
+		rows.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State, &comment.Reason)
+		fmt.Println(comment, "❌0❌0❌0❌")
+		post, err := GetPostByID(comment.PostID, currentUserID)
+		if err != nil {
+			log.Println("❌ ERREUR | Impossible de récupérer le post du comment")
+			return comments, err
+		}
 		comment.PostTitle = post.Title
-		comment.posttate = post.State
-		comment.Author, _ = GetUserByID(comment.AuthorID)
-		comment.like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, currentUserID)
+		comment.PostState = post.State
+		comment.Author, err = GetUserByID(comment.AuthorID)
+		if err != nil {
+			log.Println("❌ ERREUR | Impossible de récupérer le user du comment")
+			return comments, err
+		}
+		comment.Like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, currentUserID)
 		comments = append(comments, comment)
 	}
-
 	return comments, nil
 }
 
@@ -42,8 +49,8 @@ func GetCommentByID(ID int, userID int) (Comment, error) {
 
 	post, _ := GetPostByID(comment.PostID, 0)
 	comment.PostTitle = post.Title
-	comment.posttate = post.State
-	comment.like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, userID)
+	comment.PostState = post.State
+	comment.Like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, userID)
 
 	return comment, nil
 }
@@ -71,7 +78,7 @@ func GetcommentLikedByUser(userID int) ([]Comment, error) {
 func GetCommentFromUserByID(userID int) ([]Comment, error) {
 	var comments []Comment
 
-	rows, err := Db.Query("SELECT id FROM comment WHERE author_id = ?", userID)
+	rows, err := Db.Query("SELECT id_comment FROM comment WHERE author_id = ?", userID)
 	defer rows.Close()
 
 	if err != nil {

@@ -76,8 +76,8 @@ type Post struct {
 	Liked      bool
 	Disliked   bool
 	Author     User
-	comment    []Comment
-	like       []PostLike
+	Comment    []Comment
+	Like       []PostLike
 	Dislike    []PostLike
 	Reason     string
 	Count      int
@@ -104,11 +104,11 @@ type Comment struct {
 	Gif       string
 	Date      time.Time
 	State     int
-	posttate  int
+	PostState int
 	Liked     bool
 	Disliked  bool
 	Author    User
-	like      []CommentLike
+	Like      []CommentLike
 	Dislike   []CommentLike
 	Reason    string
 	Count     int
@@ -116,11 +116,11 @@ type Comment struct {
 
 // Stocke l'ID et le titre d'un post, et les users l'ayant liké ou disliké :
 type PostLike struct {
-	PostID int
-	// PostTitle string
-	UserID int
-	Type   string // 'like' ou 'dislike'
-	Date   time.Time
+	PostID    int
+	PostTitle string
+	UserID    int
+	Type      string // 'like' ou 'dislike'
+	Date      time.Time
 }
 
 // Stocke l'ID et le titre d'un commentaire, et les users l'ayant liké ou disliké :
@@ -176,10 +176,10 @@ type DataForIndex struct {
 }
 
 type DataForCategory struct {
-	ID    int
-	Name  string
-	User  User
-	Posts []Post
+	ID   int
+	Name string
+	User User
+	Post []Post
 }
 
 type DataForPost struct {
