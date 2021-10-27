@@ -7,6 +7,7 @@ import (
 	"forum/database"
 	"forum/toolbox"
 	"net/http"
+	"strconv"
 )
 
 var userCanDelete = []string{"posts", "comments", "gif", "images", "users", "tickets", "ticket_answers"}
@@ -14,6 +15,7 @@ var userCanAlterate = []string{"posts", "comments", "users", "tickets", "ticket_
 
 //requete de modification de la bdd
 func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
+	fmt.Println(r.Body, "ttttttt")
 	switch r.Method {
 	//savoir quelle action est demander
 	case "POST":
@@ -39,7 +41,6 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				ok, _ := json.Marshal(received)
 				w.Write(ok)
 			}
-			break
 		case "DELETE":
 			if isLegal(received, user) {
 				performAction(received)
@@ -51,7 +52,63 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				ok, _ := json.Marshal(received)
 				w.Write(ok)
 			}
+		case "get":
+			var Data admin.Data
+
+			switch received.Table {
+			case "Charts":
+				Data = admin.GetCommentList(Data)
+				Data = admin.GetClientList(Data)
+				Data = admin.GetPostList(Data)
+				Data.Category = database.GetCategoriesList()
+			case "Category":
+				Data.Category = database.GetCategoriesList()
+			case "Post":
+				Data = admin.GetPostList(Data)
+				Data = admin.GetLikes(Data)
+			case "User":
+				Data = admin.GetClientList(Data)
+			case "Comment":
+				Data = admin.GetCommentList(Data)
+			}
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
+		case "getForUpdate": // Récupere un(e) article / catégorie / utilisateur / commentaire pour remplir automatiquement la modal d'update
+			var Data admin.Data
+			ID, err := strconv.Atoi(received.ID)
+			if err != nil {
+				panic(err)
+
+			}
+			switch received.Table {
+			case "Post":
+
+				Data = admin.GetPostOnlyByID(ID, Data)
+				Data = admin.GetCategoriesList(Data)
+
+			}
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
+
+		case "getStats":
+			var Data admin.DataForChart
+			switch received.What {
+			case "Category":
+				Data = admin.GetCategoriesChart(Data)
+			case "Post":
+				Data = admin.GetPostChart(Data)
+			case "User":
+				Data = admin.GetUserChart(Data)
+			}
+
+			/*Data = admin.GetClientChart(Data)
+			Data = admin.GetCommentChart(Data)
+			Data = admin.GetPostChart(Data)
+			Data.Category = database.GetCategoriesChart()*/
+			ok, _ := json.Marshal(Data)
+			w.Write(ok)
 		}
+
 	}
 }
 

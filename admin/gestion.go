@@ -13,11 +13,19 @@ import (
 var profileTmpl = template.Must(template.ParseGlob("./templates/*"))
 
 type Data struct {
-	User     []database.User
-	Post     []database.Post
-	Comment  []database.Comment
-	Category []database.Category
-	Self     database.User
+	User      []database.User
+	Post      []database.Post
+	Comment   []database.Comment
+	Category  []database.Category
+	Self      database.User
+	CountLike []database.CountLike
+}
+
+type DataForChart struct {
+	/*DataUser     []database.User*/
+	DataChart []database.CritereChart
+	/*DataComment  []database.Comment
+	DataCategory []database.Category*/
 }
 
 type ReceivedData struct {
@@ -113,26 +121,58 @@ func isDatabaseTable(table string) bool {
 
 //Récupère tout les users
 func GetClientList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM users")
+	rows, _ := database.Db.Query("SELECT * FROM users CROSS JOIN (SELECT COUNT(*) AS Count FROM users) LEFT JOIN houses ON houses.id = users.house_id")
+
 	defer rows.Close()
 	for rows.Next() {
 		var newUser database.User
-		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID)
+
+		err := rows.Scan(&newUser.ID, &newUser.Username, &newUser.Password, &newUser.Email, &newUser.Role, &newUser.Avatar, &newUser.Date, &newUser.State, &newUser.SecretQuestion, &newUser.SecretAnswer, &newUser.House.ID, &newUser.Count, &newUser.House.ID, &newUser.House.Name, &newUser.House.Image)
 		if err != nil {
 			panic(err)
 		}
+		//newUser.House = database.GetHouseByID(newUser.House.ID)
 		Data.User = append(Data.User, newUser)
+
+	}
+
+	return Data
+}
+
+// Récupère un post depuis son ID :
+func GetPostOnlyByID(ID int, Data Data) Data {
+	var post database.Post
+	id := ID
+	row := database.Db.QueryRow("SELECT * FROM posts INNER JOIN users ON posts.author_id = users.id WHERE posts.id = ?", id) // id, title, author_id, content, category_id, date, image, state
+	//defer rows.Close()
+	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
+	//author, _ := GetUserByID(post.AuthorID)
+	//post.Author = author
+	Data.Post = append(Data.Post, post)
+	return Data
+}
+
+func GetCategoriesList(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT * FROM categories CROSS JOIN (SELECT COUNT(*) AS Count FROM categories)")
+	defer rows.Close()
+	for rows.Next() {
+		var category database.Category
+		err := rows.Scan(&category.ID, &category.Name, &category.Theme, &category.Description, &category.Count)
+		if err != nil {
+			panic(err)
+		}
+		Data.Category = append(Data.Category, category)
 	}
 	return Data
 }
 
 //Récupère tout les commentaires
 func GetCommentList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM comments")
+	rows, _ := database.Db.Query("SELECT * FROM comments CROSS JOIN (SELECT COUNT(*) AS Count FROM comments)")
 	defer rows.Close()
 	for rows.Next() {
 		var newComment database.Comment
-		err := rows.Scan(&newComment.ID, &newComment.AuthorID, &newComment.PostID, &newComment.Content, &newComment.Gif, &newComment.Date, &newComment.State, &newComment.Reason)
+		err := rows.Scan(&newComment.ID, &newComment.AuthorID, &newComment.PostID, &newComment.Content, &newComment.Gif, &newComment.Date, &newComment.State, &newComment.Reason, &newComment.Count)
 		if err != nil {
 			panic(err)
 		}
@@ -143,15 +183,74 @@ func GetCommentList(Data Data) Data {
 
 //Récupère tout les posts
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM posts")
+	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) INNER JOIN users ON posts.author_id = users.id INNER JOIN categories ON posts.category_id = categories.id")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
-		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason)
+		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID, &newPost.Category.ID, &newPost.Category.Name, &newPost.Category.Theme, &newPost.Category.Description)
 		if err != nil {
 			panic(err)
 		}
 		Data.Post = append(Data.Post, newPost)
+	}
+	return Data
+}
+
+func GetLikes(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT post_id, sum(case when type = 'like' then 1 else 0 end) as likes, sum(case when type = 'dislike' then 1 else 0 end) as dislikes FROM post_likes GROUP BY post_id")
+	defer rows.Close()
+	for rows.Next() {
+		var newCount database.CountLike
+		err := rows.Scan(&newCount.PostId, &newCount.CountLikes, &newCount.CountDislikes)
+		if err != nil {
+			panic(err)
+		}
+		Data.CountLike = append(Data.CountLike, newCount)
+	}
+	return Data
+}
+
+//Compte les posts par mois
+func GetPostChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataPost database.CritereChart
+		err := rows.Scan(&newDataPost.Count, &newDataPost.Critere)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataChart = append(Data.DataChart, newDataPost)
+	}
+	return Data
+}
+
+//Compte les posts par categorie
+func GetCategoriesChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, category_id as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY category_id")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataPost database.CritereChart
+		err := rows.Scan(&newDataPost.Count, &newDataPost.Critere)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataChart = append(Data.DataChart, newDataPost)
+	}
+	return Data
+}
+
+//Evolution du nombre des utilisateurs
+func GetUserChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM users WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	defer rows.Close()
+	for rows.Next() {
+		var newDataUser database.CritereChart
+		err := rows.Scan(&newDataUser.Count, &newDataUser.Critere)
+		if err != nil {
+			panic(err)
+		}
+		Data.DataChart = append(Data.DataChart, newDataUser)
 	}
 	return Data
 }
