@@ -1,18 +1,18 @@
 {{ define "newpost" }}
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr-FR">
 
 <head>
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/newpost.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-
-    <link rel="icon" href="../static/images/web_favicon.png" type="image/icon type">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAIRFAX | Post a new fax</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/newpost.css">   
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="icon" href="../static/images/web_favicon.png" type="image/icon type">
+    <script src="/static/lib/tinymce/tinymce.min.js"></script>
+    
 </head>
 
 <body>
@@ -42,10 +42,11 @@
                             <option value="{{.ID}}">{{.Name}}</option>
                             {{end}}
                         </select>
+                        <!--
                                 <label class="custom-file-upload">
                                 <input type="file" name="image" accept="image/*" id="image_input">
                                 <i class="fa fa-cloud-upload"></i>
-                            </label>
+                            </label>-->
                 </h1>
 
                 <div class="page__content-blockquote">
@@ -62,10 +63,10 @@
             </label>
 
             <!-- Resets the page -->
-            <input type="radio" name="page" id="page-1" onclick="moveLeft();" />
+            <input type="radio" name="page" id="page-1" />
 
             <!-- Goes to the second page -->
-            <input type="radio" name="page" id="page-2" onclick="moveRight();" />
+            <input type="radio" name="page" id="page-2" />
 
             <label class="book__page book__page--2" id="flipping-page">
                     <div class="book__page-front">
@@ -124,11 +125,9 @@
     </section>
 
 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/newpost.js"></script>
 </body>
-
-<script src="../static/js/newpost.js"></script>
-
 
 </html>
 

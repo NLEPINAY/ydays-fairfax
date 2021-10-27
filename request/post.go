@@ -76,7 +76,7 @@ func Post(w http.ResponseWriter, r *http.Request, user database.User) {
 		}
 		// (2) Récupération du commentaire :
 		content := r.FormValue("comment")
-		content = toolbox.FormatString(content) // Formattage du commentaire
+		//content = toolbox.FormatString(content) // Formattage du commentaire
 
 		// (3) Vérification de la validité du commentaire :
 		if toolbox.IsEmptyString(content) || len(content) < 3 {

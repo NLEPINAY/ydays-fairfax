@@ -37,10 +37,10 @@ func NewPost(w http.ResponseWriter, r *http.Request, user database.User) {
 	case "POST":
 		// (1) Récupération du titre, du contenu, et de la catégorie du post à publier :
 		title := r.FormValue("title")
-		title = toolbox.FormatString(title) // Formattage du titre
+		//title = toolbox.FormatString(title) // Formattage du titre
 
 		content := r.FormValue("content")
-		content = toolbox.FormatString(content) // Formattage du contenu
+		//content = toolbox.FormatString(content) // Formattage du contenu
 
 		categoryID, err := strconv.Atoi(r.FormValue("category"))
 		if err != nil {
