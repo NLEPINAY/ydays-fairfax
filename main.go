@@ -109,6 +109,9 @@ func main() {
 	// ⭐ Accès à la page d'accueil :
 	http.HandleFunc("/", request.Auth(request.Index, "everybody"))
 
+	// ⭐ Accès a la messagerie :
+	http.HandleFunc("/messagerie", request.Auth(request.Messagerie, "active members only"))
+
 	go database.CleanExpiredSessions()
 
 	log.Println("✔️ SERVER | Listening server at port 8000...")

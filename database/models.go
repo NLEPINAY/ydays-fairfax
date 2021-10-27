@@ -211,3 +211,20 @@ type ReceivedData struct {
 	Is       string `json:"is"`      //Si c'est une cellule et non une table
 	Message  string `json:"message"` //message
 }
+
+//Messagerie side
+type Chat struct {
+	ID      int
+	Author  User
+	Content string
+	Date    time.Time
+	Image   string
+	State   int
+	Reason  string
+}
+type Messagerie struct {
+	ID          int  `json:"id"` //
+	First_User  User `json:"first_user"`
+	Second_User User `json:"second_user"`
+	Chat        Chat `json:"chat"`
+}

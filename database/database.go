@@ -148,6 +148,37 @@ func Initialize() {
 			"name"			TEXT NOT NULL,
 			"image"			TEXT NOT NULL
 		)`,
+
+		`CREATE TABLE IF NOT EXISTS "chat" (
+			"id_chat"				INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"date_creation"			TEXT NOT NULL,
+			"state"					TEXT NOT NULL
+		)`,
+
+		`CREATE TABLE IF NOT EXISTS "message" (
+			"id_message"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"id_chat"				INTEGER NOT NULL,
+			"date_creation"			TEXT NOT NULL,
+			"author"				INTEGER NOT NULL,
+			"content"				TEXT NOT NULL,
+			"state"					TEXT NOT NULL,
+			FOREIGN KEY(id_chat) REFERENCES "message"(chat),
+			FOREIGN KEY(auteur) REFERENCES "users"(auteur)  
+		)`,
+
+		`CREATE TABLE IF NOT EXISTS "assoc_chat" (
+			"id_assoc"		INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"id_chat"		INTEGER NOT NULL,
+			"user_id"		INTEGER NOT NULL,
+			"author_ID"		INTEGER NOT NULL,
+			"content"		TEXT NOT NULL,
+			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"image"			TEXT DEFAULT '',
+			"state"			INTEGER DEFAULT 0,	
+			"reason"		TEXT DEFAULT "Supprimer par l'utilisateur lui même",
+			FOREIGN KEY(author_ID) REFERENCES "users"(id), 
+			FOREIGN KEY(messagerie_ID) REFERENCES "messagerie"(id) 
+		)`,
 	}
 
 	var err error
