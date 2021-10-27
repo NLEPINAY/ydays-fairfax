@@ -1,6 +1,8 @@
 {{define "header" }}
 
 <header>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <div class="columnLeft">
         <div class="menu">
             <nav role="navigation">
@@ -72,6 +74,7 @@
 
         <!-- Si le user est un modo/admin/dev : -->
         {{ if and (gt .Role 2) (eq .State 0) }}
+
         <a class="manage" href="/moderation">
             <img id="logo" src="/static/images/profile/settings.svg" title="Forum management">
         </a>
@@ -84,6 +87,18 @@
         <a class="profile" href="/Profile?user={{ .Username }}">
             <img class="profile-img" src="../static/images/profile.png" title="Your profile page">
         </a>
+        <a>
+            <i class="fas fa-user-friends iconNotif"></i>
+            <div class="notif">
+            </div>
+        
+        </a>
+        <a>
+            <i class="fas fa-envelope-open-text iconNotif"></i>
+            <div class="notif">
+            </div>
+        </a>
+
 
         <a class="active logout" href="/logout">Logout</a>
     </div>

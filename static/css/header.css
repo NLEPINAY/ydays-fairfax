@@ -10,7 +10,20 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+.iconNotif{
+  font-size: 32px;
+  color: white;
+}
 
+.notif{
+  top: 1pc;
+  position: absolute;
+  background-color: red;
+  z-index: 0;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
 a {
   text-decoration: none;
 }

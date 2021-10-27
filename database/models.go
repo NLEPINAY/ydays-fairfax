@@ -46,6 +46,7 @@ type User struct {
 	Badges         []Badge
 	House          House
 	Count          int
+	Notif          bool
 }
 
 type Session struct {
