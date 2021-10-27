@@ -1967,7 +1967,7 @@ var _exportData = function ( dt, inOpts )
 		// Always remove script tags
 		str = str.replace( /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '' );
 
-		// Always remove comments
+		// Always remove comment
 		str = str.replace( /<!\-\-.*?\-\->/g, '' );
 
 		if ( config.stripHtml ) {

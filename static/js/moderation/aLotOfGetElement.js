@@ -15,9 +15,9 @@ var AllTdCategory = document.getElementsByClassName('categoryD')
 var AllTrCategory = document.getElementsByClassName('categoryR')
 //Récupère les tableau
 var userTable = document.getElementById("users")
-var postTable = document.getElementById("posts")
-var commentTable = document.getElementById("comments")
-var categoryTable = document.getElementById("categories")
+var postTable = document.getElementById("post")
+var commentTable = document.getElementById("comment")
+var categoryTable = document.getElementById("category")
 
 
 

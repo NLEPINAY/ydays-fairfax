@@ -68,9 +68,9 @@
 
         <div class="container">
             <div class="columns super">
-                {{range .Posts}} {{ if eq .State 0 }}
+                {{range .post}} {{ if eq .State 0 }}
                 <!-- POST PUBLIÉ -->
-                <div class="column" data-date="{{.Date}}" data-comment="{{len .Comments}}" data-like="{{ len .Likes}}" data-content="{{.Content}} {{.Author.Username}} {{.Title}}">
+                <div class="column" data-date="{{.Date}}" data-comment="{{len .comment}}" data-like="{{ len .like}}" data-content="{{.Content}} {{.Author.Username}} {{.Title}}">
                     <div class="head"><a href="/post/{{ .ID }}"><span class="headline hl">{{ .Title }}</span></a>
                         <a class="author" href="/Profile?user={{ .Author.Username }}">
 
@@ -99,19 +99,19 @@
                     </figure>
                     {{ end }}
                     <div class="stats">
-                        <div class="likes">
-                            <img src="../static/images/like_empty.png" title="Number of likes">
-                            <p>{{ len .Likes }}</p>
+                        <div class="like">
+                            <img src="../static/images/like_empty.png" title="Number of like">
+                            <p>{{ len .like }}</p>
                         </div>
 
                         <div class="replies">
                             <img src="../static/images/reply.png" title="Number of replies">
-                            <p> {{ len .Comments }}</p>
+                            <p> {{ len .comment }}</p>
                         </div>
 
-                        <div class="dislikes">
-                            <img src="../static/images/dislike_empty.png" title="Number of dislikes">
-                            <p>{{ len .Dislikes }}</p>
+                        <div class="dislike">
+                            <img src="../static/images/dislike_empty.png" title="Number of dislike">
+                            <p>{{ len .Dislike }}</p>
                         </div>
                     </div>
                     {{ if ne .Author.House.ID 0 }}
@@ -123,7 +123,7 @@
 
                 {{ else }}
                 <!-- POST SUPPRIMÉ -->
-                <div class="column locked" data-date="{{.Date}}" data-comment="{{len .Comments}}" data-like="{{ len .Likes}}">
+                <div class="column locked" data-date="{{.Date}}" data-comment="{{len .comment}}" data-like="{{ len .like}}">
                     <div class="head">
                         <div class="locked-title">
                             <i class="fa fa-lock" aria-hidden="true"></i>

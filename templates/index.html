@@ -64,12 +64,6 @@
                         {{.MostLikedPost.Content}}
                     </p>
 
-                    <!-- Si la longueur du nom de l'image > 5, c'est qu'elle existe : -->
-                    {{ if gt (len .MostLikedPost.Image) 5 }}
-                    <figure class="figure">
-                        <img class="media" src="{{ .MostLikedPost.Image }}" alt="Image">
-                    </figure>
-                    {{ end }}
 
                 </div>
 
@@ -97,12 +91,6 @@
                         {{.MostCommentedPost.Content}}
                     </p>
 
-                    <!-- Si la longueur du nom de l'image > 5, c'est qu'elle existe : -->
-                    {{ if gt (len .MostCommentedPost.Image) 5 }}
-                    <figure class="figure">
-                        <img class="media" src="{{ .MostCommentedPost.Image }}" alt="Image">
-                    </figure>
-                    {{ end }}
 
                 </div>
 
@@ -124,17 +112,11 @@
                         {{.MostRecentPost.Content}}
                     </p>
 
-                    <!-- Si la longueur du nom de l'image > 5, c'est qu'elle existe : -->
-                    {{ if gt (len .MostRecentPost.Image) 5 }}
-                    <figure class="figure">
-                        <img class="media" src="{{ .MostRecentPost.Image }}" alt="Image">
-                    </figure>
-                    {{ end }}
 
                 </div>
 
 
-                {{ if ne .PromotedPost.ID 0 }}
+                {{ if .PromotedPost }}
                 <div class="column">
                     <div class="icon">
                         <h1 title="This post has been highlighted by our team">⭐</h1>
@@ -152,13 +134,6 @@
                     <p class="content">
                         {{.PromotedPost.Content}}
                     </p>
-
-                    <!-- Si la longueur du nom de l'image > 5, c'est qu'elle existe : -->
-                    {{ if gt (len .PromotedPost.Image) 5 }}
-                    <figure class="figure">
-                        <img class="media" src="{{ .PromotedPost.Image }}" alt="Image">
-                    </figure>
-                    {{ end }}
 
                 </div>
                 {{ end }}
@@ -208,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            {{ range .Categories }}
+            {{ range .Category }}
             <div class="container slider" id="slider{{.ID }}" style="opacity:0">
                 <div class="left"><img src="static/images/index/categories/category_{{.ID }}.jpg"></div>
                 <div class="right">

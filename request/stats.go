@@ -7,8 +7,8 @@ import (
 )
 
 type DataStats struct {
-	Categories []database.Category
-	//nombre de posts
+	category []database.Category
+	//nombre de post
 	LifePostResult    []int
 	MonthlyPostResult []int
 	WeeklyPostResult  []int
@@ -18,12 +18,12 @@ type DataStats struct {
 	MonthlyCommentResult []int
 	WeeklyCommentResult  []int
 	DailyCommentResult   []int
-	//nombre de likes
+	//nombre de like
 	LifeLikeResult    []int
 	MonthlyLikeResult []int
 	WeeklyLikeResult  []int
 	DailyLikeResult   []int
-	//nombre de dislikes
+	//nombre de dislike
 	LifeDislikeResult    []int
 	MonthlyDislikeResult []int
 	WeeklyDislikeResult  []int
@@ -34,9 +34,9 @@ type DataStats struct {
 // HandleFunc pour la page catégorie :
 func Stats(w http.ResponseWriter, r *http.Request, user database.User) {
 	var data DataStats
-	data.Categories = database.GetCategoriesList()
-	//Nombre de posts de chaque catégorie
-	for y := 0; y < len(data.Categories); y++ {
+	data.category = database.GetcategoryList()
+	//Nombre de post de chaque catégorie
+	for y := 0; y < len(data.category); y++ {
 		//append new cell
 		data.LifePostResult = append(data.LifePostResult, 0)
 		data.MonthlyPostResult = append(data.MonthlyPostResult, 0)

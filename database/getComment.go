@@ -6,10 +6,10 @@ import (
 
 // Fonction récupérant TOUS les commentaires du post dont l'ID est passé en argument :
 
-func GetCommentsByPostID(ID int, currentUserID int) ([]Comment, error) {
+func GetcommentByPostID(ID int, currentUserID int) ([]Comment, error) {
 	var comments []Comment
 
-	rows, err := Db.Query("SELECT * FROM comments WHERE post_id = ?", ID) // id, author_id, post_id, content, date, state
+	rows, err := Db.Query("SELECT * FROM comment WHERE post_id = ?", ID) // id, author_id, post_id, content, date, state
 	defer rows.Close()
 	if err != nil {
 		log.Println("❌ ERREUR | Impossible de récupérer les commentaires du post dont l'ID est ", ID)
@@ -18,13 +18,13 @@ func GetCommentsByPostID(ID int, currentUserID int) ([]Comment, error) {
 
 	for rows.Next() {
 		var comment Comment
-		rows.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State, &comment.Reason)
+		rows.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State)
 		post, _ := GetPostByID(comment.PostID, 0)
 
 		comment.PostTitle = post.Title
-		comment.PostState = post.State
+		comment.posttate = post.State
 		comment.Author, _ = GetUserByID(comment.AuthorID)
-		comment.Likes, comment.Dislikes, comment.Liked, comment.Disliked = GetLikesByCommentID(comment.ID, currentUserID)
+		comment.like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, currentUserID)
 		comments = append(comments, comment)
 	}
 
@@ -34,7 +34,7 @@ func GetCommentsByPostID(ID int, currentUserID int) ([]Comment, error) {
 func GetCommentByID(ID int, userID int) (Comment, error) {
 	var comment Comment
 
-	row := Db.QueryRow("SELECT * FROM comments WHERE id = ?", ID)
+	row := Db.QueryRow("SELECT * FROM comment WHERE id = ?", ID)
 	row.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State, &comment.Reason)
 
 	author, _ := GetUserByID(comment.AuthorID)
@@ -42,17 +42,17 @@ func GetCommentByID(ID int, userID int) (Comment, error) {
 
 	post, _ := GetPostByID(comment.PostID, 0)
 	comment.PostTitle = post.Title
-	comment.PostState = post.State
-	comment.Likes, comment.Dislikes, comment.Liked, comment.Disliked = GetLikesByCommentID(comment.ID, userID)
+	comment.posttate = post.State
+	comment.like, comment.Dislike, comment.Liked, comment.Disliked = GetlikeByCommentID(comment.ID, userID)
 
 	return comment, nil
 }
 
 // Récupère tous les commentaires likés par un utilisateur dont l'ID est passé en paramètre :
-func GetCommentsLikedByUser(userID int) ([]Comment, error) {
+func GetcommentLikedByUser(userID int) ([]Comment, error) {
 	var comments []Comment
 
-	rows, err := Db.Query("SELECT comment_id FROM comment_likes WHERE user_id = ?", userID)
+	rows, err := Db.Query("SELECT comment_id FROM comment_like WHERE user_id = ?", userID)
 	defer rows.Close()
 	if err != nil {
 		return comments, err
@@ -71,7 +71,7 @@ func GetCommentsLikedByUser(userID int) ([]Comment, error) {
 func GetCommentFromUserByID(userID int) ([]Comment, error) {
 	var comments []Comment
 
-	rows, err := Db.Query("SELECT id FROM comments WHERE author_id = ?", userID)
+	rows, err := Db.Query("SELECT id FROM comment WHERE author_id = ?", userID)
 	defer rows.Close()
 
 	if err != nil {

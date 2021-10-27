@@ -38,7 +38,7 @@
 
                                 <select name="category" required>
                             <option value="0" selected disabled>Select a spot</option>
-                            {{range .Categories}}
+                            {{range .category}}
                             <option value="{{.ID}}">{{.Name}}</option>
                             {{end}}
                         </select>

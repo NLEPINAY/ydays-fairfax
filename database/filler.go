@@ -9,45 +9,45 @@ import (
 )
 
 // Ajout des catégories dans la base de données :
-func FillCategories() {
-	statement_categories, err := Db.Prepare("INSERT OR IGNORE INTO categories (name,theme,description) VALUES (?,?,?)")
+func Fillcategory() {
+	statement_category, err := Db.Prepare("INSERT OR IGNORE INTO category (name_category,theme,description) VALUES (?,?,?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “categories” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “category” dans la base de données.")
 		panic(err)
 	}
-	defer statement_categories.Close()
-	statement_categories.Exec("Café", "News", "The Café is the best place to converse with other fellow Fairfaxers.<br><br>Is there a piece of news you would like to discuss? A recent breakthrough or exciting discovery? Say no more!")
-	statement_categories.Exec("Men's Club", "Lifestyle", "The Men's Club is the perfect spot to discuss men-focussed topics and share ideas to inspire all our male Fairfaxers.<br><br> Need a tip on how to dress? Advice to improve your relationship with your partner? Seek no more. You're in the right place.")
-	statement_categories.Exec("Women's Club", "Lifestyle", "The Women's Club is Fairfax's largest sisterhood. If there is a women-related topic you wish to discuss, you're in the right place.<br><br> Do you want to share a personal advice, talk about a trend or share inspirational ideas? The Women's Club is the perfect spot for you.")
-	statement_categories.Exec("Theater", "Cinema", "The Theater is every Fairfaxer's go-to meeting spot to discuss films, TV shows and plays.<br><br> Go and have look if you don't want to miss the latest news.")
-	statement_categories.Exec("Arcade", "Video Games", "Come and have a chat in the Arcade to discuss all the latest video game news.")
-	statement_categories.Exec("Library", "Literature", "Chances are all your book-loving friends are discussing their favourite (and less favourite) books in the Library right now.<br><br> Are you deciding what to read next? Tell us what titles you’ve enjoyed in the past, and you’ll get surprisingly insightful recommendations.")
-	statement_categories.Exec("Vinyl Shop", "Music", "The Viny Shop is the perfect meeting spot to discuss anything related to music.<br><br> Be it your favourite recordings, the latest music news or gossip about your favourite artists, the Vinyl Shop is the place to be.")
-	statement_categories.Exec("Museum", "Art & History", "Aaah, the Museum. The one and only place dedicated to history discussions and arts around the world.<br><br> Come and visit the Museum to discuss world history, historical periods, archaeology, arts and cultures with other passionate Fairfaxers.")
-	statement_categories.Exec("Academy", "Knowledge & Education", "Are you learning new skills? A new language? Then the Academy is the right place for you.<br><br> In the Academy, you can talk to other students and professionals about courses, schools, skills or any subjects that may require some training and education.")
-	statement_categories.Exec("Stadium", "Sports", "The Stadium is every Fairfaxer's go-to meeting place to talk about sports and fitness.<br><br> If you're looking for a place to get work-out training advice or discuss the upcoming World Cup, seek no more! You're in the right place.")
-	log.Println("✔️ DATABASE | Filled table “categories” successfully.")
+	defer statement_category.Close()
+	statement_category.Exec("Café", "News", "The Café is the best place to converse with other fellow Fairfaxers.<br><br>Is there a piece of news you would like to discuss? A recent breakthrough or exciting discovery? Say no more!")
+	statement_category.Exec("Men's Club", "Lifestyle", "The Men's Club is the perfect spot to discuss men-focussed topics and share ideas to inspire all our male Fairfaxers.<br><br> Need a tip on how to dress? Advice to improve your relationship with your partner? Seek no more. You're in the right place.")
+	statement_category.Exec("Women's Club", "Lifestyle", "The Women's Club is Fairfax's largest sisterhood. If there is a women-related topic you wish to discuss, you're in the right place.<br><br> Do you want to share a personal advice, talk about a trend or share inspirational ideas? The Women's Club is the perfect spot for you.")
+	statement_category.Exec("Theater", "Cinema", "The Theater is every Fairfaxer's go-to meeting spot to discuss films, TV shows and plays.<br><br> Go and have look if you don't want to miss the latest news.")
+	statement_category.Exec("Arcade", "Video Games", "Come and have a chat in the Arcade to discuss all the latest video game news.")
+	statement_category.Exec("Library", "Literature", "Chances are all your book-loving friends are discussing their favourite (and less favourite) books in the Library right now.<br><br> Are you deciding what to read next? Tell us what titles you’ve enjoyed in the past, and you’ll get surprisingly insightful recommendations.")
+	statement_category.Exec("Vinyl Shop", "Music", "The Viny Shop is the perfect meeting spot to discuss anything related to music.<br><br> Be it your favourite recordings, the latest music news or gossip about your favourite artists, the Vinyl Shop is the place to be.")
+	statement_category.Exec("Museum", "Art & History", "Aaah, the Museum. The one and only place dedicated to history discussions and arts around the world.<br><br> Come and visit the Museum to discuss world history, historical periods, archaeology, arts and cultures with other passionate Fairfaxers.")
+	statement_category.Exec("Academy", "Knowledge & Education", "Are you learning new skills? A new language? Then the Academy is the right place for you.<br><br> In the Academy, you can talk to other students and professionals about courses, schools, skills or any subjects that may require some training and education.")
+	statement_category.Exec("Stadium", "Sports", "The Stadium is every Fairfaxer's go-to meeting place to talk about sports and fitness.<br><br> If you're looking for a place to get work-out training advice or discuss the upcoming World Cup, seek no more! You're in the right place.")
+	log.Println("✔️ DATABASE | Filled table “category” successfully.")
 }
 
 // Ajout des maisons dans la base de données :
-func FillHouses() {
-	statement, err := Db.Prepare("INSERT OR IGNORE INTO houses (name, image) VALUES (?, ?)")
+func Fillhouse() {
+	statement, err := Db.Prepare("INSERT OR IGNORE INTO house (name, image_house) VALUES (?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “houses” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “house” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
-	statement.Exec("Kingdsbridge Griphons", "/images/houses/house-1.png")
-	statement.Exec("Westside Wildcats", "/images/houses/house-2.png")
-	statement.Exec("Columbus Krakens", "/images/houses/house-3.png")
-	statement.Exec("Syracuse Vipers", "/images/houses/house-4.png")
+	statement.Exec("Kingdsbridge Griphons", "/images/house/house-1.png")
+	statement.Exec("Westside Wildcats", "/images/house/house-2.png")
+	statement.Exec("Columbus Krakens", "/images/house/house-3.png")
+	statement.Exec("Syracuse Vipers", "/images/house/house-4.png")
 
-	log.Println("✔️ DATABASE | Filled table “houses” successfully.")
+	log.Println("✔️ DATABASE | Filled table “house” successfully.")
 }
 
 // Ajout d'un utilisateur dans la base de données :
 func FillUser(username string, password string, email string, role int, state int, houseID int) {
-	statement, err := Db.Prepare("INSERT OR IGNORE INTO users (username, password, email, role, date, state, avatar, secretQuestion, secretAnswer, house_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	statement, err := Db.Prepare("INSERT OR IGNORE INTO user (username, password, email, role, date_user, state_user, avatar, secretQuestion, secretAnswer, house_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Println("❌ ERREUR | Impossible de remplir la table “users” dans la base de données.")
 		panic(err)
@@ -78,9 +78,9 @@ func FillUser(username string, password string, email string, role int, state in
 
 // Ajout d'un post, comment et like dans la base de données :
 func FillPost(title string, authorID int, categoryID int, state int, date time.Time, content string) {
-	statement, err := Db.Prepare("INSERT INTO posts (title, author_id, content, category_id, date,image, state) VALUES (?, ?, ?, ?, ?,?, ?)")
+	statement, err := Db.Prepare("INSERT INTO post (title_post, author_id, content_post, category_id, date_post, state_post) VALUES (?, ?, ?, ?, ?,?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “posts” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “post” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -94,15 +94,15 @@ func FillPost(title string, authorID int, categoryID int, state int, date time.T
 	newPost.Date = date
 	newPost.State = state
 
-	statement.Exec(newPost.Title, newPost.AuthorID, newPost.Content, newPost.CategoryID, newPost.Date, " ", newPost.State)
-	log.Println("✔️ DATABASE | Filled table “posts” successfully.")
+	statement.Exec(newPost.Title, newPost.AuthorID, newPost.Content, newPost.CategoryID, newPost.Date, newPost.State)
+	log.Println("✔️ DATABASE | Filled table “post” successfully.")
 	log.Println("Post added: ", newPost)
 }
 
 func FillComment(postID int, authorID int, content string, state int, gif string) {
-	statement, err := Db.Prepare("INSERT INTO comments (author_id, post_id, content, gif, date, state) VALUES (?, ?, ?, ?, ?, ?)")
+	statement, err := Db.Prepare("INSERT INTO comment (author_id, post_id, content_comment, gif, date_comment, state_comment) VALUES (?, ?, ?, ?, ?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “comments” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “comment” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -116,14 +116,14 @@ func FillComment(postID int, authorID int, content string, state int, gif string
 	newComment.State = state
 
 	statement.Exec(newComment.AuthorID, newComment.PostID, newComment.Content, gif, newComment.Date, newComment.State)
-	log.Println("✔️ DATABASE | Filled table “comments” successfully.")
+	log.Println("✔️ DATABASE | Filled table “comment” successfully.")
 	log.Println("Post added: ", newComment)
 }
 
 func FillPostLike(postID int, userID int, reactionType string) {
-	statement, err := Db.Prepare("INSERT INTO post_likes (post_id, user_id, type) VALUES (?, ?, ?)")
+	statement, err := Db.Prepare("INSERT INTO post_like (post_id, user_id, type) VALUES (?, ?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “post_likes” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “post_like” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -135,14 +135,14 @@ func FillPostLike(postID int, userID int, reactionType string) {
 	newLike.Type = reactionType
 
 	statement.Exec(newLike.PostID, newLike.UserID, newLike.Type)
-	log.Println("✔️ DATABASE | Filled table “post_likes” successfully.")
+	log.Println("✔️ DATABASE | Filled table “post_like” successfully.")
 	log.Println("Like added: ", newLike)
 }
 
 func FillCommentLike(commentID int, userID int, reactionType string) {
-	statement, err := Db.Prepare("INSERT INTO comment_likes (comment_id, user_id, type) VALUES (?, ?, ?)")
+	statement, err := Db.Prepare("INSERT INTO comment_like (comment_id, user_id, type) VALUES (?, ?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “comment_likes” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “comment_like” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -154,15 +154,15 @@ func FillCommentLike(commentID int, userID int, reactionType string) {
 	newLike.Type = reactionType
 
 	statement.Exec(newLike.CommentID, newLike.UserID, newLike.Type)
-	log.Println("✔️ DATABASE | Filled table “comment_likes” successfully.")
+	log.Println("✔️ DATABASE | Filled table “comment_like” successfully.")
 	log.Println("Like added: ", newLike)
 }
 
 // Ajout d'un ticket dans la base de données :
 func FillTicket(authorID int, actual_admin int, title string, content string, date time.Time, state int) {
-	statement, err := Db.Prepare("INSERT INTO tickets (author_id,actual_admin,title, content, date, state) VALUES (?, ?, ?, ?, ?,?)")
+	statement, err := Db.Prepare("INSERT INTO ticket (author_id,actual_admin,title, content, date, state) VALUES (?, ?, ?, ?, ?,?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “posts” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “post” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -177,13 +177,13 @@ func FillTicket(authorID int, actual_admin int, title string, content string, da
 	newTicket.State = state
 
 	statement.Exec(newTicket.Author_id, newTicket.Actual_Admin, newTicket.Title, newTicket.Content, newTicket.Date, newTicket.State)
-	log.Println("✔️ DATABASE | Filled table “tickets” successfully.")
+	log.Println("✔️ DATABASE | Filled table “ticket” successfully.")
 	log.Println("Ticket added: ", newTicket)
 }
 func FillAnswer(authorID int, ticket_id int, name string, content string, date time.Time, state int) {
 	statement, err := Db.Prepare("INSERT INTO ticket_answers (author_id, ticket_id,author_name,content, date, state) VALUES (?,?,?, ?, ?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “posts” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “post” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()
@@ -202,7 +202,7 @@ func FillAnswer(authorID int, ticket_id int, name string, content string, date t
 
 // Ajout des badges dans la base de données :
 func FillBadge() {
-	statement_badge, _ := Db.Prepare("INSERT OR IGNORE INTO badge (type,image) VALUES(?,?)")
+	statement_badge, _ := Db.Prepare("INSERT OR IGNORE INTO badge (type,image_badge) VALUES(?,?)")
 	statement_badge.Exec("5like", "/images/badges/bronze.png")
 	statement_badge.Exec("10like", "/images/badges/silver.png")
 	statement_badge.Exec("15like", "/images/badges/gold.png")
@@ -231,8 +231,8 @@ func FillAllUsers() {
 	FillUser("Jeanne Dulcy", "Abc123", "jeanne.dulcy@outlook.com", MEMBER, NORMAL, WILDCATS)
 }
 
-// Ajout de toute une collection de posts dans la base de données :
-func FillAllPosts() {
+// Ajout de toute une collection de post dans la base de données :
+func FillAllpost() {
 
 	// Titre, AuthorID, CategoryID, Statut, Date, Contenu
 	FillPost("Wales beats Turkey 2-0", 4, 10, PUBLISHED, time.Now(), "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.<br><br>Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.")

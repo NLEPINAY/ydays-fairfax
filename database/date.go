@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-//Remplie des ints correspondant a 4 périodes: a vie, du mois,de la semaine,des dernières 24heures. Nombre de posts au cours de ces dates.
+//Remplie des ints correspondant a 4 périodes: a vie, du mois,de la semaine,des dernières 24heures. Nombre de post au cours de ces dates.
 func GetNumberOfPostByDateAndPostCategory(cat int, life *int, month *int, week *int, day *int) {
 	monthly := time.Now().AddDate(0, -1, 0)
 	weekly := time.Now().AddDate(0, 0, -7)
 	daily := time.Now().AddDate(0, 0, -1)
-	rows, err := Db.Query("SELECT date FROM posts p WHERE p.category_id = ?", cat)
+	rows, err := Db.Query("SELECT date FROM post p WHERE p.category_id = ?", cat)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func GetNumberOfCommentByDateAndPostCategory(cat int, life *int, month *int, wee
 	monthly := time.Now().AddDate(0, -1, 0)
 	weekly := time.Now().AddDate(0, 0, -7)
 	daily := time.Now().AddDate(0, 0, -1)
-	rows, err := Db.Query("SELECT c.date FROM comments c INNER JOIN posts p ON p.id = c.post_id WHERE p.category_id = ?", cat)
+	rows, err := Db.Query("SELECT c.date FROM comment c INNER JOIN post p ON p.id = c.post_id WHERE p.category_id = ?", cat)
 	if err != nil {
 		panic(err)
 	}
@@ -60,20 +60,20 @@ func GetNumberOfCommentByDateAndPostCategory(cat int, life *int, month *int, wee
 	}
 }
 
-//Remplie des ints correspondant a 4 périodes: a vie, du mois,de la semaine,des dernières 24heures. Nombre de likes OU dislike au cours de ces dates. Reaction correspond a like ou dislike.
+//Remplie des ints correspondant a 4 périodes: a vie, du mois,de la semaine,des dernières 24heures. Nombre de like OU dislike au cours de ces dates. Reaction correspond a like ou dislike.
 func GetNumberOfReactionByDate(cat int, reaction string, life *int, month *int, week *int, day *int) {
 	monthly := time.Now().AddDate(0, -1, 0)
 	weekly := time.Now().AddDate(0, 0, -7)
 	daily := time.Now().AddDate(0, 0, -1)
-	rows, err := Db.Query(`SELECT cl.date FROM comment_likes cl INNER JOIN comments c ON c.id = cl.comment_id INNER JOIN posts p ON p.id = c.post_id and p.category_id = ? WHERE cl.type = ? 
+	rows, err := Db.Query(`SELECT cl.date FROM comment_like cl INNER JOIN comment c ON c.id = cl.comment_id INNER JOIN post p ON p.id = c.post_id and p.category_id = ? WHERE cl.type = ? 
 						   UNION ALL 
-						   SELECT pl.date FROM post_likes pl INNER JOIN posts p ON p.id and p.id = pl.post_id and p.category_id = ? WHERE pl.type = ?`, cat, reaction, cat, reaction)
+						   SELECT pl.date FROM post_like pl INNER JOIN post p ON p.id and p.id = pl.post_id and p.category_id = ? WHERE pl.type = ?`, cat, reaction, cat, reaction)
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		//sa prend aussi les post likes
+		//sa prend aussi les post like
 		var comment CommentLike
 		rows.Scan(&comment.Date)
 		*life++
@@ -98,9 +98,9 @@ func GetMostLikedPostOfTheWeek() (Post, error) {
 	var err error
 
 	for day := 7; res.Title == ""; day = day + 7 {
-		rows, err = Db.Query(`SELECT *,count(case post_id WHEN l.type = "like" then 1 else 0 end) AS amount FROM posts p 
-							INNER JOIN post_likes l ON l.post_id = p.id
-							WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state = 0
+		rows, err = Db.Query(`SELECT *,count(case post_id WHEN l.type = "like" then 1 else 0 end) AS amount FROM post p 
+							INNER JOIN post_like l ON l.post_id = p.id_post
+							WHERE p.date_post > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state_post = 0
 							GROUP BY l.post_id
 							ORDER BY amount DESC
 							LIMIT 1`)
@@ -111,7 +111,7 @@ func GetMostLikedPostOfTheWeek() (Post, error) {
 			var myType string
 			var date time.Time
 			var amount int
-			rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.Image, &res.State, &res.Reason, &postID, &userID, &myType, &date, &amount)
+			rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.State, &res.Promoted, &postID, &userID, &myType, &date, &amount)
 		}
 	}
 
@@ -125,9 +125,9 @@ func GetMostCommentedPostOfTheWeek() (Post, error) {
 	var err error
 
 	for day := 7; res.Title == ""; day = day + 7 {
-		rows, err = Db.Query(`SELECT *,count(post_id) AS amount FROM posts p 
-								INNER JOIN comments c ON c.post_id = p.id
-								WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state = 0
+		rows, err = Db.Query(`SELECT *,count(post_id) AS amount FROM post p 
+								INNER JOIN comment c ON c.post_id = p.id_post
+								WHERE p.date_post > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state_post = 0
 								GROUP BY c.post_id
 								ORDER BY amount DESC
 								LIMIT 1`)
@@ -142,7 +142,7 @@ func GetMostCommentedPostOfTheWeek() (Post, error) {
 			var state int
 			var reason string
 			var amount int
-			rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.Image, &res.State, &res.Reason, &id, &authorID, &postID, &content, &gif, &date, &state, &reason, &amount)
+			rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.State, &res.Promoted, &id, &authorID, &postID, &content, &gif, &date, &state, &reason, &amount)
 		}
 	}
 	return res, err
@@ -151,12 +151,12 @@ func GetMostCommentedPostOfTheWeek() (Post, error) {
 //Renvoie le post le plus récent, une erreur est fournis si l'appel de Db plante
 func GetMostRecentPost() (Post, error) {
 	var res Post
-	rows, err := Db.Query(`SELECT * FROM posts p WHERE p.state = 0
-	ORDER BY id DESC
+	rows, err := Db.Query(`SELECT * FROM post p WHERE p.state_post = 0
+	ORDER BY id_post DESC
 	LIMIT 1 `)
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.Image, &res.State, &res.Reason)
+		rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.State, &res.Promoted)
 	}
 	return res, err
 }
@@ -164,10 +164,10 @@ func GetMostRecentPost() (Post, error) {
 //Renvoie le post promus par un modérateur ou administrateur
 func GetPromotedPost() (Post, error) {
 	var res Post
-	rows, err := Db.Query(`SELECT p.id,title,author_id,content,category_id,date,image,state,reason FROM promoted_post pp INNER JOIN posts p ON p.id = pp.post_id`)
+	rows, err := Db.Query(`SELECT * FROM post WHERE promoted=1 LIMIT 1`)
 	defer rows.Close()
 	for rows.Next() {
-		rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.Image, &res.State, &res.Reason)
+		rows.Scan(&res.ID, &res.Title, &res.AuthorID, &res.Content, &res.CategoryID, &res.Date, &res.State, &res.Promoted)
 	}
 	return res, err
 }

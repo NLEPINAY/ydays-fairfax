@@ -1,6 +1,8 @@
 package database
 
-import "time"
+import (
+	"time"
+)
 
 // Account roles :
 const GUEST = 0
@@ -23,7 +25,7 @@ const CENSORED = 2
 const UNRESOLVED = 0
 const RESOLVED = 1
 
-// Houses :
+// house :
 const UNAFFILIATED = 0
 const GRIPHONS = 1
 const WILDCATS = 2
@@ -43,6 +45,7 @@ type User struct {
 	SecretAnswer   string
 	Badges         []Badge
 	House          House
+	Count          int
 }
 
 type Session struct {
@@ -57,6 +60,7 @@ type Category struct {
 	Name        string
 	Theme       string
 	Description string
+	Count       int
 }
 
 type Post struct {
@@ -68,13 +72,27 @@ type Post struct {
 	Date       time.Time
 	Image      string
 	State      int
+	Promoted   int
 	Liked      bool
 	Disliked   bool
 	Author     User
-	Comments   []Comment
-	Likes      []PostLike
-	Dislikes   []PostLike
+	comment    []Comment
+	like       []PostLike
+	Dislike    []PostLike
 	Reason     string
+	Count      int
+	Category   Category
+}
+
+type CritereChart struct {
+	Count   int
+	Critere int
+}
+
+type CountLike struct {
+	PostId       int
+	Countlike    int
+	CountDislike int
 }
 
 type Comment struct {
@@ -86,13 +104,14 @@ type Comment struct {
 	Gif       string
 	Date      time.Time
 	State     int
-	PostState int
+	posttate  int
 	Liked     bool
 	Disliked  bool
 	Author    User
-	Likes     []CommentLike
-	Dislikes  []CommentLike
+	like      []CommentLike
+	Dislike   []CommentLike
 	Reason    string
+	Count     int
 }
 
 // Stocke l'ID et le titre d'un post, et les users l'ayant liké ou disliké :
@@ -149,7 +168,7 @@ type House struct {
 // Structures à passer dans les ExecuteTemplate :
 type DataForIndex struct {
 	User              User
-	Categories        []Category
+	Category          []Category
 	MostLikedPost     Post
 	MostCommentedPost Post
 	MostRecentPost    Post
@@ -164,14 +183,14 @@ type DataForCategory struct {
 }
 
 type DataForPost struct {
-	User     User
-	Post     Post
-	Comments []Comment
+	User    User
+	Post    Post
+	Comment []Comment
 }
 
 type DataForNewPost struct {
-	User       User
-	Categories []Category
+	User     User
+	Category []Category
 }
 
 type DataForNewTicket struct {
@@ -179,12 +198,12 @@ type DataForNewTicket struct {
 }
 
 type DataForProfile struct {
-	User          User
-	Profile       User
-	Posts         []Post
-	Comments      []Comment
-	LikedPosts    []Post
-	LikedComments []Comment
+	User         User
+	Profile      User
+	Post         []Post
+	Comment      []Comment
+	Likedpost    []Post
+	Likedcomment []Comment
 }
 
 type DataForSettings struct {

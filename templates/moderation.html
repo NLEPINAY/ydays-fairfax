@@ -7,24 +7,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADMINISTRATION BDD</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/Bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/header.css">
     <link rel="stylesheet" type="text/css" href="/static/css/moderation.css">
     <link rel="stylesheet" type="text/css" href="static/lib/DataTables/datatables.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <script src="/static/lib/tinymce/tinymce.min.js"></script>
 </head>
 
-<body style="width:100%">
+<body id="kraken">
+    <header>
+        <a href="/">
+            <img id="logo" src="/static/images/main_logo.png" width="20px" title="Home">
+        </a>
+        <a href="/" class="link">Home</a>
+    </header>
+    <main>
+        <h1>Administration</h1>
+        <div id="contentContainer">
+            <ul id="catList">
+                <li class="catBtn" data-table="Charts"><i class="fas fa-chart-bar"></i>
+                    <p>Charts</p>
+                </li>
+                <li class="catBtn" data-table="Post"><i class="far fa-newspaper"></i>
+                    <p>post</p>
+                </li>
+                <li class="catBtn" data-table="Comment"><i class="far fa-comment"></i>
+                    <p>comment</p>
+                </li>
+                <li class="catBtn" data-table="User"><i class="fas fa-users"></i>
+                    <p>Users</p>
+                </li>
+                <li class="catBtn" data-table="Category"><i class="fas fa-list-ul"></i>
+                    <p>category</p>
+                </li>
+            </ul>
+            <div id="cardsContainer" class="hidden">
+                <div id="topCont">
+                    <div class="card" data-chart="Post">
+                        <div class="rounded-icon">
+                            <i class="far fa-newspaper"></i>
+                        </div>
+                        <div>
+                            <p id="postCount"></p>
+                            <p>published articles</p>
+                        </div>
+                    </div>
+                    <div class="card" data-chart="Category">
+                        <div class="rounded-icon">
+                            <i class="fas fa-list-ul"></i>
+                        </div>
+                        <div>
+                            <p id="categoryCount"></p>
+                            <p>category created</p>
+                        </div>
+                    </div>
+                    <div class="card" data-chart="User">
+                        <div class="rounded-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <p id="usersCount"></p>
+                            <p>registered users</p>
+                        </div>
+                    </div>
+                    <div class="card" data-chart="Comment">
+                        <div class="rounded-icon">
+                            <i class="far fa-comment"></i>
+                        </div>
+                        <div>
+                            <p id="commentCount"></p>
+                            <p>comment posted</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="chartCont" class="card">
+                    <p id="defaultMessage">Select a category to view its statistics.</p>
+                </div>
+            </div>
+            <div class="card hidden" id="table">
+                <table id="tableAdmin" class="table" style="min-width:100%;"></table>
+            </div>
 
-    <div style="padding:100px;">
-        <table id="tableAdmin"></table>  
-    </div>
-   
+            <!-- Modal -->
+            <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updateModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="" entype="multipart/form-data" id="updateForm">
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-blue">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="../static/lib/Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../static/js/moderation/aLotOfGetElement.js"></script>
     <script src="../static/js/moderation/outils.js"></script>
     <script src="../static/js/moderation/affichageDesPages.js"></script>
-    <script src="../static/js/moderation/pageSystem.js"></script>
+    <!--<script src="../static/js/moderation/pageSystem.js"></script>-->
     <script src="../static/js/moderation/databaseCallViaPOSTrequest.js"></script>
+    <script type="text/javascript" src="../static/lib/countUp.js"></script>
     <script type="text/javascript" src="../static/lib/DataTables/datatables.min.js"></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js></script>
 </body>
 
 

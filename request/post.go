@@ -33,7 +33,7 @@ func Post(w http.ResponseWriter, r *http.Request, user database.User) {
 		/*  DataForPost struct {
 			- User     User
 			- Post     Post
-			- Comments []Comment
+			- comment []Comment
 		} */
 
 		var dataForPost database.DataForPost
@@ -43,7 +43,7 @@ func Post(w http.ResponseWriter, r *http.Request, user database.User) {
 
 		// Si le post est publié, on récupère ses commentaires :
 		if dataForPost.Post.State == 0 {
-			dataForPost.Comments, err = database.GetCommentsByPostID(ID, user.ID)
+			dataForPost.Comment, err = database.GetcommentByPostID(ID, user.ID)
 			if err != nil {
 				http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 				log.Println("❌ ERREUR | Impossible de récupérer le post ou les commentaires du post dont l'ID est ", ID)
@@ -55,7 +55,6 @@ func Post(w http.ResponseWriter, r *http.Request, user database.User) {
 		if dataForPost.Post.State > 0 {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
-
 		err = MyTemplates.ExecuteTemplate(w, "post", dataForPost)
 		if err != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
