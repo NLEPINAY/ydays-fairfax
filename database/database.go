@@ -149,7 +149,6 @@ func Initialize() {
 			"image"			TEXT NOT NULL
 		)`,
 	}
-
 	var err error
 	Db, err = sql.Open("sqlite3", "./database/database.db")
 	if err != nil {
