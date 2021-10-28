@@ -10,12 +10,11 @@ import (
 	"strconv"
 )
 
-var userCanDelete = []string{"posts", "comments", "gif", "images", "users", "tickets", "ticket_answers"}
-var userCanAlterate = []string{"posts", "comments", "users", "tickets", "ticket_answers"}
+var userCanDelete = []string{"post", "comment", "gif", "images", "users", "ticket", "ticket_answers"}
+var userCanAlterate = []string{"post", "comment", "users", "ticket", "ticket_answers"}
 
 //requete de modification de la bdd
 func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
-	fmt.Println(r.Body, "ttttttt")
 	switch r.Method {
 	//savoir quelle action est demander
 	case "POST":
@@ -60,12 +59,12 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 				Data = admin.GetCommentList(Data)
 				Data = admin.GetClientList(Data)
 				Data = admin.GetPostList(Data)
-				Data.Category = database.GetCategoriesList()
+				Data.Category = database.GetcategoryList()
 			case "Category":
-				Data.Category = database.GetCategoriesList()
+				Data.Category = database.GetcategoryList()
 			case "Post":
 				Data = admin.GetPostList(Data)
-				Data = admin.GetLikes(Data)
+				Data = admin.Getlike(Data)
 			case "User":
 				Data = admin.GetClientList(Data)
 			case "Comment":
@@ -84,7 +83,7 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			case "Post":
 
 				Data = admin.GetPostOnlyByID(ID, Data)
-				Data = admin.GetCategoriesList(Data)
+				Data = admin.GetcategoryList(Data)
 
 			}
 			ok, _ := json.Marshal(Data)
@@ -94,7 +93,7 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			var Data admin.DataForChart
 			switch received.What {
 			case "Category":
-				Data = admin.GetCategoriesChart(Data)
+				Data = admin.GetcategoryChart(Data)
 			case "Post":
 				Data = admin.GetPostChart(Data)
 			case "User":
@@ -104,7 +103,7 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			/*Data = admin.GetClientChart(Data)
 			Data = admin.GetCommentChart(Data)
 			Data = admin.GetPostChart(Data)
-			Data.Category = database.GetCategoriesChart()*/
+			Data.Category = database.GetcategoryChart()*/
 			ok, _ := json.Marshal(Data)
 			w.Write(ok)
 		}

@@ -1,4 +1,4 @@
-// Script coupant le contenu des posts pour n'avoir que les ~450 premiers caractères :
+// Script coupant le contenu des post pour n'avoir que les ~450 premiers caractères :
 
 let contents = document.getElementsByClassName('content'); // Toutes les div contenant le contenu d'un post
 

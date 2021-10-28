@@ -1,5 +1,5 @@
 var el = document.getElementsByClassName("super")[0]
-var posts = document.getElementsByClassName("column")
+var post = document.getElementsByClassName("column")
 //Converti la date sql en date js
 function convertDate(date) {
     let match = date.split('.')[0].match(/^(\d+)-(\d+)-(\d+) (\d+)\:(\d+)\:(\d+)$/)
@@ -57,9 +57,9 @@ function sortByLike(){
         el.appendChild(toSort[i]);
     }
 }
-//Filtres les posts sur la page pour un mot clé rentré
+//Filtres les post sur la page pour un mot clé rentré
 function filter(val){
-    Array.prototype.forEach.call(posts, function(e){
+    Array.prototype.forEach.call(post, function(e){
         if(val=="" && e.className.includes("invisible")){
             e.classList.remove("invisible");
         }else{

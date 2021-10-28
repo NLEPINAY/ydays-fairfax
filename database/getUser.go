@@ -40,7 +40,7 @@ func GetUserByCookie(w http.ResponseWriter, r *http.Request) (User, error) {
 func GetUserByID(id int) (User, error) {
 	var user User
 
-	row := Db.QueryRow("SELECT * FROM users WHERE id = $1", id)
+	row := Db.QueryRow("SELECT * FROM user WHERE id_user = $1", id)
 
 	row.Scan(&user.ID, &user.Username, &user.Password, &user.Email, &user.Role, &user.Avatar, &user.Date, &user.State, &user.SecretQuestion, &user.SecretAnswer, &user.House.ID)
 	user.Badges = GetBadgeByUserID(user.ID)
@@ -53,7 +53,7 @@ func GetUserByID(id int) (User, error) {
 func GetUserByUsernameOrEmail(identifier string) (User, error) {
 	var user User
 
-	row := Db.QueryRow("SELECT * FROM users WHERE username = $1 OR email = $1", identifier)
+	row := Db.QueryRow("SELECT * FROM user WHERE username = $1 OR email = $1", identifier)
 
 	row.Scan(&user.ID, &user.Username, &user.Password, &user.Email, &user.Role, &user.Avatar, &user.Date, &user.State, &user.SecretQuestion, &user.SecretAnswer, &user.House.ID)
 	user.Badges = GetBadgeByUserID(user.ID)

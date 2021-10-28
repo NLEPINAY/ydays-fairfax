@@ -25,7 +25,7 @@ const CENSORED = 2
 const UNRESOLVED = 0
 const RESOLVED = 1
 
-// Houses :
+// house :
 const UNAFFILIATED = 0
 const GRIPHONS = 1
 const WILDCATS = 2
@@ -72,12 +72,13 @@ type Post struct {
 	Date       time.Time
 	Image      string
 	State      int
+	Promoted   int
 	Liked      bool
 	Disliked   bool
 	Author     User
-	Comments   []Comment
-	Likes      []PostLike
-	Dislikes   []PostLike
+	Comment    []Comment
+	Like       []PostLike
+	Dislike    []PostLike
 	Reason     string
 	Count      int
 	Category   Category
@@ -89,9 +90,9 @@ type CritereChart struct {
 }
 
 type CountLike struct {
-	PostId        int
-	CountLikes    int
-	CountDislikes int
+	PostId       int
+	Countlike    int
+	CountDislike int
 }
 
 type Comment struct {
@@ -107,19 +108,19 @@ type Comment struct {
 	Liked     bool
 	Disliked  bool
 	Author    User
-	Likes     []CommentLike
-	Dislikes  []CommentLike
+	Like      []CommentLike
+	Dislike   []CommentLike
 	Reason    string
 	Count     int
 }
 
 // Stocke l'ID et le titre d'un post, et les users l'ayant liké ou disliké :
 type PostLike struct {
-	PostID int
-	// PostTitle string
-	UserID int
-	Type   string // 'like' ou 'dislike'
-	Date   time.Time
+	PostID    int
+	PostTitle string
+	UserID    int
+	Type      string // 'like' ou 'dislike'
+	Date      time.Time
 }
 
 // Stocke l'ID et le titre d'un commentaire, et les users l'ayant liké ou disliké :
@@ -167,7 +168,7 @@ type House struct {
 // Structures à passer dans les ExecuteTemplate :
 type DataForIndex struct {
 	User              User
-	Categories        []Category
+	Category          []Category
 	MostLikedPost     Post
 	MostCommentedPost Post
 	MostRecentPost    Post
@@ -175,21 +176,21 @@ type DataForIndex struct {
 }
 
 type DataForCategory struct {
-	ID    int
-	Name  string
-	User  User
-	Posts []Post
+	ID   int
+	Name string
+	User User
+	Post []Post
 }
 
 type DataForPost struct {
-	User     User
-	Post     Post
-	Comments []Comment
+	User    User
+	Post    Post
+	Comment []Comment
 }
 
 type DataForNewPost struct {
-	User       User
-	Categories []Category
+	User     User
+	Category []Category
 }
 
 type DataForNewTicket struct {
@@ -197,12 +198,12 @@ type DataForNewTicket struct {
 }
 
 type DataForProfile struct {
-	User          User
-	Profile       User
-	Posts         []Post
-	Comments      []Comment
-	LikedPosts    []Post
-	LikedComments []Comment
+	User         User
+	Profile      User
+	Post         []Post
+	Comment      []Comment
+	Likedpost    []Post
+	Likedcomment []Comment
 }
 
 type DataForSettings struct {
@@ -228,4 +229,21 @@ type ReceivedData struct {
 	Reason   string `json:"reason"`  //Si ya une raison
 	Is       string `json:"is"`      //Si c'est une cellule et non une table
 	Message  string `json:"message"` //message
+}
+
+//Messagerie side
+type Chat struct {
+	ID      int
+	Author  User
+	Content string
+	Date    time.Time
+	Image   string
+	State   int
+	Reason  string
+}
+type Messagerie struct {
+	ID          int  `json:"id"` //
+	First_User  User `json:"first_user"`
+	Second_User User `json:"second_user"`
+	Chat        Chat `json:"chat"`
 }

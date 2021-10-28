@@ -2,15 +2,15 @@ package database
 
 import "log"
 
-// Fonction récupératrice de likes/dislikes d'un post et du booléen 'liked/disliked par le user' en fonction de l'ID du post (et de l'ID du user) :
-func GetLikesByPostID(ID int, currentUserID int) ([]PostLike, []PostLike, bool, bool) {
-	var Likes, Dislikes []PostLike
+// Fonction récupératrice de like/dislike d'un post et du booléen 'liked/disliked par le user' en fonction de l'ID du post (et de l'ID du user) :
+func GetlikeByPostID(ID int, currentUserID int) ([]PostLike, []PostLike, bool, bool) {
+	var like, Dislike []PostLike
 	var Liked, Disliked bool
 
-	rows, err := Db.Query("SELECT * FROM post_likes WHERE post_id = ?", ID)
+	rows, err := Db.Query("SELECT * FROM post_like WHERE post_id = ?", ID)
 	defer rows.Close()
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de sélectionner les colonnes de la table post_likes avec post_id = ", ID)
+		log.Println("❌ ERREUR | Impossible de sélectionner les colonnes de la table post_like avec post_id = ", ID)
 		panic(err)
 	}
 
@@ -20,31 +20,31 @@ func GetLikesByPostID(ID int, currentUserID int) ([]PostLike, []PostLike, bool, 
 
 		switch postLike.Type {
 		case "like":
-			Likes = append(Likes, postLike)
+			like = append(like, postLike)
 			if postLike.UserID == currentUserID {
 				Liked = true
 			}
 
 		case "dislike":
-			Dislikes = append(Dislikes, postLike)
+			Dislike = append(Dislike, postLike)
 			if postLike.UserID == currentUserID {
 				Disliked = true
 			}
 		}
 	}
 
-	return Likes, Dislikes, Liked, Disliked // Nombre de likes/dislikes, et booléen 'liké/disliké par l'utilisateur connecté'
+	return like, Dislike, Liked, Disliked // Nombre de like/dislike, et booléen 'liké/disliké par l'utilisateur connecté'
 }
 
-// Fonction récupératrice de likes/dislikes d'un commentaire et du booléen 'liked/disliked par le user' en fonction de l'ID du commentaire (et de l'ID du user) :
-func GetLikesByCommentID(ID int, currentUserID int) ([]CommentLike, []CommentLike, bool, bool) {
-	var Likes, Dislikes []CommentLike
+// Fonction récupératrice de like/dislike d'un commentaire et du booléen 'liked/disliked par le user' en fonction de l'ID du commentaire (et de l'ID du user) :
+func GetlikeByCommentID(ID int, currentUserID int) ([]CommentLike, []CommentLike, bool, bool) {
+	var like, Dislike []CommentLike
 	var Liked, Disliked bool
 
-	rows, err := Db.Query("SELECT * FROM comment_likes WHERE comment_id = ?", ID)
+	rows, err := Db.Query("SELECT * FROM comment_like WHERE comment_id = ?", ID)
 	defer rows.Close()
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de sélectionner les colonnes de la table comment_likes avec comment_id = ", ID)
+		log.Println("❌ ERREUR | Impossible de sélectionner les colonnes de la table comment_like avec comment_id = ", ID)
 		panic(err)
 	}
 
@@ -53,14 +53,14 @@ func GetLikesByCommentID(ID int, currentUserID int) ([]CommentLike, []CommentLik
 		rows.Scan(&commentLike.CommentID, &commentLike.UserID, &commentLike.Type, &commentLike.Date)
 		switch commentLike.Type {
 		case "like":
-			Likes = append(Likes, commentLike)
+			like = append(like, commentLike)
 			if commentLike.UserID == currentUserID {
 				Liked = true
 				Disliked = false
 			}
 
 		case "dislike":
-			Dislikes = append(Dislikes, commentLike)
+			Dislike = append(Dislike, commentLike)
 			if commentLike.UserID == currentUserID {
 				Disliked = true
 				Liked = false
@@ -68,5 +68,5 @@ func GetLikesByCommentID(ID int, currentUserID int) ([]CommentLike, []CommentLik
 		}
 	}
 
-	return Likes, Dislikes, Liked, Disliked
+	return like, Dislike, Liked, Disliked
 }

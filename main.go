@@ -18,18 +18,15 @@ func main() {
 	// ⭐ Initialisation de la base de données :
 	database.Initialize()
 
-	// database.FillCategories()
-	// database.FillHouses()
+	// database.Fillcategory()
+	// database.Fillhouse()
 	// database.FillBadge()
 	// database.FillAllUsers()
-	// database.FillAllPosts()
+	// database.FillAllpost()
 
 	// database.FillUser("Tenebros", "Abc123", "virgil.nauleau@ynov.com", database.ADMIN, database.NORMAL, database.KRAKENS) // Username, Password, Email, Role, Statut, HouseID
 	// database.FillUser("Tenebros2", "Abc123", "virgil2.nauleau@ynov.com", 1, database.NORMAL, database.GRIPHONS)           // Username, Password, Email, Role, Statut, HouseID
 	// database.FillUser("John Doe", "Abc123", "john.doe@ynov.com", database.MEMBER, database.NORMAL, database.UNAFFILIATED) // Username, Password, Email, Role, Statut, HouseID
-
-	// database.FillPost("World wide best post ever done", 1, "This is the content of the best post ever done", 1, database.PUBLISHED) // Titre, AuthorID, Content, CategoryID, Statut
-	// database.FillPost("Deleted post", 1, "This post is deleted", 1, database.UNPUBLISHED)
 
 	// database.FillComment(1, 1, "Best post ever done", database.PUBLISHED, "https://media.tenor.com/images/fcc716e6b70dc2e8e9839280369952a6/tenor.gif") // PostID, AuthorID, Content, Statut, GIF
 	// database.FillComment(2, 1, "I agree with myself", database.PUBLISHED, "")
@@ -38,7 +35,7 @@ func main() {
 	// database.FillPostLike(1, 1, "like")
 	// database.FillCommentLike(1, 1, "like")
 
-	//Ajout de tickets :
+	//Ajout de ticket :
 
 	// database.FillTicket(2, 1, "Problem", "I have a problem", time.Now(), 0)
 	// database.FillAnswer(1, 1, "Tenebros", "Answer", time.Now(), 0)
@@ -109,7 +106,10 @@ func main() {
 	// ⭐ Accès à la page d'accueil :
 	http.HandleFunc("/", request.Auth(request.Index, "everybody"))
 
-	go database.CleanExpiredSessions()
+	// ⭐ Accès a la messagerie :
+	http.HandleFunc("/messagerie", request.Auth(request.Messagerie, "active members only"))
+
+	go database.CleanExpiredsession()
 
 	log.Println("✔️ SERVER | Listening server at port 8000...")
 	err := http.ListenAndServeTLS(":8000", "https-server.crt", "https-server.key", nil)

@@ -205,7 +205,7 @@ header ul li a.active:hover {
 } */
 
 
-/* SECTION 2 (CATEGORIES) */
+/* SECTION 2 (category) */
 
 #section2 {
     position: relative;
@@ -277,43 +277,43 @@ header ul li a.active:hover {
 }
 
 #img-cafe {
-    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_cafe.png") no-repeat center;
+    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_cafe.png") no-repeat center;
 }
 
 #img-gents {
-    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_gents.png") no-repeat center;
+    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_gents.png") no-repeat center;
 }
 
 #img-ladies {
-    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_ladies.png") no-repeat center;
+    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_ladies.png") no-repeat center;
 }
 
 #img-theater {
-    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_theater.png") no-repeat center;
+    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_theater.png") no-repeat center;
 }
 
 #img-arcade {
-    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_arcade.png") no-repeat center;
+    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_arcade.png") no-repeat center;
 }
 
 #img-library {
-    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_library.png") no-repeat center;
+    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_library.png") no-repeat center;
 }
 
 #img-vinyl {
-    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_vinyl.png") no-repeat center;
+    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_vinyl.png") no-repeat center;
 }
 
 #img-museum {
-    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_museum.png") no-repeat center;
+    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_museum.png") no-repeat center;
 }
 
 #img-academy {
-    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_academy.png") no-repeat center;
+    background: linear-gradient(90deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_academy.png") no-repeat center;
 }
 
 #img-stadium {
-    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/categories/category_stadium.png") no-repeat center;
+    background: linear-gradient(270deg, transparent 60%, rgba(16, 20, 27, 1) 100%), url("/static/images/category/category_stadium.png") no-repeat center;
 }
 
 .text-container {

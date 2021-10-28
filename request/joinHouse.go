@@ -15,7 +15,7 @@ func JoinHouse(w http.ResponseWriter, r *http.Request, user database.User) {
 		err := MyTemplates.ExecuteTemplate(w, "join-house", user)
 		if err != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-			log.Println("❌ ERREUR | Impossible d'exécuter le template “houses”.")
+			log.Println("❌ ERREUR | Impossible d'exécuter le template “house”.")
 			fmt.Println(err)
 			return
 		}

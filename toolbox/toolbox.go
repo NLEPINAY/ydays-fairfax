@@ -92,7 +92,7 @@ func UploadImage(r *http.Request, userID int, postOrAvatar string) (string, erro
 
 	// 1️⃣ Si l'on souhaite uploader une image pour un post :
 	if postOrAvatar == "post" {
-		imagePath = "/images/posts/" + fileName + fileExtension // Par exemple : "/images/post/user-27__123e4567-e89b-12d3-a456-426614174000.jpg"
+		imagePath = "/images/post/" + fileName + fileExtension // Par exemple : "/images/post/user-27__123e4567-e89b-12d3-a456-426614174000.jpg"
 	}
 
 	// 2️⃣ Si l'on souhaite uploader un avatar :

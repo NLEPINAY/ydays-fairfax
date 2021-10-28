@@ -64,10 +64,10 @@ $(document).ready(function () {
 
   function countElements(response) {
     const types = [
-      ["postsCount", response.Post[0].Count],
-      ["categoriesCount", response.Category[0].Count],
+      ["postCount", response.Post[0].Count],
+      ["categoryCount", response.Category[0].Count],
       ["usersCount", response.User[0].Count],
-      ["commentsCount", response.Comment[0].Count],
+      ["commentCount", response.Comment[0].Count],
     ];
     types.forEach((element) =>
       new CountUp(element[0], 0, element[1], 0, 2.5).start()
@@ -102,12 +102,12 @@ $(document).ready(function () {
       typeChart = "line";
       titleText =
         type == "Post"
-          ? "PUBLISHED POSTS PER MONTH"
+          ? "PUBLISHED post PER MONTH"
           : "USERS REGISTRATION PER MONTH";
     } else if (type == "Category") {
       data.DataChart.forEach((element) => dataC.push(element.Critere));
       var lab = dataC;
-      titleText = "PUBLISHED POSTS PER CATEGORIES";
+      titleText = "PUBLISHED post PER category";
       typeChart = "bar";
     }
     data.DataChart.forEach(
@@ -212,14 +212,14 @@ $(document).ready(function () {
             "CategoryID",
           ];
           if(table == "Post") {
-            // Ajout du nombre de likes / dislikes pour chaque post
+            // Ajout du nombre de like / dislike pour chaque post
             x[table].forEach((ind) => { // Boucle sur x.Post
-              ind['Likes'] = 0;    // Valeurs par défaut
-              ind['Dislikes'] = 0;
+              ind['like'] = 0;    // Valeurs par défaut
+              ind['Dislike'] = 0;
               x['CountLike'].forEach((index) => { // Boucle sur x.CountLike
                 if (ind['ID'] == index['PostId']) {
-                  ind['Likes'] = index['CountLikes'] + '<i class="fas fa-heart ml-2 text-danger"></i>';
-                  ind['Dislikes'] = index['CountDislikes'] + '<i class="fas fa-heart-broken ml-2"></i>';
+                  ind['like'] = index['Countlike'] + '<i class="fas fa-heart ml-2 text-danger"></i>';
+                  ind['Dislike'] = index['CountDislike'] + '<i class="fas fa-heart-broken ml-2"></i>';
                 }
               })
             })           

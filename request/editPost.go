@@ -16,7 +16,7 @@ func EditPost(w http.ResponseWriter, r *http.Request, user database.User) {
 			panic(err)
 		}
 		if p.Table == "gif" {
-			query = `UPDATE comments SET gif = "" WHERE id = "` + p.ID + `"`
+			query = `UPDATE comment SET gif = "" WHERE id = "` + p.ID + `"`
 		} else {
 			query = `UPDATE ` + p.Table + ` SET content = "` + p.NewValue + `" WHERE id = "` + p.ID + `"`
 		}

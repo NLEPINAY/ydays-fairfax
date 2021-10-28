@@ -378,7 +378,7 @@ tinymce.addI18n('fr_FR',{
 "alignment": "alignement",
 "indentation": "retrait",
 "permanent pen": "feutre ind\u00e9l\u00e9bile",
-"comments": "commentaires",
+"comment": "commentaires",
 "Format Painter": "Reproduire la mise en forme",
 "Insert\/edit iframe": "Ins\u00e9rer\/modifier iframe",
 "Capitalization": "Mise en majuscules",
