@@ -285,3 +285,17 @@ header {
         }
     }
 }
+
+/* search */
+.container_search_user {
+    & img.search_icon {
+        height: 30px;
+        cursor: pointer
+    }
+    & div.deploy_search {
+        min-height: 100vh;
+        transform: translate(calc(-100vw + 30px + 25px), -100vh);
+        position: absolute;
+        width: 100%;
+    }
+}

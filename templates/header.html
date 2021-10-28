@@ -86,8 +86,16 @@
         </a>
 
         <a class="active logout" href="/logout">Logout</a>
-    </div>
 
+        <div class="container_search_user">
+            <img src="/static/images/search.png" class="search_icon" alt="Search a user">
+            <div class="deploy_search">
+                <img src="/static/images/delete.png" class="close_search" alt="Close search">
+                <input type="search" name="user_search" id="user_search" class="user_search" placeholder="Search user here ...">
+                <button class="btn_search">Search</button>
+            </div>
+        </div>
+    </div>
     {{ end }}
 
 </header>
