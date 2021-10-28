@@ -15,7 +15,7 @@ var userCanAlterate = []string{"posts", "comments", "users", "tickets", "ticket_
 
 //requete de modification de la bdd
 func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
-	fmt.Println(r.Body, "ttttttt")
+	fmt.Println(r.Body, "ERREUR FETCHING")
 	switch r.Method {
 	//savoir quelle action est demander
 	case "POST":
@@ -85,7 +85,8 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 
 				Data = admin.GetPostOnlyByID(ID, Data)
 				Data = admin.GetCategoriesList(Data)
-
+			case "Comment":
+				Data = admin.GetCommentByID(ID, Data)
 			}
 			ok, _ := json.Marshal(Data)
 			w.Write(ok)
@@ -107,6 +108,7 @@ func Fetching(w http.ResponseWriter, r *http.Request, user database.User) {
 			Data.Category = database.GetCategoriesChart()*/
 			ok, _ := json.Marshal(Data)
 			w.Write(ok)
+
 		}
 
 	}
@@ -117,22 +119,36 @@ func performAction(r database.ReceivedData) {
 	var query string
 	switch r.Action {
 	case "UPDATE":
-		query = "UPDATE " + r.Table + " SET " + r.What + " = \"" + r.NewValue + "\" WHERE id" + " = \"" + r.ID + "\""
-		break
+		switch r.Message {
+		case "updateState":
+			query := "UPDATE " + r.Table + " SET " + r.What + " = ? WHERE id  =  ?"
+			statement, err := database.Db.Prepare(query)
+			if err != nil {
+				panic(err)
+			}
+			statement.Exec(r.NewValue, r.ID)
+		default:
+			query = "UPDATE " + r.Table + " SET " + r.What + " = \"" + r.NewValue + "\" WHERE id" + " = \"" + r.ID + "\""
+			_, err := database.Db.Exec(query)
+			if err != nil {
+				panic(err)
+			}
+		}
+
 	case "DELETE":
 		if r.Is == "cell" { //si c'est une cellule c'est un update sur une valeur null
 			query = "UPDATE " + r.Table + " SET " + r.What + " = \"\" WHERE id" + " = \"" + r.ID + "\""
 		} else { //une table je la supprime
 			query = "DELETE FROM " + r.Table + " WHERE id = \"" + r.ID + "\""
 		}
-		break
+		_, err := database.Db.Exec(query)
+		if err != nil {
+			panic(err)
+		}
 	case "CREATE":
 
 	}
-	_, err := database.Db.Exec(query)
-	if err != nil {
-		panic(err)
-	}
+
 }
 
 //a les droits administrateur ou demande de toucher quelque chose qui lui appartient

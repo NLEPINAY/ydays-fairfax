@@ -1,3 +1,55 @@
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../font/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: url("../font/Roboto/Roboto-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../font/Roboto/Roboto-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../font/Roboto/Roboto-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: url("../font/Roboto/Roboto-Thin.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: normal;
+  src: url("../font/Roboto/Roboto-MediumItalic.ttf") format("truetype");
+}
+
+body {
+  font-family: unset;
+}
+
+*:not(i) {
+  font-family: "Roboto", sans-serif !important;
+  /*font-weight: normal;*/
+  line-height: 1.5;
+}
+
 .dataTable tbody>tr.selected,
 .dataTable tbody>tr>.selected {
   background-color: #ffe9dc;

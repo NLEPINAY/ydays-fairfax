@@ -144,11 +144,17 @@ func GetPostOnlyByID(ID int, Data Data) Data {
 	var post database.Post
 	id := ID
 	row := database.Db.QueryRow("SELECT * FROM posts INNER JOIN users ON posts.author_id = users.id WHERE posts.id = ?", id) // id, title, author_id, content, category_id, date, image, state
-	//defer rows.Close()
 	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
-	//author, _ := GetUserByID(post.AuthorID)
-	//post.Author = author
 	Data.Post = append(Data.Post, post)
+	return Data
+}
+
+func GetCommentByID(ID int, Data Data) Data {
+	var comment database.Comment
+	id := ID
+	row := database.Db.QueryRow("SELECT * FROM comments INNER JOIN users ON comments.author_id = users.id WHERE comments.id = ?", id)
+	row.Scan(&comment.ID, &comment.AuthorID, &comment.PostID, &comment.Content, &comment.Gif, &comment.Date, &comment.State, &comment.Reason, &comment.Author.ID, &comment.Author.Username, &comment.Author.Password, &comment.Author.Email, &comment.Author.Role, &comment.Author.Avatar, &comment.Author.Date, &comment.Author.State, &comment.Author.SecretQuestion, &comment.Author.SecretAnswer, &comment.Author.House.ID)
+	Data.Comment = append(Data.Comment, comment)
 	return Data
 }
 

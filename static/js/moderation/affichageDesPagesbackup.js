@@ -1,4 +1,3 @@
-// Tableau utilisé pour créer dynamiquement les champs de la modal d'update
 const formInputs = {
   Post: {
     Title: {
@@ -28,7 +27,6 @@ $(document).ready(function () {
   let tableParam = urlParams.get("table");
   var table = tableParam ? tableParam : "Charts";
 
-  // Appel de l'initialisation de DataTable en fonction du type de données choisi
   $(document).on("click", ".catBtn", function () {
     $(".catBtn").removeClass("activeCat");
     $(this).addClass("activeCat");
@@ -40,12 +38,10 @@ $(document).ready(function () {
       $("#cardsContainer").addClass("hidden");
     }
     initDatatable($(this).attr("data-table"));
-    checkPoint("Appel de l'initialisation de DataTable sur la table " + $(this).attr("data-table"));
   });
 
   // Affichage des différentes stats
   $(document).on("click", "#topCont .card", function () {
-    checkPoint("Chargement des statistiques de la table "+$(this).attr("data-chart"));
     $("#topCont .card").removeClass("activeChart");
     $(this).addClass("activeChart");
     const type = $(this).attr("data-chart");
@@ -63,7 +59,6 @@ $(document).ready(function () {
     })
       .then((x) => x.json())
       .then((x) => {
-        checkPoint("Requête effectuée, appel de la fonction de génération des charts");
         generateChart(x, type);
       });
   });
@@ -71,7 +66,6 @@ $(document).ready(function () {
   //Initialisation menu actif
   $("li[data-table='" + table + "']").click();
 
-  //Initialisation de l'animation de comptage des différents éléments (posts, categories, users, comments)
   function countElements(response) {
     const types = [
       ["postsCount", response.Post[0].Count],
@@ -79,10 +73,8 @@ $(document).ready(function () {
       ["usersCount", response.User[0].Count],
       ["commentsCount", response.Comment[0].Count],
     ];
-    types.forEach((element) => {
-      checkPoint("Début de l'animation de comptage");
-      new CountUp(element[0], 0, element[1], 0, 2.5).start();      
-    }
+    types.forEach((element) =>
+      new CountUp(element[0], 0, element[1], 0, 2.5).start()
     );
   }
 
@@ -91,7 +83,7 @@ $(document).ready(function () {
    * Documentation : https://www.chartjs.org/docs/latest/getting-started/
    */
   async function generateChart(data, type) {
-    checkPoint("Génération des charts");
+    console.log("data:", data);
     var dataC = [];
     var titleText = "";
     var typeChart = "";
@@ -188,14 +180,11 @@ $(document).ready(function () {
         },
       },
     });
-    checkPoint("Chart généré !");
   }
 
   var tableAdmin = null;
 
-  // Initialisation de DataTable et chargement des données
   function initDatatable(table) {
-    checkPoint("Requête BDD de la table " + table + "pour initialisation de DataTable");
     var params = new Object();
     params.action = "get";
     params.table = table;
@@ -209,7 +198,6 @@ $(document).ready(function () {
     })
       .then((x) => x.json())
       .then((x) => {
-        checkPoint("Création dynamique des colonnes de DataTable en fonction de la table à afficher");
         if (table != "Charts") {
           const dataArray = [];
           var dataAttributes = "";
@@ -240,17 +228,14 @@ $(document).ready(function () {
               })
             })           
           }
-          Object.entries(x[table][0]).forEach(([key, value]) => {      
+          Object.entries(x[table][0]).forEach(([key, value]) => {
+            dataAttributes += "data-" + key.toLowerCase() + '="' + value + '" ';
             if (!columnsToExclude.includes(key)) {
-              if((key.toLowerCase() != "author") && (key.toLowerCase() != "category")) {
-              dataAttributes += "data-" + key.toLowerCase() + '="' + value + '" ';
-            }
               var column = {};
               column.title = key
                 .replace("ID", "Id")
                 .replace(/([A-Z])/g, " $1")
-                .toUpperCase() //.replace(/_/g, " ") => pour transformer du snake case;
-                .trim();
+                .toUpperCase(); //.replace(/_/g, " ") => pour transformer du snake case;
               column.data = key;
               // Paramètres spécifiques
               if (key == "Date") {
@@ -284,11 +269,11 @@ $(document).ready(function () {
                   return data.Name;
                 };
               } else if (key.includes("State")) {
-                column.render = function (data, type, row, meta) {
+                column.render = function (data) {
                   var result =
                     data == 1
-                      ? '<div class="toggleStateBtn" data-table="'+table+'" data-value="'+data+'" data-id="'+ row.ID +'" data-column="'+column.title+'"><i class="fas fa-eye"></i></div>'
-                      : '<div class="toggleStateBtn" data-table="'+table+'" data-value="'+data+'" data-id="'+ row.ID +'" data-column="'+column.title+'"><i class="fas fa-eye-slash"></i></div>';
+                      ? '<i class="fas fa-eye"></i>'
+                      : '<i class="fas fa-eye-slash"></i>';
                   return result;
                 };
               }
@@ -318,7 +303,6 @@ $(document).ready(function () {
             tableAdmin.destroy();
             $("#tableAdmin").empty();
           }
-          checkPoint("Début de l'initialisation de DataTable");
           tableAdmin = $("#tableAdmin").DataTable({
             columns: dataArray,
             data: x[table],
@@ -334,7 +318,6 @@ $(document).ready(function () {
       });
   }
 
-  // Conversion des dates avant affichage dans le DataTable
   function convertirDate(date) {
     var monthName = [
       "Janvier",
@@ -374,51 +357,11 @@ $(document).ready(function () {
 
   // Modal Update
   $(document).on("click", ".editLink", function () {
-    // Début de la chaine de Promises
-    initializeModal($(this).attr("data-table-type"),$(this).attr("data-id"));
-  });
-
-  // Requete BDD du/de la post/comment/user/categorie choisi(e)
-  function initializeModal (event,id) {
-    checkPoint("Début de l'initialisation de la modal d'update");
-      var params = new Object();
-      const tableToUpdate = event;
-      params.action = "getForUpdate";
-      params.table = tableToUpdate;
-      params.id = id;
-      fetch("/fetching", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(params),
-      })
-        .then((x) => x.json())
-        .then((x) => {
-          checkPoint("Requête de la table " + tableToUpdate + " effectuée !");
-          loadModal(x, tableToUpdate).then((loadModalResponse) => { // Création et ajout dans le DOM des champs (avec valeurs) d'update de la modal
-            initEditor(loadModalResponse) // Initialisation de l'éditeur WYSIWYG TinyMCE
-          });
-        })
-  };
-
-  // Changer les states au clic de l'icone de visibilité
-  $(document).on('click', '.toggleStateBtn', function() {
-    var initialState = parseInt($(this).attr('data-value'));
-    var newState = initialState = 1 ? 0 : 1;
-    var tableForToggle = $(this).attr('data-table');
-    var idToToggle = $(this).attr('data-id');
-    var columnForToggle = $(this).attr('data-column');
-    checkPoint("Changement de visibilité:  Actuelle: " + initialState + " => Nouvelle: " + newState);
-
     var params = new Object();
-    params.action = "UPDATE";
-    params.table = "posts";//tableForToggle;
-    params.what = columnForToggle.toLowerCase();
-    params.id = idToToggle;//parseInt(idToToggle);
-    params.message = "updateState";
-    params.newValue = newState;
+    const tableToUpdate = $(this).attr("data-table-type");
+    params.action = "getForUpdate";
+    params.table = tableToUpdate;
+    params.id = $(this).attr("data-id");
     fetch("/fetching", {
       method: "POST",
       headers: {
@@ -429,18 +372,159 @@ $(document).ready(function () {
     })
       .then((x) => x.json())
       .then((x) => {
-        var feedback = x.message == "SUCCESS." ? "Changement de visibilité effectué => Nouvelle visibilité: " + newState : "ERREUR lors de la modification de la visibilité";
-        checkPoint(feedback);
-        //$("li[data-table='Post']").click();
-        //TO DO : redraw datatable
-      });
-    
-  })
+        
+        var formContent = "";
+        var textarea = "";
+        var textareaContent = "";
+        Object.entries(formInputs[tableToUpdate]).forEach(([input, data]) => {
+            if (formInputs[`${tableToUpdate}`][`${input}`].type == "textarea") {
+              textareaContent = x[`${tableToUpdate}`][0][`${input}`];
+              textarea +=
+              `<div class="form-group w-100">
+              <label for="` +
+              input +
+              `">` +
+              input +
+              `</label>
+              <textarea class="form-control" name="` +
+                input +
+                `" id="textareaContent">` +
+                /*x[`${tableToUpdate}`][0][`${input}`] +
+                */`</textarea></div>`;
+            } else if (formInputs[`${tableToUpdate}`][`${input}`].type == "select") {
+              var options = "";
+              var tableSelect = formInputs[`${tableToUpdate}`][`${input}`].table;
+              x.Category.forEach((element) => {
+                options += `<option value="`+element.Name+`">`+element.Name+`</option>`;
+              })
+              formContent +=
+              `<div class="form-group">
+              <label for="` +
+              input +
+              `">` +
+              input +
+              `</label>
+              <select class="form-control" name="`+input+`">
+              `+options+`
+              </select>
+              </div>`
+            } else {
+              formContent +=
+                `<div class="form-group">
+                <label for="` +
+                input +
+                `">` +
+                input +
+                `</label>
+                <input class="form-control" type="` +
+                formInputs[`${tableToUpdate}`][`${input}`].type +
+                `" name="` +
+                input +
+                `" value="` +
+                x[`${tableToUpdate}`][0][`${input}`] +
+                `"></div>`;
+            }
+        })
 
-  /*
-  remove :
-   tableNews.row(btn.parents("tr")).remove().draw();
-  */
+        formContent += textarea;
+        $("#updateForm").html(formContent);
+      
+          // S'il y a un textarea, on initialise l'éditeur
+          if(textarea) {
+            // Initialisation tinymce (éditeur de texte WYSIWYG)
+            tinymce.init({
+              menubar: false,
+              language: "fr_FR",
+              selector: "#textareaContent",
+              plugins:
+                "autoresize image template textcolor hr importcss link noneditable spellchecker",
+              //"lists advlist autoresize charmap emoticons media image template preview textcolor hr importcss link noneditable table help",
+              toolbar:
+                "fontselect fontsizeselect | bold italic forecolor" +
+                "alignleft aligncenter alignright alignjustify | " +
+                "imageupload image" + "| spellchecker",
+              target_list: [
+                { title: "Téléchargement", value: "_self" },
+                { title: "Nouvel onglet", value: "_blank" },
+              ],
+              media_live_embeds: true,
+              browser_spellcheck: true,
+              spellchecker_languages: 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,' +
+          'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv',
+              spellchecker_language: "fr-FR",
+              noneditable_noneditable_class: "mceNonEditable",
+              branding: false,
+              mobile: {
+                menubar: true,
+              },
+              file_picker_types: "file image media",
+              images_upload_handler: function (blobInfo, success, failure) {
+                var xhr, formData;
+                xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open("POST", "./private/controller/traitement-ajax.php");
+                xhr.onload = function () {
+                  var json;
+                  if (xhr.status != 200) {
+                    failure("HTTP Error: " + xhr.status);
+                    return;
+                  }
+                  json = JSON.parse(xhr.responseText);
+
+                  if (!json || typeof json.location != "string") {
+                    failure("Invalid JSON: " + xhr.responseText);
+                    return;
+                  }
+                  success(json.location);
+                };
+                formData = new FormData();
+                formData.append("file", blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+              },
+
+              file_picker_callback: function (cb, value, meta) {
+                var input = document.createElement("input");
+                input.setAttribute("type", "file");
+                input.setAttribute("accept", "image/* audio/* video/*");
+                input.onchange = function () {
+                  var file = this.files[0];
+
+                  var reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = function () {
+                    var id = "blobid" + new Date().getTime();
+                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                    var base64 = reader.result.split(",")[1];
+                    var blobInfo = blobCache.create(id, file, base64);
+                    blobCache.add(blobInfo);
+
+                    // call the callback and populate the Title field with the file name
+                    cb(blobInfo.blobUri(), {
+                      title: file.name,
+                    });
+                  };
+                };
+
+                input.click();
+              },
+            }).then(tinymce.get("textareaContent").setContent(textareaContent));
+            console.log("textarea-content: ",textareaContent);
+            console.log("textarea: ",$("#textareaContent"));
+            //tinymce.get("textareaContent").setContent(textareaContent);
+
+            $(document).on("focusin", function (e) {
+              if ($(e.target).closest(".mce-window").length) {
+                e.stopImmediatePropagation();
+              }
+            });
+          }
+      });
+
+    $(".modal-title").html(
+      "UPDATE " + tableToUpdate.toUpperCase() + " N°" + $(this).attr("data-id")
+    );
+
+  });
 
   //Initialisation de dataTable avec des paramètres personnalisés
   if ($.fn.dataTable) {
@@ -479,199 +563,3 @@ $(document).ready(function () {
     });
   }
 });
-
-// Fonction pour générer le html du formulaire d'update dans la modal
-const loadModal = function(x,tableToUpdate) {
-  checkPoint("Début création du HTML de la modal d'update");
-  return new Promise(function(resolve, reject) {
-    $("#updateForm").html("");
-  var formContent = "";
-  var textarea = "";
-  var textareaContent = "";
-  Object.entries(formInputs[tableToUpdate]).forEach(([input, data]) => {
-      if (formInputs[`${tableToUpdate}`][`${input}`].type == "textarea") {
-        textareaContent = x[`${tableToUpdate}`][0][`${input}`];
-        textarea =
-        `<div class="form-group w-100">
-        <label for="` +
-        input +
-        `">` +
-        input +
-        `</label>
-        <textarea class="form-control" name="` +
-          input +
-          `" id="textareaContent">` +
-          textareaContent +
-          `</textarea></div>`;
-          $("#updateForm").append(textarea); // Ajout dans la modal (en première position) du textarea
-      } else if (formInputs[`${tableToUpdate}`][`${input}`].type == "select") {
-        var options = "";
-        var tableSelect = formInputs[`${tableToUpdate}`][`${input}`].table;
-        x.Category.forEach((element) => {
-          // On select l'option enregistrée en BDD
-          var selected = element.ID == x[`${tableToUpdate}`][0].CategoryID ? 'selected' : '';
-          options += `<option value="`+element.ID+`" `+selected+`>`+element.Name+`</option>`;
-        })
-        formContent +=
-        `<div class="form-group">
-        <label for="` +
-        input +
-        `">` +
-        input +
-        `</label>
-        <select class="form-control" name="`+input+`">
-        `+options+`
-        </select>
-        </div>`
-      } else {
-        formContent +=
-          `<div class="form-group">
-          <label for="` +
-          input +
-          `">` +
-          input +
-          `</label>
-          <input class="form-control" type="` +
-          formInputs[`${tableToUpdate}`][`${input}`].type +
-          `" name="` +
-          input +
-          `" value="` +
-          x[`${tableToUpdate}`][0][`${input}`] +
-          `"></div>`;
-      }
-  })
-
-  // Ajout du titre dans la modal
-  $(".modal-title").html(
-    "UPDATE " + tableToUpdate.toUpperCase() + " N°" + $(this).attr("data-id")
-  );
-
-  // AJout des champs autres que le textarea
-  $("#updateForm").prepend(formContent);
-
-  // On resolve la Promise pour passer à la suivante
-  checkPoint("HTML du formulaire d'update généré et ajouté au DOM !");
-  resolve(textareaContent);
-});
-};
-
-// Initialisation de l'éditeur WYSIWYG
-const initEditor = (textareaContent) => {
-  // Si une précédente instance existe, on la détruit
-  checkPoint("Initialisation de TinyMCE");
-  if(tinymce.editors.length > 0){
-  tinymce.EditorManager.execCommand('mceRemoveEditor',true, "textareaContent");
-  tinymce.EditorManager.execCommand('mceAddEditor',true, "textareaContent");
-  checkPoint("Destruction des précédentes instances de TinyMCE");
-}
-
-    // Initialisation
-  tinymce.init({
-    menubar: false,
-    language: "fr_FR",
-    selector: "#textareaContent",
-    setup: function (editor) {
-      // Confirmation
-      editor.on('init', function (e) {
-        checkPoint("Editeur TinyMCE initialisé !");
-      });
-    },
-    plugins:
-      "autoresize image template textcolor hr importcss link noneditable spellchecker",
-    //"lists advlist autoresize charmap emoticons media image template preview textcolor hr importcss link noneditable table help",
-    toolbar:
-      "fontselect fontsizeselect | bold italic forecolor" +
-      "alignleft aligncenter alignright alignjustify | " +
-      "imageupload image" + "| spellchecker",
-    target_list: [
-      { title: "Téléchargement", value: "_self" },
-      { title: "Nouvel onglet", value: "_blank" },
-    ],
-    media_live_embeds: true,
-    browser_spellcheck: true,
-    spellchecker_languages: 'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,' +
-'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,Spanish=es,Swedish=sv',
-    spellchecker_language: "fr-FR",
-    noneditable_noneditable_class: "mceNonEditable",
-    branding: false,
-    mobile: {
-      menubar: true,
-    },
-    file_picker_types: "file image media",
-    images_upload_handler: function (blobInfo, success, failure) {
-      var xhr, formData;
-      xhr = new XMLHttpRequest();
-      xhr.withCredentials = false;
-      xhr.open("POST", "./private/controller/traitement-ajax.php");
-      xhr.onload = function () {
-        var json;
-        if (xhr.status != 200) {
-          failure("HTTP Error: " + xhr.status);
-          return;
-        }
-        json = JSON.parse(xhr.responseText);
-
-        if (!json || typeof json.location != "string") {
-          failure("Invalid JSON: " + xhr.responseText);
-          return;
-        }
-        success(json.location);
-      };
-      formData = new FormData();
-      formData.append("file", blobInfo.blob(), blobInfo.filename());
-      xhr.send(formData);
-    },
-
-    file_picker_callback: function (cb, value, meta) {
-      var input = document.createElement("input");
-      input.setAttribute("type", "file");
-      input.setAttribute("accept", "image/* audio/* video/*");
-      input.onchange = function () {
-        var file = this.files[0];
-
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-          var id = "blobid" + new Date().getTime();
-          var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-          var base64 = reader.result.split(",")[1];
-          var blobInfo = blobCache.create(id, file, base64);
-          blobCache.add(blobInfo);
-
-          // call the callback and populate the Title field with the file name
-          cb(blobInfo.blobUri(), {
-            title: file.name,
-          });
-        };
-      };
-
-      input.click();
-    },
-    init_instance_callback : function(editor) {
-      // Si besoin
-    },
-  })
-
-  $(document).on("focusin", function (e) {
-    if ($(e.target).closest(".mce-window").length) {
-      e.stopImmediatePropagation();
-    }
-  });
-
-};
-
-// Fonction de feedback
-function checkPoint(etape) {
-  var now = new Date();
-  var annee   = now.getFullYear();
-  var mois    = now.getMonth() + 1;
-  var jour    = now.getDate();
-  var heure   = now.getHours();
-  var minute  = now.getMinutes();
-  var seconde = now.getSeconds();
-  var millisecondes = now.getMilliseconds();
-
-  console.log(heure +"h:"+minute+"min:"+seconde+"sec:"+millisecondes+"ms: ", etape);
-}
-
-
