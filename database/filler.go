@@ -37,10 +37,10 @@ func Fillhouse() {
 		panic(err)
 	}
 	defer statement.Close()
-	statement.Exec("Kingdsbridge Griphons", "/images/house/house-1.png")
-	statement.Exec("Westside Wildcats", "/images/house/house-2.png")
-	statement.Exec("Columbus Krakens", "/images/house/house-3.png")
-	statement.Exec("Syracuse Vipers", "/images/house/house-4.png")
+	statement.Exec("Kingdsbridge Griphons", "/images/houses/house-1.png")
+	statement.Exec("Westside Wildcats", "/images/houses/house-2.png")
+	statement.Exec("Columbus Krakens", "/images/houses/house-3.png")
+	statement.Exec("Syracuse Vipers", "/images/houses/house-4.png")
 
 	log.Println("✔️ DATABASE | Filled table “house” successfully.")
 }
