@@ -4,14 +4,14 @@ Func Ticket: (gestion de l'affichage ticket)
     Cas Get:
         Si une id est retrouver dans l'url je sais qu'il faut charger un ticket en particulier.
 
-        Si il y en a pas je vais chercher tout les tickets de l'user que le middleware ma donner.
+        Si il y en a pas je vais chercher tout les ticket de l'user que le middleware ma donner.
             Sauf si l'utilisateur est admin, dans ce cas la je les afficher tous, il peut les ouvrir, commenter et les passer en résolut tout comme le créateur du post.
 
         Je charge la data avec le templates et lui sait en fonction de si il y a un ticket ou plus quel page ils dois crée.
 
     Cas Post:
         L'utilisateur ou un administrateur a cliquer sur le bouton résoudre d'un ticket et nous le cloturont ici.
-        Une fois cloturer nous renvoyons sur la pages des tickets.
+        Une fois cloturer nous renvoyons sur la pages des ticket.
 
 Func NewTicket: (gestion de la création d'un nouveau ticket)
     Cas Get:
@@ -38,7 +38,7 @@ Une des pages les plus simples , elle conciste juste a récupérer les table et 
 Func ProfilePage: (gère l'utilisateur si c'est sa page)
     Cas Get:
         Récupère l'utilisateur correspondant a l'email ou l'username passer derrière "user="
-        Affiche ces posts et commentaire
+        Affiche ces post et commentaire
     Cas Post:
         Si l'utilisateur est sur sa page il peut supprimer un  de ces post ou commentaire de sont choix.
 Func DeleteSelection:
@@ -115,7 +115,7 @@ Function Reaction: (permet d'enregistrer le like ou dislike de l'utilisateur sur
 
 Function Moderation: (contient une fonction pour chaque table touchant les users)
     Cas Get:
-        Affiche tout les post / comments / users de la base de donnée.
+        Affiche tout les post / comment / users de la base de donnée.
         Permet de supprimer n'importe qu'elle ligne ou de modifier n'importe quel valeurs
         Peut poser problème mais page accéssible normalement qu'au staff donc leurs prob
         (A IMPLEMENTER) crée et supprimer d'autre catégories.

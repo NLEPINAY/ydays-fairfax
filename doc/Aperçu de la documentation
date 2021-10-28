@@ -5,7 +5,7 @@
                         Le serveur lanceras en premier une fonction Initialize elle permets de crée la database, si elle a besoin d'être modifier c'est ici qu'il faut le faire.
                         Si les tables ne sont pas encore crée elle le seront ici.
                         2.
-                        Le serveur lance ensuite la fonction FillCategories qui crée dans la atables categories les catégories prédéfinie.
+                        Le serveur lance ensuite la fonction Fillcategory qui crée dans la atables category les catégories prédéfinie.
                         La page moderation permetras ensuite de crée et supprimer des catégories. (NOT DONE YET)
                         3.
                         Nous ouvront ensuite deux fichier en tant que file server , les images et le statics contenant js et css des templates.
@@ -16,7 +16,7 @@
                             - Request.Auth demande la fonction du handleFunc a lancer une fois qu'il a fini sont traitement ansi qu'un string correspondant au grade minimal a avoir
                               pour accéder a la dite page.
                         5.
-                        Nous supprimons les sessions dont le temps a été dépasser dans CleanExpiredSessions et ouvront le serveur ensuite.
+                        Nous supprimons les session dont le temps a été dépasser dans CleanExpiredsession et ouvront le serveur ensuite.
 
 
 

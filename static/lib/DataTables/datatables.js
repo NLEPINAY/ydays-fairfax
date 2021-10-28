@@ -7132,7 +7132,7 @@ function inflate(strm, flush) {
       }
 
       /* build code tables -- note: do not change the lenbits or distbits
-         values here (9 and 6) without reading the comments in inftrees.h
+         values here (9 and 6) without reading the comment in inftrees.h
          concerning the ENOUGH constants, which depend on those values */
       state.lenbits = 9;
 
@@ -7775,7 +7775,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
    used keeps track of how many table entries have been allocated from the
    provided *table space.  It is checked for LENS and DIST tables against
    the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in
-   the initial root table size constants.  See the comments in inftrees.h
+   the initial root table size constants.  See the comment in inftrees.h
    for more information.
 
    sym increments through all symbols, and the loop terminates when
@@ -11515,7 +11515,7 @@ process.nextTick = function (fun) {
     }
 };
 
-// v8 likes predictible objects
+// v8 like predictible objects
 function Item(fun, array) {
     this.fun = fun;
     this.array = array;
@@ -31989,7 +31989,7 @@ function inflate(strm, flush) {
         }
 
         /* build code tables -- note: do not change the lenbits or distbits
-           values here (9 and 6) without reading the comments in inftrees.h
+           values here (9 and 6) without reading the comment in inftrees.h
            concerning the ENOUGH constants, which depend on those values */
         state.lenbits = 9;
 
@@ -33043,7 +33043,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
    used keeps track of how many table entries have been allocated from the
    provided *table space.  It is checked for LENS and DIST tables against
    the constants ENOUGH_LENS and ENOUGH_DISTS to guard against changes in
-   the initial root table size constants.  See the comments in inftrees.h
+   the initial root table size constants.  See the comment in inftrees.h
    for more information.
 
    sym increments through all symbols, and the loop terminates when
@@ -34791,15 +34791,15 @@ fontkit.registerFormat = function (format) {
   formats.push(format);
 };
 
-fontkit.openSync = function (filename, postscriptName) {
+fontkit.openSync = function (filename, postcriptName) {
   var buffer = __webpack_require__(8).readFileSync(filename);
-  return fontkit.create(buffer, postscriptName);
+  return fontkit.create(buffer, postcriptName);
 };
 
-fontkit.open = function (filename, postscriptName, callback) {
-  if (typeof postscriptName === 'function') {
-    callback = postscriptName;
-    postscriptName = null;
+fontkit.open = function (filename, postcriptName, callback) {
+  if (typeof postcriptName === 'function') {
+    callback = postcriptName;
+    postcriptName = null;
   }
 
   __webpack_require__(8).readFile(filename, function (err, buffer) {
@@ -34808,7 +34808,7 @@ fontkit.open = function (filename, postscriptName, callback) {
     }
 
     try {
-      var font = fontkit.create(buffer, postscriptName);
+      var font = fontkit.create(buffer, postcriptName);
     } catch (e) {
       return callback(e);
     }
@@ -34819,13 +34819,13 @@ fontkit.open = function (filename, postscriptName, callback) {
   return;
 };
 
-fontkit.create = function (buffer, postscriptName) {
+fontkit.create = function (buffer, postcriptName) {
   for (var i = 0; i < formats.length; i++) {
     var format = formats[i];
     if (format.probe(buffer)) {
       var font = new format(new r.DecodeStream(buffer));
-      if (postscriptName) {
-        return font.getFont(postscriptName);
+      if (postcriptName) {
+        return font.getFont(postcriptName);
       }
 
       return font;
@@ -35270,9 +35270,9 @@ var NameTable = new r.VersionedStruct(r.uint16, {
   }
 });
 
-var NAMES = ['copyright', 'fontFamily', 'fontSubfamily', 'uniqueSubfamily', 'fullName', 'version', 'postscriptName', // Note: A font may have only one PostScript name and that name must be ASCII.
+var NAMES = ['copyright', 'fontFamily', 'fontSubfamily', 'uniqueSubfamily', 'fullName', 'version', 'postcriptName', // Note: A font may have only one postcript name and that name must be ASCII.
 'trademark', 'manufacturer', 'designer', 'description', 'vendorURL', 'designerURL', 'license', 'licenseURL', null, // reserved
-'preferredFamily', 'preferredSubfamily', 'compatibleFull', 'sampleText', 'postscriptCIDFontName', 'wwsFamilyName', 'wwsSubfamilyName'];
+'preferredFamily', 'preferredSubfamily', 'compatibleFull', 'sampleText', 'postcriptCIDFontName', 'wwsFamilyName', 'wwsSubfamilyName'];
 
 NameTable.process = function (stream) {
   var records = {};
@@ -35338,7 +35338,7 @@ NameTable.preEncode = function () {
       string: val.en
     });
 
-    if (key === 'postscriptName') {
+    if (key === 'postcriptName') {
       records.push({
         platformID: 1,
         encodingID: 0,
@@ -35432,7 +35432,7 @@ var OS2 = new r.VersionedStruct(r.uint16, {
 var versions = OS2.versions;
 versions[3] = versions[4] = versions[2];
 
-// PostScript information
+// postcript information
 var post = new r.VersionedStruct(r.fixed32, {
   header: { // these fields exist at the top of all versions
     italicAngle: r.fixed32, // Italic angle in counter-clockwise degrees from the vertical.
@@ -36675,7 +36675,7 @@ var FontDict = new CFFDict([
 
 var CFFTopDict = new CFFDict([
 // key       name                   type(s)                                 default
-[[12, 30], 'ROS', ['sid', 'sid', 'number'], null], [0, 'version', 'sid', null], [1, 'Notice', 'sid', null], [[12, 0], 'Copyright', 'sid', null], [2, 'FullName', 'sid', null], [3, 'FamilyName', 'sid', null], [4, 'Weight', 'sid', null], [[12, 1], 'isFixedPitch', 'boolean', false], [[12, 2], 'ItalicAngle', 'number', 0], [[12, 3], 'UnderlinePosition', 'number', -100], [[12, 4], 'UnderlineThickness', 'number', 50], [[12, 5], 'PaintType', 'number', 0], [[12, 6], 'CharstringType', 'number', 2], [[12, 7], 'FontMatrix', 'array', [0.001, 0, 0, 0.001, 0, 0]], [13, 'UniqueID', 'number', null], [5, 'FontBBox', 'array', [0, 0, 0, 0]], [[12, 8], 'StrokeWidth', 'number', 0], [14, 'XUID', 'array', null], [15, 'charset', CFFCharset, ISOAdobeCharset], [16, 'Encoding', CFFEncoding, StandardEncoding], [17, 'CharStrings', new CFFPointer(new CFFIndex()), null], [18, 'Private', new CFFPrivateOp(), null], [[12, 20], 'SyntheticBase', 'number', null], [[12, 21], 'PostScript', 'sid', null], [[12, 22], 'BaseFontName', 'sid', null], [[12, 23], 'BaseFontBlend', 'delta', null],
+[[12, 30], 'ROS', ['sid', 'sid', 'number'], null], [0, 'version', 'sid', null], [1, 'Notice', 'sid', null], [[12, 0], 'Copyright', 'sid', null], [2, 'FullName', 'sid', null], [3, 'FamilyName', 'sid', null], [4, 'Weight', 'sid', null], [[12, 1], 'isFixedPitch', 'boolean', false], [[12, 2], 'ItalicAngle', 'number', 0], [[12, 3], 'UnderlinePosition', 'number', -100], [[12, 4], 'UnderlineThickness', 'number', 50], [[12, 5], 'PaintType', 'number', 0], [[12, 6], 'CharstringType', 'number', 2], [[12, 7], 'FontMatrix', 'array', [0.001, 0, 0, 0.001, 0, 0]], [13, 'UniqueID', 'number', null], [5, 'FontBBox', 'array', [0, 0, 0, 0]], [[12, 8], 'StrokeWidth', 'number', 0], [14, 'XUID', 'array', null], [15, 'charset', CFFCharset, ISOAdobeCharset], [16, 'Encoding', CFFEncoding, StandardEncoding], [17, 'CharStrings', new CFFPointer(new CFFIndex()), null], [18, 'Private', new CFFPrivateOp(), null], [[12, 20], 'SyntheticBase', 'number', null], [[12, 21], 'postcript', 'sid', null], [[12, 22], 'BaseFontName', 'sid', null], [[12, 23], 'BaseFontBlend', 'delta', null],
 
 // CID font specific
 [[12, 31], 'CIDFontVersion', 'number', 0], [[12, 32], 'CIDFontRevision', 'number', 0], [[12, 33], 'CIDFontType', 'number', 0], [[12, 34], 'CIDCount', 'number', 8720], [[12, 35], 'UIDBase', 'number', null], [[12, 37], 'FDSelect', new CFFPointer(FDSelect), null], [[12, 36], 'FDArray', new CFFPointer(new CFFIndex(FontDict)), null], [[12, 38], 'FontName', 'sid', null]]);
@@ -36845,7 +36845,7 @@ var CFFFont = function () {
   };
 
   _createClass(CFFFont, [{
-    key: 'postscriptName',
+    key: 'postcriptName',
     get: function get() {
       if (this.version < 2) {
         return this.nameIndex[0];
@@ -38174,7 +38174,7 @@ var Instance = new r.Struct({
   coord: new r.Array(r.fixed32, function (t) {
     return t.parent.axisCount;
   }),
-  postscriptNameID: new r.Optional(r.uint16, function (t) {
+  postcriptNameID: new r.Optional(r.uint16, function (t) {
     return t.parent.instanceSize - t._currentOffset > 0;
   })
 });
@@ -38413,7 +38413,7 @@ tables.prep = prep;
 tables['cvt '] = cvt;
 tables.glyf = glyf;
 
-// PostScript Outlines
+// postcript Outlines
 tables['CFF '] = CFFFont;
 tables['CFF2'] = CFFFont;
 tables.VORG = VORG;
@@ -42689,7 +42689,7 @@ var isCombiningT = function isCombiningT(code) {
   return T_BASE + 1 && 1 <= code && code <= T_END;
 };
 
-// Character categories
+// Character category
 var X = 0; // Other character
 var L = 1; // Leading consonant
 var V = 2; // Medial vowel
@@ -42698,7 +42698,7 @@ var LV = 4; // Composed <LV> syllable
 var LVT = 5; // Composed <LVT> syllable
 var M = 6; // Tone mark
 
-// This function classifies a character using the above categories.
+// This function classifies a character using the above category.
 function getType(code) {
   if (isL(code)) {
     return L;
@@ -42909,13 +42909,13 @@ var indicMachine = {
 	tags: tags
 };
 
-var categories = ["O", "IND", "S", "GB", "B", "FM", "CGJ", "VMAbv", "VMPst", "VAbv", "VPst", "CMBlw", "VPre", "VBlw", "H", "VMBlw", "CMAbv", "MBlw", "CS", "R", "SUB", "MPst", "MPre", "FAbv", "FPst", "FBlw", "SMAbv", "SMBlw", "VMPre", "ZWNJ", "ZWJ", "WJ", "VS", "N", "HN", "MAbv"];
+var category = ["O", "IND", "S", "GB", "B", "FM", "CGJ", "VMAbv", "VMPst", "VAbv", "VPst", "CMBlw", "VPre", "VBlw", "H", "VMBlw", "CMAbv", "MBlw", "CS", "R", "SUB", "MPst", "MPre", "FAbv", "FPst", "FBlw", "SMAbv", "SMBlw", "VMPre", "ZWNJ", "ZWJ", "WJ", "VS", "N", "HN", "MAbv"];
 var decompositions$1 = { "2507": [2503, 2494], "2508": [2503, 2519], "2888": [2887, 2902], "2891": [2887, 2878], "2892": [2887, 2903], "3018": [3014, 3006], "3019": [3015, 3006], "3020": [3014, 3031], "3144": [3142, 3158], "3264": [3263, 3285], "3271": [3270, 3285], "3272": [3270, 3286], "3274": [3270, 3266], "3275": [3270, 3266, 3285], "3402": [3398, 3390], "3403": [3399, 3390], "3404": [3398, 3415], "3546": [3545, 3530], "3548": [3545, 3535], "3549": [3545, 3535, 3530], "3550": [3545, 3551], "3635": [3661, 3634], "3763": [3789, 3762], "3955": [3953, 3954], "3957": [3953, 3956], "3958": [4018, 3968], "3959": [4018, 3953, 3968], "3960": [4019, 3968], "3961": [4019, 3953, 3968], "3969": [3953, 3968], "6971": [6970, 6965], "6973": [6972, 6965], "6976": [6974, 6965], "6977": [6975, 6965], "6979": [6978, 6965], "69934": [69937, 69927], "69935": [69938, 69927], "70475": [70471, 70462], "70476": [70471, 70487], "70843": [70841, 70842], "70844": [70841, 70832], "70846": [70841, 70845], "71098": [71096, 71087], "71099": [71097, 71087] };
 var stateTable$1 = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 2, 3, 4, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, 17, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 2, 0, 24, 0, 25], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 28, 0, 0, 0, 0, 27, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 39, 0, 0, 47], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 0, 0, 12, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 0, 9, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 0, 11, 12, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 0, 9, 0, 0, 12, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 7, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 0, 11, 12, 0, 14, 0, 0, 0, 0, 0, 11, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 4, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 48, 11, 12, 13, 14, 48, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 49, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 0, 11, 12, 0, 14, 0, 16, 0, 0, 0, 11, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 51, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 0, 11, 12, 0, 14, 0, 16, 0, 0, 0, 11, 0, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 28, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 0, 0, 36, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 0, 33, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 34, 35, 36, 37, 38, 0, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 47], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 0, 35, 36, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 0, 33, 0, 0, 36, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 0, 31, 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 47], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 0, 35, 36, 0, 38, 0, 0, 0, 0, 0, 35, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 52, 35, 36, 37, 38, 52, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 53, 0, 0, 47], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 0, 35, 36, 0, 38, 0, 40, 0, 0, 0, 35, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 47], [0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 0, 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 0, 35, 36, 0, 38, 0, 40, 0, 0, 0, 35, 0, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 48, 11, 12, 13, 14, 0, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 5, 0, 6, 7, 8, 9, 48, 11, 12, 13, 14, 48, 16, 0, 0, 18, 11, 19, 20, 21, 22, 0, 0, 23, 0, 0, 0, 0, 0, 0, 25], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 51, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 52, 35, 36, 37, 38, 0, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 47], [0, 0, 0, 0, 0, 29, 0, 30, 31, 32, 33, 52, 35, 36, 37, 38, 52, 40, 0, 0, 41, 35, 42, 43, 44, 45, 0, 0, 46, 0, 0, 0, 0, 0, 0, 47], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 51, 0]];
 var accepting$1 = [false, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true];
 var tags$1 = [[], ["broken_cluster"], ["independent_cluster"], ["symbol_cluster"], ["standard_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], [], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["broken_cluster"], ["numeral_cluster"], ["broken_cluster"], ["independent_cluster"], ["symbol_cluster"], ["symbol_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["virama_terminated_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["standard_cluster"], ["broken_cluster"], ["broken_cluster"], ["numeral_cluster"], ["number_joiner_terminated_cluster"], ["standard_cluster"], ["standard_cluster"], ["numeral_cluster"]];
 var useData = {
-	categories: categories,
+	category: category,
 	decompositions: decompositions$1,
 	stateTable: stateTable$1,
 	accepting: accepting$1,
@@ -42924,7 +42924,7 @@ var useData = {
 
 // Cateories used in the OpenType spec:
 // https://www.microsoft.com/typography/otfntdev/devanot/shaping.aspx
-var CATEGORIES = {
+var category = {
   X: 1 << 0,
   C: 1 << 1,
   V: 1 << 2,
@@ -42973,9 +42973,9 @@ var POSITIONS = {
   End: 1 << 15
 };
 
-var CONSONANT_FLAGS = CATEGORIES.C | CATEGORIES.Ra | CATEGORIES.CM | CATEGORIES.V | CATEGORIES.Placeholder | CATEGORIES.Dotted_Circle;
-var JOINER_FLAGS = CATEGORIES.ZWJ | CATEGORIES.ZWNJ;
-var HALANT_OR_COENG_FLAGS = CATEGORIES.H | CATEGORIES.Coeng;
+var CONSONANT_FLAGS = category.C | category.Ra | category.CM | category.V | category.Placeholder | category.Dotted_Circle;
+var JOINER_FLAGS = category.ZWJ | category.ZWNJ;
+var HALANT_OR_COENG_FLAGS = category.H | category.Coeng;
 
 var INDIC_CONFIGS = {
   Default: {
@@ -43216,7 +43216,7 @@ function setupSyllables(font, glyphs) {
     if (start > last) {
       ++syllable;
       for (var _i2 = last; _i2 < start; _i2++) {
-        glyphs[_i2].shaperInfo = new IndicInfo(CATEGORIES.X, POSITIONS.End, 'non_indic_cluster', syllable);
+        glyphs[_i2].shaperInfo = new IndicInfo(category.X, POSITIONS.End, 'non_indic_cluster', syllable);
       }
     }
 
@@ -43233,7 +43233,7 @@ function setupSyllables(font, glyphs) {
   if (last < glyphs.length) {
     ++syllable;
     for (var i = last; i < glyphs.length; i++) {
-      glyphs[i].shaperInfo = new IndicInfo(CATEGORIES.X, POSITIONS.End, 'non_indic_cluster', syllable);
+      glyphs[i].shaperInfo = new IndicInfo(category.X, POSITIONS.End, 'non_indic_cluster', syllable);
     }
   }
 }
@@ -43320,7 +43320,7 @@ function initialReordering(font, glyphs, plan) {
 
       // Insert after possible Repha.
       var _i5 = start;
-      while (_i5 < end && glyphs[_i5].shaperInfo.category === CATEGORIES.Repha) {
+      while (_i5 < end && glyphs[_i5].shaperInfo.category === category.Repha) {
         _i5++;
       }
 
@@ -43344,7 +43344,7 @@ function initialReordering(font, glyphs, plan) {
     // If the syllable starts with Ra + Halant (in a script that has Reph)
     // and has more than one consonant, Ra is excluded from candidates for
     // base consonants.
-    if (indicConfig.rephPos !== POSITIONS.Ra_To_Become_Reph && features.rphf && start + 3 <= end && (indicConfig.rephMode === 'Implicit' && !isJoiner(glyphs[start + 2]) || indicConfig.rephMode === 'Explicit' && glyphs[start + 2].shaperInfo.category === CATEGORIES.ZWJ)) {
+    if (indicConfig.rephPos !== POSITIONS.Ra_To_Become_Reph && features.rphf && start + 3 <= end && (indicConfig.rephMode === 'Implicit' && !isJoiner(glyphs[start + 2]) || indicConfig.rephMode === 'Explicit' && glyphs[start + 2].shaperInfo.category === category.ZWJ)) {
       // See if it matches the 'rphf' feature.
       var _g = [glyphs[start].copy(), glyphs[start + 1].copy(), glyphs[start + 2].copy()];
       if (wouldSubstitute(_g.slice(0, 2), 'rphf') || indicConfig.rephMode === 'Explicit' && wouldSubstitute(_g, 'rphf')) {
@@ -43355,7 +43355,7 @@ function initialReordering(font, glyphs, plan) {
         base = start;
         hasReph = true;
       }
-    } else if (indicConfig.rephMode === 'Log_Repha' && glyphs[start].shaperInfo.category === CATEGORIES.Repha) {
+    } else if (indicConfig.rephMode === 'Log_Repha' && glyphs[start].shaperInfo.category === category.Repha) {
       limit++;
       while (limit < end && isJoiner(glyphs[limit])) {
         limit++;
@@ -43398,7 +43398,7 @@ function initialReordering(font, glyphs, plan) {
               }
 
               base = _i6;
-            } else if (start < _i6 && _info.category === CATEGORIES.ZWJ && glyphs[_i6 - 1].shaperInfo.category === CATEGORIES.H) {
+            } else if (start < _i6 && _info.category === category.ZWJ && glyphs[_i6 - 1].shaperInfo.category === category.H) {
               // A ZWJ after a Halant stops the base search, and requests an explicit
               // half form.
               // A ZWJ before a Halant, requests a subjoined form instead, and hence
@@ -43475,7 +43475,7 @@ function initialReordering(font, glyphs, plan) {
     // Mark final consonants.  A final consonant is one appearing after a matra,
     // like in Khmer.
     for (var _i9 = base + 1; _i9 < end; _i9++) {
-      if (glyphs[_i9].shaperInfo.category === CATEGORIES.M) {
+      if (glyphs[_i9].shaperInfo.category === category.M) {
         for (var j = _i9 + 1; j < end; j++) {
           if (isConsonant(glyphs[j])) {
             glyphs[j].shaperInfo.position = POSITIONS.Final_C;
@@ -43510,15 +43510,15 @@ function initialReordering(font, glyphs, plan) {
     if (plan.isOldSpec) {
       var disallowDoubleHalants = plan.unicodeScript !== 'Malayalam';
       for (var _i10 = base + 1; _i10 < end; _i10++) {
-        if (glyphs[_i10].shaperInfo.category === CATEGORIES.H) {
+        if (glyphs[_i10].shaperInfo.category === category.H) {
           var _j = void 0;
           for (_j = end - 1; _j > _i10; _j--) {
-            if (isConsonant(glyphs[_j]) || disallowDoubleHalants && glyphs[_j].shaperInfo.category === CATEGORIES.H) {
+            if (isConsonant(glyphs[_j]) || disallowDoubleHalants && glyphs[_j].shaperInfo.category === category.H) {
               break;
             }
           }
 
-          if (glyphs[_j].shaperInfo.category !== CATEGORIES.H && _j > _i10) {
+          if (glyphs[_j].shaperInfo.category !== category.H && _j > _i10) {
             // Move Halant to after last consonant.
             var t = glyphs[_i10];
             glyphs.splice.apply(glyphs, [_i10, 0].concat(glyphs.splice(_i10 + 1, _j - _i10)));
@@ -43534,9 +43534,9 @@ function initialReordering(font, glyphs, plan) {
     var lastPos = POSITIONS.Start;
     for (var _i11 = start; _i11 < end; _i11++) {
       var _info3 = glyphs[_i11].shaperInfo;
-      if (_info3.category & (JOINER_FLAGS | CATEGORIES.N | CATEGORIES.RS | CATEGORIES.CM | HALANT_OR_COENG_FLAGS & _info3.category)) {
+      if (_info3.category & (JOINER_FLAGS | category.N | category.RS | category.CM | HALANT_OR_COENG_FLAGS & _info3.category)) {
         _info3.position = lastPos;
-        if (_info3.category === CATEGORIES.H && _info3.position === POSITIONS.Pre_M) {
+        if (_info3.category === category.H && _info3.position === POSITIONS.Pre_M) {
           // Uniscribe doesn't move the Halant with Left Matra.
           // TEST: U+092B,U+093F,U+094DE
           // We follow.  This is important for the Sinhala
@@ -43567,7 +43567,7 @@ function initialReordering(font, glyphs, plan) {
           }
         }
         last = _i12;
-      } else if (glyphs[_i12].shaperInfo.category === CATEGORIES.M) {
+      } else if (glyphs[_i12].shaperInfo.category === category.M) {
         last = _i12;
       }
     }
@@ -43628,7 +43628,7 @@ function initialReordering(font, glyphs, plan) {
       //
       // Test case: U+0924,U+094D,U+0930,U+094d,U+200D,U+0915
       for (var _i17 = start; _i17 + 1 < base; _i17++) {
-        if (glyphs[_i17].shaperInfo.category === CATEGORIES.Ra && glyphs[_i17 + 1].shaperInfo.category === CATEGORIES.H && (_i17 + 1 === base || glyphs[_i17 + 2].shaperInfo.category === CATEGORIES.ZWJ)) {
+        if (glyphs[_i17].shaperInfo.category === category.Ra && glyphs[_i17 + 1].shaperInfo.category === category.H && (_i17 + 1 === base || glyphs[_i17 + 2].shaperInfo.category === category.ZWJ)) {
           glyphs[_i17].features.blwf = true;
           glyphs[_i17 + 1].features.blwf = true;
         }
@@ -43664,7 +43664,7 @@ function initialReordering(font, glyphs, plan) {
     // Apply ZWJ/ZWNJ effects
     for (var _i19 = start + 1; _i19 < end; _i19++) {
       if (isJoiner(glyphs[_i19])) {
-        var nonJoiner = glyphs[_i19].shaperInfo.category === CATEGORIES.ZWNJ;
+        var nonJoiner = glyphs[_i19].shaperInfo.category === category.ZWNJ;
         var _j5 = _i19;
 
         do {
@@ -43750,12 +43750,12 @@ function finalReordering(font, glyphs, plan) {
       }
     }
 
-    if (base === end && start < base && glyphs[base - 1].shaperInfo.category === CATEGORIES.ZWJ) {
+    if (base === end && start < base && glyphs[base - 1].shaperInfo.category === category.ZWJ) {
       base--;
     }
 
     if (base < end) {
-      while (start < base && glyphs[base].shaperInfo.category & (CATEGORIES.N | HALANT_OR_COENG_FLAGS)) {
+      while (start < base && glyphs[base].shaperInfo.category & (category.N | HALANT_OR_COENG_FLAGS)) {
         base--;
       }
     }
@@ -43779,7 +43779,7 @@ function finalReordering(font, glyphs, plan) {
       // The glyphs formed by 'half' are Chillus or ligated explicit viramas.
       // We want to position matra after them.
       if (plan.unicodeScript !== 'Malayalam' && plan.unicodeScript !== 'Tamil') {
-        while (newPos > start && !(glyphs[newPos].shaperInfo.category & (CATEGORIES.M | HALANT_OR_COENG_FLAGS))) {
+        while (newPos > start && !(glyphs[newPos].shaperInfo.category & (category.M | HALANT_OR_COENG_FLAGS))) {
           newPos--;
         }
 
@@ -43832,7 +43832,7 @@ function finalReordering(font, glyphs, plan) {
     // - If repha is encoded separately and in the logical position, we should only
     //   move it if it did NOT ligate.  If it ligated, it's probably the font trying
     //   to make it work without the reordering.
-    if (start + 1 < end && glyphs[start].shaperInfo.position === POSITIONS.Ra_To_Become_Reph && glyphs[start].shaperInfo.category === CATEGORIES.Repha !== (glyphs[start].isLigated && !glyphs[start].isMultiplied)) {
+    if (start + 1 < end && glyphs[start].shaperInfo.position === POSITIONS.Ra_To_Become_Reph && glyphs[start].shaperInfo.category === category.Repha !== (glyphs[start].isLigated && !glyphs[start].isMultiplied)) {
       var newRephPos = void 0;
       var rephPos = indicConfig.rephPos;
       var found = false;
@@ -43929,7 +43929,7 @@ function finalReordering(font, glyphs, plan) {
         // TEST: U+0930,U+094D,U+0915,U+094B,U+094D
         if (isHalantOrCoeng(glyphs[newRephPos])) {
           for (var _i22 = base + 1; _i22 < newRephPos; _i22++) {
-            if (glyphs[_i22].shaperInfo.category === CATEGORIES.M) {
+            if (glyphs[_i22].shaperInfo.category === category.M) {
               newRephPos--;
             }
           }
@@ -43972,16 +43972,16 @@ function finalReordering(font, glyphs, plan) {
             // The glyphs formed by 'half' are Chillus or ligated explicit viramas.
             // We want to position matra after them.
             if (plan.unicodeScript !== 'Malayalam' && plan.unicodeScript !== 'Tamil') {
-              while (_newPos > start && !(glyphs[_newPos - 1].shaperInfo.category & (CATEGORIES.M | HALANT_OR_COENG_FLAGS))) {
+              while (_newPos > start && !(glyphs[_newPos - 1].shaperInfo.category & (category.M | HALANT_OR_COENG_FLAGS))) {
                 _newPos--;
               }
 
               // In Khmer coeng model, a H,Ra can go *after* matras.  If it goes after a
               // split matra, it should be reordered to *before* the left part of such matra.
-              if (_newPos > start && glyphs[_newPos - 1].shaperInfo.category === CATEGORIES.M) {
+              if (_newPos > start && glyphs[_newPos - 1].shaperInfo.category === category.M) {
                 var _oldPos2 = _i23;
                 for (var j = base + 1; j < _oldPos2; j++) {
-                  if (glyphs[j].shaperInfo.category === CATEGORIES.M) {
+                  if (glyphs[j].shaperInfo.category === category.M) {
                     _newPos--;
                     break;
                   }
@@ -44027,7 +44027,7 @@ function nextSyllable(glyphs, start) {
 
 var _class$7;
 var _temp$3;
-var categories$1 = useData.categories;
+var category$1 = useData.category;
 var decompositions$2 = useData.decompositions;
 var trie$2 = new UnicodeTrie(Buffer("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","base64"));
 var stateMachine$1 = new StateMachine(useData);
@@ -44129,7 +44129,7 @@ function setupSyllables$1(font, glyphs) {
 
     // Create shaper info
     for (var i = start; i <= end; i++) {
-      glyphs[i].shaperInfo = new USEInfo(categories$1[useCategory(glyphs[i])], tags[0], syllable);
+      glyphs[i].shaperInfo = new USEInfo(category$1[useCategory(glyphs[i])], tags[0], syllable);
     }
 
     // Assign rphf feature
@@ -46403,7 +46403,7 @@ var TTFGlyph = function (_Glyph) {
 }(Glyph);
 
 /**
- * Represents an OpenType PostScript glyph, in the Compact Font Format.
+ * Represents an OpenType postcript glyph, in the Compact Font Format.
  */
 
 var CFFGlyph = function (_Glyph) {
@@ -48285,7 +48285,7 @@ var CFFSubset = function (_Subset) {
     topDict.Encoding = null;
     topDict.CharStrings = this.charstrings;
 
-    var _arr = ['version', 'Notice', 'Copyright', 'FullName', 'FamilyName', 'Weight', 'PostScript', 'BaseFontName', 'FontName'];
+    var _arr = ['version', 'Notice', 'Copyright', 'FullName', 'FamilyName', 'Weight', 'postcript', 'BaseFontName', 'FontName'];
     for (var _i4 = 0; _i4 < _arr.length; _i4++) {
       var key = _arr[_i4];
       topDict[key] = this.addString(this.cff.string(topDict[key]));
@@ -48305,7 +48305,7 @@ var CFFSubset = function (_Subset) {
       hdrSize: this.cff.hdrSize,
       offSize: this.cff.length,
       header: this.cff.header,
-      nameIndex: [this.cff.postscriptName],
+      nameIndex: [this.cff.postcriptName],
       topDictIndex: [topDict],
       stringIndex: this.strings,
       globalSubrIndex: this.gsubrs
@@ -48349,7 +48349,7 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
 
 /**
  * This is the base class for all SFNT-based font formats in fontkit.
- * It supports TrueType, and PostScript glyphs, and several color glyph formats.
+ * It supports TrueType, and postcript glyphs, and several color glyph formats.
  */
 var TTFFont = (_class = function () {
   TTFFont.probe = function probe(buffer) {
@@ -48421,7 +48421,7 @@ var TTFFont = (_class = function () {
   };
 
   /**
-   * The unique PostScript name for this font
+   * The unique postcript name for this font
    * @type {string}
    */
 
@@ -48673,9 +48673,9 @@ var TTFFont = (_class = function () {
   };
 
   _createClass(TTFFont, [{
-    key: 'postscriptName',
+    key: 'postcriptName',
     get: function get() {
-      var name = this.name.records.postscriptName;
+      var name = this.name.records.postcriptName;
       if (name) {
         var lang = _Object$keys(name)[0];
         return name[lang];
@@ -49440,7 +49440,7 @@ var TrueTypeCollection = function () {
       var stream = new r.DecodeStream(this.stream.buffer);
       stream.pos = offset;
       var font = new TTFFont(stream);
-      if (font.postscriptName === name) {
+      if (font.postcriptName === name) {
         return font;
       }
     }
@@ -49622,7 +49622,7 @@ var DFont = function () {
       var pos = this.header.dataOffset + ref.dataOffset + 4;
       var stream = new r.DecodeStream(this.stream.buffer.slice(pos));
       var font = new TTFFont(stream);
-      if (font.postscriptName === name) {
+      if (font.postcriptName === name) {
         return font;
       }
     }
@@ -54680,7 +54680,7 @@ bits = function(n) {
   return (log2(n) + 1) | 0;
 };
 
-CATEGORY_BITS = bits(data.categories.length - 1);
+CATEGORY_BITS = bits(data.category.length - 1);
 
 COMBINING_BITS = bits(data.combiningClasses.length - 1);
 
@@ -54711,7 +54711,7 @@ NUMBER_MASK = (1 << NUMBER_BITS) - 1;
 exports.getCategory = function(codePoint) {
   var val;
   val = trie.get(codePoint);
-  return data.categories[(val >> CATEGORY_SHIFT) & CATEGORY_MASK];
+  return data.category[(val >> CATEGORY_SHIFT) & CATEGORY_MASK];
 };
 
 exports.getCombiningClass = function(codePoint) {
@@ -54810,7 +54810,7 @@ exports.isMark = function(codePoint) {
 /* 270 */
 /***/ (function(module, exports) {
 
-module.exports = {"categories":["Cc","Zs","Po","Sc","Ps","Pe","Sm","Pd","Nd","Lu","Sk","Pc","Ll","So","Lo","Pi","Cf","No","Pf","Lt","Lm","Mn","Me","Mc","Nl","Zl","Zp","Cs","Co"],"combiningClasses":["Not_Reordered","Above","Above_Right","Below","Attached_Above_Right","Attached_Below","Overlay","Iota_Subscript","Double_Below","Double_Above","Below_Right","Above_Left","CCC10","CCC11","CCC12","CCC13","CCC14","CCC15","CCC16","CCC17","CCC18","CCC19","CCC20","CCC21","CCC22","CCC23","CCC24","CCC25","CCC30","CCC31","CCC32","CCC27","CCC28","CCC29","CCC33","CCC34","CCC35","CCC36","Nukta","Virama","CCC84","CCC91","CCC103","CCC107","CCC118","CCC122","CCC129","CCC130","CCC132","Attached_Above","Below_Left","Left","Kana_Voicing","CCC26","Right"],"scripts":["Common","Latin","Bopomofo","Inherited","Greek","Coptic","Cyrillic","Armenian","Hebrew","Arabic","Syriac","Thaana","Nko","Samaritan","Mandaic","Devanagari","Bengali","Gurmukhi","Gujarati","Oriya","Tamil","Telugu","Kannada","Malayalam","Sinhala","Thai","Lao","Tibetan","Myanmar","Georgian","Hangul","Ethiopic","Cherokee","Canadian_Aboriginal","Ogham","Runic","Tagalog","Hanunoo","Buhid","Tagbanwa","Khmer","Mongolian","Limbu","Tai_Le","New_Tai_Lue","Buginese","Tai_Tham","Balinese","Sundanese","Batak","Lepcha","Ol_Chiki","Braille","Glagolitic","Tifinagh","Han","Hiragana","Katakana","Yi","Lisu","Vai","Bamum","Syloti_Nagri","Phags_Pa","Saurashtra","Kayah_Li","Rejang","Javanese","Cham","Tai_Viet","Meetei_Mayek","null","Linear_B","Lycian","Carian","Old_Italic","Gothic","Old_Permic","Ugaritic","Old_Persian","Deseret","Shavian","Osmanya","Elbasan","Caucasian_Albanian","Linear_A","Cypriot","Imperial_Aramaic","Palmyrene","Nabataean","Hatran","Phoenician","Lydian","Meroitic_Hieroglyphs","Meroitic_Cursive","Kharoshthi","Old_South_Arabian","Old_North_Arabian","Manichaean","Avestan","Inscriptional_Parthian","Inscriptional_Pahlavi","Psalter_Pahlavi","Old_Turkic","Old_Hungarian","Brahmi","Kaithi","Sora_Sompeng","Chakma","Mahajani","Sharada","Khojki","Multani","Khudawadi","Grantha","Tirhuta","Siddham","Modi","Takri","Ahom","Warang_Citi","Pau_Cin_Hau","Cuneiform","Egyptian_Hieroglyphs","Anatolian_Hieroglyphs","Mro","Bassa_Vah","Pahawh_Hmong","Miao","Duployan","SignWriting","Mende_Kikakui"],"eaw":["N","Na","A","W","H","F"]}
+module.exports = {"category":["Cc","Zs","Po","Sc","Ps","Pe","Sm","Pd","Nd","Lu","Sk","Pc","Ll","So","Lo","Pi","Cf","No","Pf","Lt","Lm","Mn","Me","Mc","Nl","Zl","Zp","Cs","Co"],"combiningClasses":["Not_Reordered","Above","Above_Right","Below","Attached_Above_Right","Attached_Below","Overlay","Iota_Subscript","Double_Below","Double_Above","Below_Right","Above_Left","CCC10","CCC11","CCC12","CCC13","CCC14","CCC15","CCC16","CCC17","CCC18","CCC19","CCC20","CCC21","CCC22","CCC23","CCC24","CCC25","CCC30","CCC31","CCC32","CCC27","CCC28","CCC29","CCC33","CCC34","CCC35","CCC36","Nukta","Virama","CCC84","CCC91","CCC103","CCC107","CCC118","CCC122","CCC129","CCC130","CCC132","Attached_Above","Below_Left","Left","Kana_Voicing","CCC26","Right"],"scripts":["Common","Latin","Bopomofo","Inherited","Greek","Coptic","Cyrillic","Armenian","Hebrew","Arabic","Syriac","Thaana","Nko","Samaritan","Mandaic","Devanagari","Bengali","Gurmukhi","Gujarati","Oriya","Tamil","Telugu","Kannada","Malayalam","Sinhala","Thai","Lao","Tibetan","Myanmar","Georgian","Hangul","Ethiopic","Cherokee","Canadian_Aboriginal","Ogham","Runic","Tagalog","Hanunoo","Buhid","Tagbanwa","Khmer","Mongolian","Limbu","Tai_Le","New_Tai_Lue","Buginese","Tai_Tham","Balinese","Sundanese","Batak","Lepcha","Ol_Chiki","Braille","Glagolitic","Tifinagh","Han","Hiragana","Katakana","Yi","Lisu","Vai","Bamum","Syloti_Nagri","Phags_Pa","Saurashtra","Kayah_Li","Rejang","Javanese","Cham","Tai_Viet","Meetei_Mayek","null","Linear_B","Lycian","Carian","Old_Italic","Gothic","Old_Permic","Ugaritic","Old_Persian","Deseret","Shavian","Osmanya","Elbasan","Caucasian_Albanian","Linear_A","Cypriot","Imperial_Aramaic","Palmyrene","Nabataean","Hatran","Phoenician","Lydian","Meroitic_Hieroglyphs","Meroitic_Cursive","Kharoshthi","Old_South_Arabian","Old_North_Arabian","Manichaean","Avestan","Inscriptional_Parthian","Inscriptional_Pahlavi","Psalter_Pahlavi","Old_Turkic","Old_Hungarian","Brahmi","Kaithi","Sora_Sompeng","Chakma","Mahajani","Sharada","Khojki","Multani","Khudawadi","Grantha","Tirhuta","Siddham","Modi","Takri","Ahom","Warang_Citi","Pau_Cin_Hau","Cuneiform","Egyptian_Hieroglyphs","Anatolian_Hieroglyphs","Mro","Bassa_Vah","Pahawh_Hmong","Miao","Duployan","SignWriting","Mende_Kikakui"],"eaw":["N","Na","A","W","H","F"]}
 
 /***/ }),
 /* 271 */
@@ -57296,7 +57296,7 @@ exports.transformDictionaryWord = function(dst, idx, word, len, transform) {
       this.subset = this.font.createSubset();
       this.unicode = [[0]];
       this.widths = [this.font.getGlyph(0).advanceWidth];
-      this.name = this.font.postscriptName;
+      this.name = this.font.postcriptName;
       this.scale = 1000 / this.font.unitsPerEm;
       this.ascender = this.font.ascent * this.scale;
       this.descender = this.font.descent * this.scale;
@@ -57418,7 +57418,7 @@ exports.transformDictionaryWord = function(dst, idx, word, len, transform) {
         }
         return results;
       })()).join('');
-      name = tag + '+' + this.font.postscriptName;
+      name = tag + '+' + this.font.postcriptName;
       bbox = this.font.bbox;
       descriptor = this.document.ref({
         Type: 'FontDescriptor',
@@ -70659,7 +70659,7 @@ this.pdfMake = this.pdfMake || {}; this.pdfMake.vfs = {
 		"fnStateLoadCallback": function ( settings ) {
 			try {
 				return JSON.parse(
-					(settings.iStateDuration === -1 ? sessionStorage : localStorage).getItem(
+					(settings.iStateDuration === -1 ? sessiontorage : localStorage).getItem(
 						'DataTables_'+settings.sInstance+'_'+location.pathname
 					)
 				);
@@ -70762,7 +70762,7 @@ this.pdfMake = this.pdfMake || {}; this.pdfMake.vfs = {
 		 */
 		"fnStateSaveCallback": function ( settings, data ) {
 			try {
-				(settings.iStateDuration === -1 ? sessionStorage : localStorage).setItem(
+				(settings.iStateDuration === -1 ? sessiontorage : localStorage).setItem(
 					'DataTables_'+settings.sInstance+'_'+location.pathname,
 					JSON.stringify( data )
 				);
@@ -78411,7 +78411,7 @@ var _exportData = function ( dt, inOpts )
 		// Always remove script tags
 		str = str.replace( /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '' );
 
-		// Always remove comments
+		// Always remove comment
 		str = str.replace( /<!\-\-.*?\-\->/g, '' );
 
 		if ( config.stripHtml ) {
@@ -78767,7 +78767,7 @@ $.extend( DataTable.ext.buttons, {
 				.replace(/\n/g," ")        // remove new lines
 				.replace(/<br\s*\/?>/gi, " ")  // replace line breaks with spaces
 				.replace(/<select(.*?)<\/select>/g, "") // remove select tags, including options text
-				.replace(/<!\-\-.*?\-\->/g, "") // strip HTML comments
+				.replace(/<!\-\-.*?\-\->/g, "") // strip HTML comment
 				.replace(/<.*?>/g, "")   // strip HTML
 				.replace(/^\s+|\s+$/g,""); // trim
 

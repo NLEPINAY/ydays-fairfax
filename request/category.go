@@ -32,7 +32,7 @@ func Category(w http.ResponseWriter, r *http.Request, user database.User) {
 			- ID    int
 			- Name  string
 			- User  User
-			- Posts []Post
+			- post []Post
 		} */
 
 		var dataForCategory database.DataForCategory
@@ -59,7 +59,7 @@ func Category(w http.ResponseWriter, r *http.Request, user database.User) {
 			log.Println("❌ ERREUR | Le nom de la catégorie n°", ID, " est une string vide.")
 			return
 		}
-		dataForCategory.Posts, err = database.GetPostsByCategoryID(ID) // Récupération de tous les posts appartenant à la catégorie
+		dataForCategory.Post, err = database.GetpostByCategoryID(ID) // Récupération de tous les post appartenant à la catégorie
 		if err != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 			return
@@ -76,13 +76,13 @@ func Category(w http.ResponseWriter, r *http.Request, user database.User) {
 		if err != nil {
 			panic(err)
 		} else {
-			_, err = database.Db.Exec("INSERT INTO categories (name) VALUES ($1)", p.NewValue)
+			_, err = database.Db.Exec("INSERT INTO category (name) VALUES ($1)", p.NewValue)
 			if err != nil {
 				ERROR, _ := json.Marshal("ERROR")
 				w.Write(ERROR)
 				panic(err)
 			}
-			database.Db.QueryRow("SELECT id FROM categories WHERE name = ?", p.NewValue).Scan(&p.ID)
+			database.Db.QueryRow("SELECT id FROM category WHERE name = ?", p.NewValue).Scan(&p.ID)
 			fmt.Println(p.ID)
 			var msg = `{"new": "` + p.NewValue + `" , "id" : "` + p.ID + `" }`
 			w.Write([]byte(msg))

@@ -105,7 +105,7 @@ function grab_data(st) {
 function DeleteGif(id) {
     var params = new Object()
     params.id = id.toString()
-    params.table = "comments"
+    params.table = "comment"
     params.action = "DELETE"
     params.What = "gif"
     params.is="cell"
@@ -128,13 +128,13 @@ function DeleteGif(id) {
 function Delete(Table, id, p, textarea) {
     var params = new Object()
     switch (Table) {
-        case "posts":
+        case "post":
             var textarea = document.getElementById('EditArea')
             var editBtn = document.getElementById("edit")
             var finishBtn = document.getElementById("validate")
             var delBtn = document.getElementById("delete")
             break
-        case "comments":
+        case "comment":
             var textarea = document.getElementById('EditArea' + id)
             var editBtn = document.getElementById("edit" + id)
             var finishBtn = document.getElementById("validate" + id)
@@ -193,13 +193,13 @@ function Edit(id) {
 //Permet de valider les modifications
 function Validate(Table, id, p, textarea) {
     switch (Table) {
-        case "posts":
+        case "post":
             var textarea = document.getElementById('EditArea')
             var editBtn = document.getElementById("edit")
             var finishBtn = document.getElementById("validate")
             var delBtn = document.getElementById("delete")
             break
-        case "comments":
+        case "comment":
             var textarea = document.getElementById('EditArea' + id)
             var editBtn = document.getElementById("edit" + id)
             var finishBtn = document.getElementById("validate" + id)

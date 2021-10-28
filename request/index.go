@@ -22,7 +22,7 @@ func Index(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	/*  DataForIndex struct {
 	    - User  				User
-	    - Categories 			[]Category
+	    - category 			[]Category
 		- MostLikedPost 		Post
 		- MostCommentedPost 	Post
 		- MostRecentPost 		Post
@@ -33,11 +33,10 @@ func Index(w http.ResponseWriter, r *http.Request, user database.User) {
 	var dataForIndex database.DataForIndex
 
 	dataForIndex.User = user
-	dataForIndex.Categories = database.GetCategoriesList()
+	dataForIndex.Category = database.GetcategoryList()
 
 	dataForIndex.MostLikedPost, err = database.GetMostLikedPostOfTheWeek()
 	dataForIndex.MostLikedPost.Author, _ = database.GetUserByID(dataForIndex.MostLikedPost.AuthorID)
-
 	dataForIndex.MostCommentedPost, err2 = database.GetMostCommentedPostOfTheWeek()
 	dataForIndex.MostCommentedPost.Author, _ = database.GetUserByID(dataForIndex.MostCommentedPost.AuthorID)
 
@@ -46,10 +45,9 @@ func Index(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	dataForIndex.PromotedPost, err4 = database.GetPromotedPost()
 	dataForIndex.PromotedPost.Author, _ = database.GetUserByID(dataForIndex.PromotedPost.AuthorID)
-
 	if err != nil || err2 != nil || err3 != nil || err4 != nil {
 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-		log.Println("❌ ERREUR | Impossible de récupérer les 3 ou l'un des 3 posts pour la page Index")
+		log.Println("❌ ERREUR | Impossible de récupérer les 3 ou l'un des 3 post pour la page Index")
 		fmt.Println(err, err2, err3)
 		return
 	}

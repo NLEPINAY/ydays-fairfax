@@ -18,13 +18,13 @@ func NewPost(w http.ResponseWriter, r *http.Request, user database.User) {
 
 		/*  DataForNewPost struct {
 			- User       User
-			- Categories []Category
+			- category []Category
 		} */
 
 		var dataForNewPost database.DataForNewPost
 
 		dataForNewPost.User = user
-		dataForNewPost.Categories = database.GetCategoriesList()
+		dataForNewPost.Category = database.GetcategoryList()
 
 		err := MyTemplates.ExecuteTemplate(w, "newpost", dataForNewPost)
 		if err != nil {

@@ -33,10 +33,10 @@ func ProfilePage(w http.ResponseWriter, r *http.Request, user database.User) {
 		/* type DataForProfile struct {
 			User          User
 			Profile       User
-			Posts         []Post
-			Comments      []Comment
-			LikedPosts    []Post
-			LikedComments []Comment
+			post         []Post
+			comment      []Comment
+			Likedpost    []Post
+			Likedcomment []Comment
 		} */
 
 		profile := r.URL.Query().Get("user")
@@ -44,10 +44,10 @@ func ProfilePage(w http.ResponseWriter, r *http.Request, user database.User) {
 		data.User = user
 		data.Profile, err1 = database.GetUserByUsernameOrEmail(strings.ToLower(profile))
 		data.Profile.Badges = database.GetBadgeByUserID(data.Profile.ID)
-		data.Posts, err2 = database.GetPostsFromUserByID(data.Profile.ID)
-		data.Comments, err3 = database.GetCommentFromUserByID(data.Profile.ID)
-		data.LikedPosts, err4 = database.GetPostsLikedByUser(data.Profile.ID)
-		data.LikedComments, err5 = database.GetCommentsLikedByUser(data.Profile.ID)
+		data.Post, err2 = database.GetpostFromUserByID(data.Profile.ID)
+		data.Comment, err3 = database.GetCommentFromUserByID(data.Profile.ID)
+		data.Likedpost, err4 = database.GetpostLikedByUser(data.Profile.ID)
+		data.Likedcomment, err5 = database.GetcommentLikedByUser(data.Profile.ID)
 
 		if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
@@ -92,7 +92,7 @@ func deleteAccount(w http.ResponseWriter, r *http.Request, user database.User, p
 		w.Write(ERROR)
 		panic(err)
 	}
-	database.Db.Exec("DELETE FROM sessions WHERE user_id = $1", p.ID)
+	database.Db.Exec("DELETE FROM session WHERE user_id = $1", p.ID)
 	// On récupère le cookie dont le nom est "session", et on modifie son MaxAge (nombre négatif) pour le faire expirer :
 	cookie := &http.Cookie{
 		Name:   "session",

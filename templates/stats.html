@@ -11,14 +11,14 @@
 <body>
 
     <div class="row-container"></div>
-        {{ range $index , $cat := .Categories }}
+        {{ range $index , $cat := .category }}
         <table>
             <tr>
                 <th>{{$cat.Name}}</th>
             </tr>
-            <!-- Posts side -->
+            <!-- post side -->
             <tr>
-                <td>Nombre de posts:</td>
+                <td>Nombre de post:</td>
             </tr>
             <tr>
                 <td>{{index $.LifePostResult $index}}</td>
@@ -41,7 +41,7 @@
             <tr>
                 <td>{{index $.DailyPostResult $index}}</td>
             </tr>
-            <!-- Comments side -->
+            <!-- comment side -->
             <tr>
                 <td>Nombre de commentaires:</td>
             </tr>
@@ -68,7 +68,7 @@
             </tr>
             <!-- Like Side -->
             <tr>
-                <td>Nombre de Likes:</td>
+                <td>Nombre de like:</td>
             </tr>
             <tr>
                 <td>{{index $.LifeLikeResult $index}}</td>
@@ -93,7 +93,7 @@
             </tr>
             <!-- Dislike Side -->
             <tr>
-                <td>Nombre de Dislikes:</td>
+                <td>Nombre de Dislike:</td>
             </tr>
             <tr>
                 <td>{{index $.LifeDislikeResult $index}}</td>

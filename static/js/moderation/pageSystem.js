@@ -8,11 +8,11 @@
                     actualTable = urlParams.get('table')
                     if (actualTable == "users") {
                         showUsers()
-                    } else if (actualTable == "posts") {
-                        showPosts()
-                    } else if (actualTable == "comments") {
-                        showComments()
-                    } else if (actualTable == "categories") {
+                    } else if (actualTable == "post") {
+                        showpost()
+                    } else if (actualTable == "comment") {
+                        showcomment()
+                    } else if (actualTable == "category") {
                         showCategory()
                     }
                     //Je chope la page si elle est dans l'URL
@@ -39,12 +39,12 @@
                 switch (actualTable) {
                     case "users":
                         return UserOffset
-                    case "comments":
+                    case "comment":
                         return CommentOffset
-                    case "posts":
+                    case "post":
                         return PostOffset
                         break
-                    case "categories":
+                    case "category":
                         return CategoryOffset
                 }
             }
@@ -54,13 +54,13 @@
                     case "users":
                         UserOffset += i
                         break
-                    case "comments":
+                    case "comment":
                         CommentOffset += i
                         break
-                    case "posts":
+                    case "post":
                         PostOffset += i
                         break
-                    case "categories":
+                    case "category":
                         CategoryOffset += i
                 }
             }
@@ -73,13 +73,13 @@
                     case "users":
                         arr = AllTrUser
                         break
-                    case "comments":
+                    case "comment":
                         arr = AllTrComment
                         break
-                    case "posts":
+                    case "post":
                         arr = AllTrPost
                         break
-                    case "categories":
+                    case "category":
                         arr = AllTrCategory
                 }
                 if (actualOffSet < arr.length) {
@@ -114,13 +114,13 @@
                     case "users":
                         arr = AllTrUser
                         break
-                    case "comments":
+                    case "comment":
                         arr = AllTrComment
                         break
-                    case "posts":
+                    case "post":
                         arr = AllTrPost
                         break
-                    case "categories":
+                    case "category":
                         arr = AllTrCategory
                 }
                 //Si il y a une page avant alors je masque la page actuelle
@@ -152,11 +152,11 @@ function initialize() {
     temp = actualTable
     actualTable = "users"
     NextPage()
-    actualTable = "posts"
+    actualTable = "post"
     NextPage()
-    actualTable = "comments"
+    actualTable = "comment"
     NextPage()
-    actualTable = "categories"
+    actualTable = "category"
     NextPage()
     actualTable = temp
 }

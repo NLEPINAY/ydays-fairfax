@@ -78,7 +78,7 @@ func Login(w http.ResponseWriter, r *http.Request, user database.User) {
 
 func Logout(w http.ResponseWriter, r *http.Request, user database.User) {
 	// Suppression de la session de l'utilisateur dans la base de données :
-	database.Db.Exec("DELETE FROM sessions WHERE user_id = $1", user.ID)
+	database.Db.Exec("DELETE FROM session WHERE user_id = $1", user.ID)
 
 	// On récupère le cookie dont le nom est "session", et on modifie son MaxAge (nombre négatif) pour le faire expirer :
 	cookie := &http.Cookie{

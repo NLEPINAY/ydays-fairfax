@@ -45,9 +45,9 @@ section#newspaper .stats {
   justify-content: center;
   align-items: center;
 }
-section#newspaper .stats .likes,
+section#newspaper .stats .like,
 section#newspaper .stats .replies,
-section#newspaper .stats .dislikes {
+section#newspaper .stats .dislike {
   display: flex;
   flex-direction: row;
   margin: 0 20px 0 20px;

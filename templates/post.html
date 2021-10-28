@@ -58,19 +58,19 @@
                         <!-- [2] IF user has liked the post before : picture full ❤️ -->
                         {{ if .Post.Liked }}
                         <a href="/reaction/like/post/{{.Post.ID}}">
-                            <img src="../static/images/like_full.png" title="Number of likes">
+                            <img src="../static/images/like_full.png" title="Number of like">
                         </a>
 
                         <!-- [2] ELSE (user has NOT liked the post) : picture empty 🤍 -->
                         {{ else }}
                         <a href="/reaction/like/post/{{.Post.ID}}">
-                            <img src="../static/images/like_empty.png" title="Number of likes">
+                            <img src="../static/images/like_empty.png" title="Number of like">
                         </a>
                         {{ end }}
 
                         <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty 🤍 -->
                         {{ else }}
-                        <img src="../static/images/like_empty.png" title="Number of likes"> {{ end }}
+                        <img src="../static/images/like_empty.png" title="Number of like"> {{ end }}
 
                         <!-- ======== ✉️ REPLIES ✉️ ======== -->
                         <img src="../static/images/reply.png" title="Number of replies">
@@ -82,26 +82,24 @@
                         <!-- [2] IF user has disliked the post before : picture full 💔 -->
                         {{ if .Post.Disliked }}
                         <a href="/reaction/dislike/post/{{.Post.ID}}">
-                            <img src="../static/images/dislike_full.png" title="Number of dislikes">
+                            <img src="../static/images/dislike_full.png" title="Number of dislike">
                         </a>
 
                         <!-- [2] ELSE (user has NOT liked the post) : picture empty -->
                         {{ else }}
                         <a href="/reaction/dislike/post/{{.Post.ID}}">
-                            <img src="../static/images/dislike_empty.png" title="Number of dislikes">
+                            <img src="../static/images/dislike_empty.png" title="Number of dislike">
                         </a>
                         {{ end }}
 
                         <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty -->
                         {{ else }}
-                        <img src="../static/images/dislike_empty.png" title="Number of dislikes"> {{ end }}
+                        <img src="../static/images/dislike_empty.png" title="Number of dislike"> {{ end }}
 
 
                     </div>
                     <div class="numbers">
-                        <p>{{ len .Post.Likes }}</p>
-                        <p>{{ len .Comments }}</p>
-                        <p>{{ len .Post.Dislikes }}</p>
+
                     </div>
                 </div>
 
@@ -172,12 +170,6 @@
                     {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1)}}
                     <textarea class="Invisible" id="EditArea">{{.Post.Content}}</textarea> {{end}}
 
-                    <!-- Si la longueur du nom de l'image > 5, c'est qu'elle existe : -->
-                    {{ if gt (len .Post.Image) 5 }}
-                    <div class="image">
-                        <img src="{{ .Post.Image }}">
-                    </div>
-                    {{ end }}
 
                     <div class="date">{{ .Post.Date }}</div>
                 </div>
@@ -185,13 +177,13 @@
                 <!-- Si le user est l'auteur du post : -->
                 {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1) }}
                 <input type="button" value="Edit" class="white" id=edit onclick="Edit('')" />
-                <input type="button" value="Edit Fax" id=validate class="Invisible white" onclick="Validate('posts', {{ .Post.ID }} , document.getElementById('main-text'))" />
-                <input type="button" value="Delete Fax" id=delete class="Invisible white" onclick="Delete('posts', {{ .Post.ID }} , document.getElementById('main-text'))" /> {{end}}
+                <input type="button" value="Edit Fax" id=validate class="Invisible white" onclick="Validate('post', {{ .Post.ID }} , document.getElementById('main-text'))" />
+                <input type="button" value="Delete Fax" id=delete class="Invisible white" onclick="Delete('post', {{ .Post.ID }} , document.getElementById('main-text'))" /> {{end}}
             </div>
 
-            <!-- COLONNE 'COMMENTS' -->
+            <!-- COLONNE 'comment' -->
             <div class="column right">
-                {{ range .Comments }}
+                {{ range .Comment }}
                 <div class="container">
                     <div class="top">
                         <a href="/Profile?user={{ .Author.Username }}" target="_blank">
@@ -231,8 +223,8 @@
                     <textarea class="Invisible" id="EditArea{{.ID}}">{{.Content}}</textarea>
                     <input type="button" class="whiter white" value="Edit" id="edit{{.ID}}" onclick="Edit({{.ID}})" /> {{if ne .Gif ""}}
                     <input type="button" value="Delete gif" class="Invisible white" id="deletegif{{.ID}}" onclick="DeleteGif({{.ID}})" /> {{end}}
-                    <input type="button" value="Edit Reply" id="validate{{.ID}}" class="Invisible white" onclick="Validate('comments', {{ .ID }})" />
-                    <input type="button" value="Delete Reply" id="delete{{.ID}}" class="Invisible white" onclick="Delete('comments', {{ .ID }})" />{{end}}
+                    <input type="button" value="Edit Reply" id="validate{{.ID}}" class="Invisible white" onclick="Validate('comment', {{ .ID }})" />
+                    <input type="button" value="Delete Reply" id="delete{{.ID}}" class="Invisible white" onclick="Delete('comment', {{ .ID }})" />{{end}}
 
                     <div class="bottom">
                         <!-- Si le post n'est pas supprimé : -->

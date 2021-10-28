@@ -110,9 +110,9 @@
                     </div>
 
                     <div class="columns">
-                        <!-- Posts du profile : -->
+                        <!-- post du profile : -->
                         <div class="column" id="column-1">
-                            {{ range .Posts }}
+                            {{ range .Post }}
                             <div class="post">
                                 <!-- Si le post est publié : -->
                                 {{ if eq .State 0}}
@@ -135,7 +135,7 @@
 
                         <!-- Commentaires du profile : -->
                         <div class="column" id="column-2">
-                            {{ range .Comments }}
+                            {{ range .Comment }}
                             <div class="comment">
                                 <!-- Si le post est publié : -->
                                 {{ if eq .PostState 0}}
@@ -168,9 +168,9 @@
                             {{ end }}
                         </div>
 
-                        <!-- Posts likés par le profile : -->
+                        <!-- post likés par le profile : -->
                         <div class="column" id="column-3">
-                            {{ range .LikedPosts }}
+                            {{ range .Likedpost }}
                             <div class="post">
                                 <!-- Si le post est publié : -->
                                 {{ if eq .State 0}}
@@ -194,7 +194,7 @@
 
                         <!-- Commentaires likés par le profile : -->
                         <div class="column" id="column-2">
-                            {{ range .LikedComments }}
+                            {{ range .Likedcomment }}
                             <div class="comment">
                                 <!-- Si le post est publié : -->
                                 {{ if eq .PostState 0}}
@@ -260,7 +260,7 @@
             {{end}}
             <div> LIST OF POST OF THIS USER :</div>
             <table>
-                {{range .Posts}}
+                {{range .Post}}
                 <tr>
                     <td>
                         {{if gt .State 0}}
@@ -272,15 +272,15 @@
                 </tr>
                 {{end}}
             </table>
-            <div> LIST OF COMMENTS OF THIS USER :</div>
+            <div> LIST OF comment OF THIS USER :</div>
             <table>
-                {{range .Comments}}
+                {{range .Comment}}
                 <tr>
                     <td>
                         {{if gt .State 0}}
                         <div data-name='deleted'>{{.Content}} Deleted</div>
                         {{else}}
-                        <div id={{.ID}} data-name='comments'>{{.Content}}</div>
+                        <div id={{.ID}} data-name='comment'>{{.Content}}</div>
                         {{end}}
                     </td>
                 </tr>

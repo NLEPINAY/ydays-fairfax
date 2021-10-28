@@ -11,9 +11,9 @@ import (
 )
 
 type TicketData struct {
-	User    database.User
-	Tickets []database.Ticket
-	Bool    int
+	User   database.User
+	ticket []database.Ticket
+	Bool   int
 }
 
 func Ticket(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -25,13 +25,13 @@ func Ticket(w http.ResponseWriter, r *http.Request, user database.User) {
 		if particular != nil {
 			data.Bool = 1
 			id, _ := strconv.Atoi(particular[0])
-			data.Tickets = append(data.Tickets, database.GetTicketByID(id))
-			database.Db.QueryRow("SELECT username FROM users WHERE id=?", data.Tickets[0].Author_id).Scan(&data.Tickets[0].Author_name)
+			data.ticket = append(data.ticket, database.GetTicketByID(id))
+			database.Db.QueryRow("SELECT username FROM users WHERE id=?", data.ticket[0].Author_id).Scan(&data.ticket[0].Author_name)
 		} else {
 			if user.Role < database.ADMIN {
-				data.Tickets = database.GetTicketByUserID(user.ID)
+				data.ticket = database.GetTicketByUserID(user.ID)
 			} else {
-				data.Tickets = database.GetAllTickets()
+				data.ticket = database.GetAllticket()
 			}
 			data.Bool = 0
 		}
@@ -48,9 +48,9 @@ func Ticket(w http.ResponseWriter, r *http.Request, user database.User) {
 		id := r.FormValue("id")
 		database.ResolveTicket(id)
 		if user.Role < database.ADMIN {
-			data.Tickets = database.GetTicketByUserID(data.User.ID)
+			data.ticket = database.GetTicketByUserID(data.User.ID)
 		} else {
-			data.Tickets = database.GetAllTickets()
+			data.ticket = database.GetAllticket()
 		}
 		err := MyTemplates.ExecuteTemplate(w, "ticket", data)
 		if err != nil {

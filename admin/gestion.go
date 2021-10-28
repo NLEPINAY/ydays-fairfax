@@ -73,7 +73,7 @@ func Moderation(w http.ResponseWriter, r *http.Request, user database.User) {
 		Data = GetCommentList(Data)
 		Data = GetPostList(Data)
 		Data.Self = user
-		Data.Category = database.GetCategoriesList()
+		Data.Category = database.GetcategoryList()
 		err := profileTmpl.ExecuteTemplate(w, "moderation", Data)
 		if err != nil {
 			panic(err)
@@ -121,7 +121,7 @@ func isDatabaseTable(table string) bool {
 
 //Récupère tout les users
 func GetClientList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM users CROSS JOIN (SELECT COUNT(*) AS Count FROM users) LEFT JOIN houses ON houses.id = users.house_id")
+	rows, _ := database.Db.Query("SELECT * FROM user CROSS JOIN (SELECT COUNT(*) AS Count FROM user) LEFT JOIN house ON house.id_house = user.house_id")
 
 	defer rows.Close()
 	for rows.Next() {
@@ -143,17 +143,17 @@ func GetClientList(Data Data) Data {
 func GetPostOnlyByID(ID int, Data Data) Data {
 	var post database.Post
 	id := ID
-	row := database.Db.QueryRow("SELECT * FROM posts INNER JOIN users ON posts.author_id = users.id WHERE posts.id = ?", id) // id, title, author_id, content, category_id, date, image, state
+	row := database.Db.QueryRow("SELECT * FROM post INNER JOIN users ON post.author_id = users.id WHERE post.id = ?", id) // id, title, author_id, content, category_id, date, image, state
 	//defer rows.Close()
-	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
+	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Promoted, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
 	//author, _ := GetUserByID(post.AuthorID)
 	//post.Author = author
 	Data.Post = append(Data.Post, post)
 	return Data
 }
 
-func GetCategoriesList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM categories CROSS JOIN (SELECT COUNT(*) AS Count FROM categories)")
+func GetcategoryList(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT * FROM category CROSS JOIN (SELECT COUNT(*) AS Count FROM category)")
 	defer rows.Close()
 	for rows.Next() {
 		var category database.Category
@@ -168,7 +168,7 @@ func GetCategoriesList(Data Data) Data {
 
 //Récupère tout les commentaires
 func GetCommentList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM comments CROSS JOIN (SELECT COUNT(*) AS Count FROM comments)")
+	rows, _ := database.Db.Query("SELECT * FROM comment CROSS JOIN (SELECT COUNT(*) AS Count FROM comment)")
 	defer rows.Close()
 	for rows.Next() {
 		var newComment database.Comment
@@ -181,13 +181,13 @@ func GetCommentList(Data Data) Data {
 	return Data
 }
 
-//Récupère tout les posts
+//Récupère tout les post
 func GetPostList(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT * FROM posts CROSS JOIN (SELECT COUNT(*) AS Count FROM posts) INNER JOIN users ON posts.author_id = users.id INNER JOIN categories ON posts.category_id = categories.id")
+	rows, _ := database.Db.Query("SELECT * FROM post CROSS JOIN (SELECT COUNT(*) AS Count FROM post) INNER JOIN user ON post.author_id = user.id_user INNER JOIN category ON post.category_id = category.id_category")
 	defer rows.Close()
 	for rows.Next() {
 		var newPost database.Post
-		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.Image, &newPost.State, &newPost.Reason, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID, &newPost.Category.ID, &newPost.Category.Name, &newPost.Category.Theme, &newPost.Category.Description)
+		err := rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.State, &newPost.Promoted, &newPost.Count, &newPost.Author.ID, &newPost.Author.Username, &newPost.Author.Password, &newPost.Author.Email, &newPost.Author.Role, &newPost.Author.Avatar, &newPost.Author.Date, &newPost.Author.State, &newPost.Author.SecretQuestion, &newPost.Author.SecretAnswer, &newPost.Author.House.ID, &newPost.Category.ID, &newPost.Category.Name, &newPost.Category.Theme, &newPost.Category.Description)
 		if err != nil {
 			panic(err)
 		}
@@ -196,12 +196,12 @@ func GetPostList(Data Data) Data {
 	return Data
 }
 
-func GetLikes(Data Data) Data {
-	rows, _ := database.Db.Query("SELECT post_id, sum(case when type = 'like' then 1 else 0 end) as likes, sum(case when type = 'dislike' then 1 else 0 end) as dislikes FROM post_likes GROUP BY post_id")
+func Getlike(Data Data) Data {
+	rows, _ := database.Db.Query("SELECT post_id, sum(case when type = 'like' then 1 else 0 end) as like, sum(case when type = 'dislike' then 1 else 0 end) as dislike FROM post_like GROUP BY post_id")
 	defer rows.Close()
 	for rows.Next() {
 		var newCount database.CountLike
-		err := rows.Scan(&newCount.PostId, &newCount.CountLikes, &newCount.CountDislikes)
+		err := rows.Scan(&newCount.PostId, &newCount.Countlike, &newCount.CountDislike)
 		if err != nil {
 			panic(err)
 		}
@@ -210,9 +210,9 @@ func GetLikes(Data Data) Data {
 	return Data
 }
 
-//Compte les posts par mois
+//Compte les post par mois
 func GetPostChart(Data DataForChart) DataForChart {
-	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	rows, _ := database.Db.Query("SELECT COUNT(id_post) AS Count, strftime('%m', date_post) as Critere FROM post WHERE strftime('%Y', date_post) = '2021' GROUP BY strftime('%m', date_post)")
 	defer rows.Close()
 	for rows.Next() {
 		var newDataPost database.CritereChart
@@ -225,9 +225,9 @@ func GetPostChart(Data DataForChart) DataForChart {
 	return Data
 }
 
-//Compte les posts par categorie
-func GetCategoriesChart(Data DataForChart) DataForChart {
-	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, category_id as Critere FROM posts WHERE strftime('%Y', Date) = '2021' GROUP BY category_id")
+//Compte les post par category
+func GetcategoryChart(Data DataForChart) DataForChart {
+	rows, _ := database.Db.Query("SELECT COUNT(id_post) AS Count, category_id as Critere FROM post WHERE strftime('%Y', date_post) = '2021' GROUP BY category_id")
 	defer rows.Close()
 	for rows.Next() {
 		var newDataPost database.CritereChart
@@ -242,7 +242,7 @@ func GetCategoriesChart(Data DataForChart) DataForChart {
 
 //Evolution du nombre des utilisateurs
 func GetUserChart(Data DataForChart) DataForChart {
-	rows, _ := database.Db.Query("SELECT COUNT(ID) AS Count, strftime('%m', Date) as Critere FROM users WHERE strftime('%Y', Date) = '2021' GROUP BY strftime('%m', Date)")
+	rows, _ := database.Db.Query("SELECT COUNT(id_user) AS Count, strftime('%m', date_user) as Critere FROM user WHERE strftime('%Y', date_user) = '2021' GROUP BY strftime('%m', date_user)")
 	defer rows.Close()
 	for rows.Next() {
 		var newDataUser database.CritereChart

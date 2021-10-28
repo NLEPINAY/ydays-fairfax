@@ -22,131 +22,141 @@ var Db *sql.DB
 func Initialize() {
 	// Déclaration de toutes les tables de la base de données :
 	dbTables := []string{
-		`CREATE TABLE IF NOT EXISTS "users" (
-			"id"				INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+		`CREATE TABLE IF NOT EXISTS "user" (
+			"id_user"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
 			"username"			TEXT UNIQUE NOT NULL,
 			"password"			TEXT NOT NULL,
 			"email"				TEXT UNIQUE NOT NULL,
 			"role"				INTEGER DEFAULT 0,
 			"avatar"			TEXT DEFAULT "/images/avatars/defaultAvatar.jpg",
-			"date"				DATETIME DEFAULT CURRENT_TIMESTAMP,
-			"state"				INTEGER DEFAULT 0,		
+			"date_user"			DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"state_user"		INTEGER DEFAULT 0,		
 			"secretQuestion"	TEXT DEFAULT '',
 			"secretAnswer"		TEXT DEFAULT '',
 			"house_id"			INTEGER DEFAULT 0
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "posts" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"title"			TEXT NOT NULL,
-			"author_id"		INTEGER NOT NULL,
-			"content"		TEXT NOT NULL,
-			"category_id"	INTEGER NOT NULL,
-			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			"image"			TEXT DEFAULT '',
-			"state"			INTEGER DEFAULT 0,
-			"reason"		TEXT DEFAULT "Supprimer par l'utilisateur lui même",
-			FOREIGN KEY(author_id) REFERENCES "users"(id), 
-			FOREIGN KEY(category_id) REFERENCES "categories"(id) 
+		`CREATE TABLE IF NOT EXISTS "post" (
+			"id_post"				INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"title_post"			TEXT NOT NULL,
+			"author_id"				INTEGER NOT NULL,
+			"content_post"			TEXT NOT NULL,
+			"category_id"			INTEGER NOT NULL,
+			"date_post"				DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"state_post"			INTEGER DEFAULT 0,
+			"promoted"				INTEGER NOT NULL DEFAULT 0,
+			FOREIGN KEY(author_id) REFERENCES "user"(id_user), 
+			FOREIGN KEY(category_id) REFERENCES "category"(id_category) 
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "comments" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"author_id"		INTEGER NOT NULL,
-			"post_id"		INTEGER NOT NULL,
-			"content"		TEXT NOT NULL,
-			"gif"			TEXT NOT NULL DEFAULT '',
-			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			"state"			INTEGER DEFAULT 0,
-			"reason"		TEXT DEFAULT "Supprimer par l'utilisateur lui même",
-			FOREIGN KEY(author_id) REFERENCES "users"(id),
-			FOREIGN KEY(post_id) REFERENCES "posts"(id)
+		`CREATE TABLE IF NOT EXISTS "comment" (
+			"id_comment"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"author_id"				INTEGER NOT NULL,
+			"post_id"				INTEGER NOT NULL,
+			"content_comment"		TEXT NOT NULL,
+			"gif"					TEXT NOT NULL DEFAULT '',
+			"date_comment"			DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"state_comment"			INTEGER DEFAULT 0,
+			FOREIGN KEY(author_id) REFERENCES "user"(id_user),
+			FOREIGN KEY(post_id) REFERENCES "post"(id_post)
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "sessions" (
-			"id"		INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"user_id"	INTEGER NOT NULL,
-			"uuid"		TEXT NOT NULL,
-			"date"		DATETIME DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY(user_id) REFERENCES "users"(id)
+		`CREATE TABLE IF NOT EXISTS "session" (
+			"id_session"		INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"user_id"			INTEGER NOT NULL,
+			"uuid"				TEXT NOT NULL,
+			"date_session"		DATETIME DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY(user_id) REFERENCES "user"(id_user)
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "categories" (
-			"id"	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"name"	TEXT NOT NULL UNIQUE,
+		`CREATE TABLE IF NOT EXISTS "category" (
+			"id_category"	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"name_category"	TEXT NOT NULL UNIQUE,
 			"theme" TEXT NOT NULL DEFAULT ' ',
 			"description"	TEXT NOT NULL DEFAULT ' '
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "post_likes" (
-			"post_id"		INTEGER NOT NULL,
-			"user_id"		INTEGER NOT NULL,
-			"type"			TEXT NOT NULL,	
-			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY(post_id) REFERENCES "posts"(id),
-			FOREIGN KEY(user_id) REFERENCES "users"(id),
+		`CREATE TABLE IF NOT EXISTS "post_like" (
+			"post_id"			INTEGER NOT NULL,
+			"user_id"			INTEGER NOT NULL,
+			"type"				TEXT NOT NULL,	
+			"date_post_like"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY(post_id) REFERENCES "post"(id_post),
+			FOREIGN KEY(user_id) REFERENCES "user"(id_user),
 			PRIMARY KEY(post_id, user_id)
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "comment_likes" (
+		`CREATE TABLE IF NOT EXISTS "comment_like" (
 			"comment_id"	INTEGER NOT NULL,
 			"user_id"		INTEGER NOT NULL,
 			"type"			TEXT NOT NULL,	
 			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY(comment_id) REFERENCES "comments"(id),
-			FOREIGN KEY(user_id) REFERENCES "users"(id),
+			FOREIGN KEY(comment_id) REFERENCES "comment"(id_user),
+			FOREIGN KEY(user_id) REFERENCES "user"(id_user),
 			PRIMARY KEY(comment_id, user_id)
 		)`,
 
 		`CREATE TABLE IF NOT EXISTS "badge" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"type"			TEXT NOT NULL,
-			"image"			TEXT NOT NULL
+			"id_badge"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"type"				TEXT NOT NULL,
+			"image_badge"				TEXT NOT NULL
 		)`,
 
 		`CREATE TABLE IF NOT EXISTS "user_badge" (
 			"user_id"		INTEGER NOT NULL,
 			"badge_id"		INTEGER NOT NULL,
-			FOREIGN KEY(user_id) REFERENCES "users"(id),
-			FOREIGN KEY(badge_id) REFERENCES "badge"(id),
+			FOREIGN KEY(user_id) REFERENCES "user"(id_user),
+			FOREIGN KEY(badge_id) REFERENCES "badge"(id_badge),
 			PRIMARY KEY(user_id, badge_id)
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "tickets" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+		`CREATE TABLE IF NOT EXISTS "ticket" (
+			"id_ticket"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
 			"author_id"		INTEGER NOT NULL,
-			"actual_admin" INTERGER NOT NULL,
-			"title"		TEXT NOT NULL,
-			"content"		TEXT NOT NULL,
-			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			"state"			INTEGER DEFAULT 0,
-			FOREIGN KEY(author_id) REFERENCES "users"(id),
-			FOREIGN KEY(actual_admin) REFERENCES "users"(id)
+			"actual_admin" 	INTERGER NOT NULL,
+			"title_ticket"			TEXT NOT NULL,
+			"content_ticket"		TEXT NOT NULL,
+			"date_ticket"			DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"state_ticket"			INTEGER DEFAULT 0,
+			FOREIGN KEY(author_id) REFERENCES "user"(id_user),
+			FOREIGN KEY(actual_admin) REFERENCES "user"(id_user)
 		)`,
 
-		`CREATE TABLE IF NOT EXISTS "ticket_answers" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"ticket_id"		INTEGER NOT NULL,
-			"author_id"		INTEGER NOT NULL,
-			"author_name" STRING NOT NULL,
-			"content"		TEXT NOT NULL,
-			"date"			DATETIME DEFAULT CURRENT_TIMESTAMP,
-			"state"			INTEGER DEFAULT 0,
-			FOREIGN KEY(ticket_id) REFERENCES "ticket"(id),
-			FOREIGN KEY(author_name) REFERENCES "users"(username),
-			FOREIGN KEY(author_id) REFERENCES "users"(id)
-		)`,
-
-		`CREATE TABLE IF NOT EXISTS "promoted_post" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-			"post_id"		INTEGER NOT NULL,
-			FOREIGN KEY(post_id) REFERENCES "posts"(id)
-		)`,
-
-		`CREATE TABLE IF NOT EXISTS "houses" (
-			"id"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+		`CREATE TABLE IF NOT EXISTS "house" (
+			"id_house"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
 			"name"			TEXT NOT NULL,
-			"image"			TEXT NOT NULL
+			"image_house"			TEXT NOT NULL
+		)`,
+
+		`CREATE TABLE IF NOT EXISTS "chat" (
+			"id_chat"				INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"date_creation"			TEXT NOT NULL,
+			"state"					TEXT NOT NULL
+		)`,
+
+		`CREATE TABLE IF NOT EXISTS "message" (
+			"id_message"			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"id_chat"				INTEGER NOT NULL,
+			"date_creation"			TEXT NOT NULL,
+			"author"				INTEGER NOT NULL,
+			"content_message"				TEXT NOT NULL,
+			"state_message"					TEXT NOT NULL,
+			FOREIGN KEY(id_chat) REFERENCES "chat"(id_chat),
+			FOREIGN KEY(author) REFERENCES "user"(user_id)  
+		)`,
+
+		`CREATE TABLE IF NOT EXISTS "assoc_chat" (
+			"id_assoc"		INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+			"id_chat"		INTEGER NOT NULL,
+			"user_id"		INTEGER NOT NULL,
+			"author_ID"		INTEGER NOT NULL,
+			"content_assoc"		TEXT NOT NULL,
+			"date_assoc"			DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"image_assoc"			TEXT DEFAULT '',
+			"state_assoc"			INTEGER DEFAULT 0,	
+			"reason_assoc"		TEXT DEFAULT "Supprimer par l'utilisateur lui même",
+			FOREIGN KEY(author_ID) REFERENCES "user"(id_user), 
+			FOREIGN KEY(id_chat) REFERENCES "chat"(id_chat) 
 		)`,
 	}
 	var err error
@@ -179,7 +189,7 @@ func createDatabase(table string) error {
 
 func AddSessionToDatabase(w http.ResponseWriter, r *http.Request, user User) error {
 	// Je supprime la session précédente de l'utilisateur et en créé une nouvelle :
-	Db.Exec("DELETE FROM sessions WHERE user_id = $1", user.ID)
+	Db.Exec("DELETE FROM session WHERE user_id = $1", user.ID)
 	log.Println("Adding session to database with user's ID : ", user.ID)
 
 	sessionID := uuid.New()
@@ -191,12 +201,12 @@ func AddSessionToDatabase(w http.ResponseWriter, r *http.Request, user User) err
 	cookie.MaxAge = 60 * 60 * 24 // 24 heures
 	http.SetCookie(w, cookie)
 
-	// Insertion des valeurs de la session dans la table 'sessions' :
-	statement, err := Db.Prepare("INSERT INTO sessions (user_id, uuid, date) VALUES (?, ?, ?)")
+	// Insertion des valeurs de la session dans la table 'session' :
+	statement, err := Db.Prepare("INSERT INTO session (user_id, uuid, date_session) VALUES (?, ?, ?)")
 	defer statement.Close()
 	if err != nil {
 		log.Println("❌ ERREUR | Impossible d'insérer la session dans la base de données.")
-		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “INSERT INTO sessions (user_id, uuid, date) VALUES (", user.ID, sessionID, time.Now().Add(24*time.Hour), ")”")
+		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “INSERT INTO session (user_id, uuid, date) VALUES (", user.ID, sessionID, time.Now().Add(24*time.Hour), ")”")
 		return err
 	}
 
@@ -205,9 +215,9 @@ func AddSessionToDatabase(w http.ResponseWriter, r *http.Request, user User) err
 	return nil
 }
 
-func CleanExpiredSessions() {
+func CleanExpiredsession() {
 	for {
-		Db.Exec("DELETE FROM sessions WHERE date < $1", time.Now())
+		Db.Exec("DELETE FROM session WHERE date < $1", time.Now())
 		time.Sleep(10 * time.Minute)
 	}
 }

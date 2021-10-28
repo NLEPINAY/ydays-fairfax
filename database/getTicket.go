@@ -2,7 +2,7 @@ package database
 
 func GetTicketByUserID(id int) []Ticket {
 	var tickets []Ticket
-	rows, _ := Db.Query("SELECT * FROM tickets WHERE author_id = ? ORDER BY id DESC", id)
+	rows, _ := Db.Query("SELECT * FROM ticket WHERE author_id = ? ORDER BY id DESC", id)
 	defer rows.Close()
 	for rows.Next() {
 		var ticket Ticket
@@ -12,10 +12,10 @@ func GetTicketByUserID(id int) []Ticket {
 	return tickets
 }
 
-func GetAllTickets() []Ticket {
+func GetAllticket() []Ticket {
 	var tickets []Ticket
 
-	rows, _ := Db.Query("SELECT * FROM tickets")
+	rows, _ := Db.Query("SELECT * FROM ticket")
 	defer rows.Close()
 	for rows.Next() {
 		var ticket Ticket
@@ -27,7 +27,7 @@ func GetAllTickets() []Ticket {
 
 func GetTicketByID(id int) Ticket {
 	var ticket Ticket
-	Db.QueryRow("SELECT * FROM tickets WHERE id=?", id).Scan(&ticket.ID, &ticket.Author_id, &ticket.Actual_Admin, &ticket.Title, &ticket.Content, &ticket.Date, &ticket.State)
+	Db.QueryRow("SELECT * FROM ticket WHERE id=?", id).Scan(&ticket.ID, &ticket.Author_id, &ticket.Actual_Admin, &ticket.Title, &ticket.Content, &ticket.Date, &ticket.State)
 	ticket.Answer = GetAnswerOfTicket(id)
 	return ticket
 }
@@ -46,7 +46,7 @@ func GetAnswerOfTicket(id int) []Ticket_Answer {
 }
 
 func ResolveTicket(id string) {
-	query := "UPDATE tickets SET state = 1 WHERE id=" + id
+	query := "UPDATE ticket SET state = 1 WHERE id=" + id
 	_, err := Db.Exec(query)
 	if err != nil {
 		panic(err)

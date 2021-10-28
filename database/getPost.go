@@ -5,28 +5,27 @@ import (
 	"strconv"
 )
 
-// Récupère TOUS les posts appartennant à la catégorie dont l'ID est passé en argument :
-func GetPostsByCategoryID(id int) ([]Post, error) {
+// Récupère TOUS les post appartennant à la catégorie dont l'ID est passé en argument :
+func GetpostByCategoryID(id int) ([]Post, error) {
 	var posts []Post
-
-	rows, err := Db.Query("SELECT * FROM posts WHERE category_id = ? ORDER BY id DESC", id) // id, title, author_id, content, category_id, date, image, state
+	rows, err := Db.Query("SELECT * FROM post WHERE category_id = ? ORDER BY id_post DESC", id) // id, title, author_id, content, category_id, date, image, state
 
 	defer rows.Close()
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de récupérer les posts de la catégorie dont l'ID est ", id)
+		log.Println("❌ ERREUR | Impossible de récupérer les post de la catégorie dont l'ID est ", id)
 		return posts, err
 	}
 
 	for rows.Next() {
 		var post Post
-		rows.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason)
+		rows.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.State, &post.Promoted)
 
 		author, _ := GetUserByID(post.AuthorID)
 		post.Author = author
 
-		comments, _ := GetCommentsByPostID(post.ID, 0)
-		post.Comments = comments
-		post.Likes, post.Dislikes, post.Liked, post.Disliked = GetLikesByPostID(post.ID, 0)
+		comment, _ := GetcommentByPostID(post.ID, 0)
+		post.Comment = comment
+		post.Like, post.Dislike, post.Liked, post.Disliked = GetlikeByPostID(post.ID, 0)
 		posts = append(posts, post)
 	}
 	return posts, nil
@@ -36,19 +35,19 @@ func GetPostsByCategoryID(id int) ([]Post, error) {
 func GetPostByID(ID int, currentUserID int) (Post, error) {
 	var post Post
 
-	row := Db.QueryRow("SELECT * FROM posts WHERE id = ?", ID) // id, title, author_id, content, category_id, date, image, state
-	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Reason)
+	row := Db.QueryRow("SELECT * FROM post WHERE id_post = ?", ID) // id, title, author_id, content, category_id, date, image, state
+	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.State, &post.Promoted)
 	author, _ := GetUserByID(post.AuthorID)
 	post.Author = author
-	post.Likes, post.Dislikes, post.Liked, post.Disliked = GetLikesByPostID(post.ID, currentUserID)
+	post.Like, post.Dislike, post.Liked, post.Disliked = GetlikeByPostID(post.ID, currentUserID)
 	return post, nil
 }
 
-// Récupère tous les posts likés par un utilisateur dont l'ID est passé en paramètre :
-func GetPostsLikedByUser(userID int) ([]Post, error) {
+// Récupère tous les post likés par un utilisateur dont l'ID est passé en paramètre :
+func GetpostLikedByUser(userID int) ([]Post, error) {
 	var posts []Post
 
-	rows, err := Db.Query("SELECT post_id FROM post_likes WHERE user_id = ?", userID)
+	rows, err := Db.Query("SELECT post_id FROM post_like WHERE user_id = ?", userID)
 	defer rows.Close()
 	if err != nil {
 		return posts, err
@@ -64,14 +63,14 @@ func GetPostsLikedByUser(userID int) ([]Post, error) {
 }
 
 // VIRGIL :
-func GetPostsFromUserByID(identifier int) ([]Post, error) {
+func GetpostFromUserByID(identifier int) ([]Post, error) {
 	var posts []Post
-	inject := "SELECT id,title,author_id,content,category_id,date,state FROM posts WHERE author_id = " + strconv.Itoa(identifier)
+	inject := "SELECT * FROM post WHERE author_id = " + strconv.Itoa(identifier)
 	rows, _ := Db.Query(inject)
 	defer rows.Close()
 	for rows.Next() {
 		var newPost Post
-		rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.State)
+		rows.Scan(&newPost.ID, &newPost.Title, &newPost.AuthorID, &newPost.Content, &newPost.CategoryID, &newPost.Date, &newPost.State, &newPost.Promoted)
 		author, _ := GetUserByID(newPost.AuthorID)
 		newPost.Author = author
 		posts = append(posts, newPost)

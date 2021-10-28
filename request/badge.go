@@ -23,8 +23,8 @@ func AddBadgeIfUnlocked(user database.User) {
 
 func getTotalLikeOfUser(id int) int {
 	var result int
-	database.Db.QueryRow(`SELECT count(*) as Compte FROM posts p 
-	INNER JOIN post_likes pl ON pl.post_id = p.id
+	database.Db.QueryRow(`SELECT count(*) as Compte FROM post p 
+	INNER JOIN post_like pl ON pl.post_id = p.id
 	WHERE p.author_id = $1 and pl.type = "like"`, id).Scan(&result)
 	return result
 }

@@ -139,7 +139,7 @@ for (let i = 0; i < todayDates.length; i++) {
     todayDates[i].innerHTML = fullDate;
 };
 
-// ========= ⭐ FORMATTAGE DE LA DATE DES POSTS ⭐ =========
+// ========= ⭐ FORMATTAGE DE LA DATE DES post ⭐ =========
 
 let dates = document.getElementsByClassName('date');
 
@@ -157,7 +157,7 @@ for (let i = 0; i < dates.length; i++) {
 };
 
 
-// Multiplication du contenu des posts par 20 (A SUPPRIMER PLUS TARD) :
+// Multiplication du contenu des post par 20 (A SUPPRIMER PLUS TARD) :
 
 // let contents = document.getElementsByClassName("content")
 // for (let i = 0; i < contents.length; i++) {
