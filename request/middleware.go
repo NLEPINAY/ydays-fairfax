@@ -22,25 +22,25 @@ func Auth(nextFunction CustomFunc, credentials string) http.HandlerFunc {
 
 		if credentials == "guests only" && user.Role != database.GUEST {
 			log.Println("⚠️ AUTH | Access denied. Guests only but user's role is : ", user.Role)
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
 			return
 		}
 
 		if credentials == "members only" && user.Role < database.MEMBER {
 			log.Println("⚠️ AUTH | Access denied. Members only but user's role is : ", user.Role)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
 		if credentials == "active members only" && (user.Role < database.MEMBER || user.State != database.NORMAL) {
 			log.Println("⚠️ AUTH | Access denied. Active members only but user's role is ", user.Role, " and user's state is ", user.State)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
 		if credentials == "active moderators only" && (user.Role < database.MODERATOR || user.State != database.NORMAL) {
 			log.Println("⚠️ AUTH | Access denied. Active moderators only but user's role is ", user.Role, " and user's state is ", user.State)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
 
@@ -56,7 +56,7 @@ func Auth(nextFunction CustomFunc, credentials string) http.HandlerFunc {
 
 		if credentials == "unaffiliated members only" && (user.House.ID != database.UNAFFILIATED || user.Role < database.MEMBER || user.State != database.NORMAL) {
 			log.Println("⚠️ AUTH | Access denied. Unaffiliated members only but user's house ID is ", user.House.ID, " and user's role is ", user.Role)
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
 			return
 		}
 

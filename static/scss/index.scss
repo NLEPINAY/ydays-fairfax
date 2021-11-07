@@ -25,18 +25,14 @@
         outline: 1px solid rgb(144, 112, 112);
     }
     
-    * {
-        font-family: 'Poppins', sans-serif;
-        // margin: 0;
-        // padding: 0;
-        // box-sizing: border-box;
-        // scroll-behavior: smooth;
-    }
     
     body {
         min-height: 100vh;
-        // background: linear-gradient(#2b1055, #7597de);
         overflow-x: hidden;
+    }
+
+    main {
+        font-family: 'Poppins', sans-serif;
     }
     
     // ========= SECTION 1 : Top Banner =========
@@ -93,7 +89,7 @@
             // white-space: nowrap;
             font-size: 90px;
             letter-spacing: 10px;
-            font-weight: 700;
+            font-weight: 600;
             padding-bottom: 10px;
             background-image: radial-gradient(circle, rgba(222, 208, 160, 1) 0%, rgba(167, 150, 102, 1) 100%);
             background-image: -webkit-radial-gradient(circle, rgba(222, 208, 160, 1) 0%, rgba(167, 150, 102, 1) 100%);

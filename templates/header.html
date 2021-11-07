@@ -1,95 +1,113 @@
 {{define "header" }}
 
-<header>
-    <div class="columnLeft">
-        <div class="menu">
-            <nav role="navigation">
-                <div id="menuToggle">
-                    <input type="checkbox" />
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <ul id="menu">
-                        <a href="/category/1">
-                            <li>Café</li>
-                        </a>
-                        <a href="/category/2">
-                            <li>Men's Club</li>
-                        </a>
-                        <a href="/category/3">
-                            <li>Women's Club</li>
-                        </a>
-                        <a href="/category/4">
-                            <li>Theater</li>
-                        </a>
-                        <a href="/category/5">
-                            <li>Arcade</li>
-                        </a>
-                        <a href="/category/6">
-                            <li>Library</li>
-                        </a>
-                        <a href="/category/7">
-                            <li>Vinyl Shop</li>
-                        </a>
-                        <a href="/category/8">
-                            <li>Museum</li>
-                        </a>
-                        <a href="/category/9">
-                            <li>Academy</li>
-                        </a>
-                        <a href="/category/10">
-                            <li>Stadium</li>
-                        </a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/login_modal.css">
+</head>
 
-                    </ul>
-                </div>
-            </nav>
+<body>
+    <header>
+        <div class="columnLeft">
+            <div class="menu">
+                <nav role="navigation">
+                    <div id="menuToggle">
+                        <input type="checkbox" />
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <ul id="menu">
+                            <a href="/category/1">
+                                <li>Café</li>
+                            </a>
+                            <a href="/category/2">
+                                <li>Men's Club</li>
+                            </a>
+                            <a href="/category/3">
+                                <li>Women's Club</li>
+                            </a>
+                            <a href="/category/4">
+                                <li>Theater</li>
+                            </a>
+                            <a href="/category/5">
+                                <li>Arcade</li>
+                            </a>
+                            <a href="/category/6">
+                                <li>Library</li>
+                            </a>
+                            <a href="/category/7">
+                                <li>Vinyl Shop</li>
+                            </a>
+                            <a href="/category/8">
+                                <li>Museum</li>
+                            </a>
+                            <a href="/category/9">
+                                <li>Academy</li>
+                            </a>
+                            <a href="/category/10">
+                                <li>Stadium</li>
+                            </a>
+
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+
+            {{ if gt .Role 0 }}
+            <a class="ticket" href="/ticket">
+                <img id="ticket-img" src="/static/images/ticket.png" title="Contact us"/>
+            </a>
+            {{ end }}
         </div>
 
+        <div class="columnCenter">
+            <a href="/home">
+                <img id="logo" src="/static/images/main_logo.png" title="Home">
+            </a>
+        </div>
 
-        {{ if gt .Role 0 }}
-        <a class="ticket" href="/ticket">
-            <img id="ticket-img" src="/static/images/ticket.png" title="Contact us">
-        </a>
+        {{ if and (eq .Role 0) (eq .State 0) }}
+
+        <div class="columnRight">
+            <!-- <span class="active login" onClick="openModal()">Login</span> -->
+            <a class="active login" href="/login">Login</a>
+
+        </div>
+
+        {{ else }}
+
+        <div class="columnRight">
+
+            <!-- Si le user est un modo/admin/dev : -->
+            {{ if and (gt .Role 2) (eq .State 0) }}
+            <a class="manage" href="/moderation">
+                <img id="logo" src="/static/images/profile/settings.svg" title="Forum management"/>
+            </a>
+            {{ end }}
+
+            <a class="new-post" href="/new-post">
+                <img class="new-post-img" src="../static/images/plus_sign.png" title="Publish a new fax"/>
+            </a>
+
+            <a class="profile" href="/Profile?user={{ .Username }}">
+                <img class="profile-img" src="../static/images/profile.png" title="Your profile page"/>
+            </a>
+
+            <a class="active logout" href="/logout">Logout</a>
+        </div>
+
         {{ end }}
-    </div>
 
-    <div class="columnCenter">
-        <a href="/">
-            <img id="logo" src="/static/images/main_logo.png" title="Home">
-        </a>
-    </div>
+    </header>
 
-    {{ if and (eq .Role 0) (eq .State 0) }}
+    {{ template "login_modal" .}}
 
-    <div class="columnRight">
-        <a class="active login" href="/login">Login</a>
-    </div>
+</body>
 
-    {{ else }}
-
-    <div class="columnRight">
-
-        <!-- Si le user est un modo/admin/dev : -->
-        {{ if and (gt .Role 2) (eq .State 0) }}
-        <a class="manage" href="/moderation">
-            <img id="logo" src="/static/images/profile/settings.svg" title="Forum management">
-        </a>
-        {{ end }}
-
-        <a class="new-post" href="/new-post">
-            <img class="new-post-img" src="../static/images/plus_sign.png" title="Publish a new fax">
-        </a>
-
-        <a class="profile" href="/Profile?user={{ .Username }}">
-            <img class="profile-img" src="../static/images/profile.png" title="Your profile page">
-        </a>
-
-        <a class="active logout" href="/logout">Logout</a>
-    </div>
-
-    {{ end }}
-
-</header>
+</html>
 
 {{end}}

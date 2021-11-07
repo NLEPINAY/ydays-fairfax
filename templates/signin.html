@@ -1,0 +1,48 @@
+{{ define "signin"}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/signin.css">
+
+    <title>🧙 Join a unique adventure</title>
+</head>
+
+<body>
+    <main>
+        <div class="main__img">
+            <img class="main__background" src="../static/images/signin/background.svg">
+            <div class="main__foreground__wrapper">
+                <img class="main__foreground hovering" src="../static/images/signin/foreground.svg">
+                <img class="main__foreground__mobile hovering" src="../static/images/signin/foreground_mobile.svg">
+            </div>
+        </div>
+
+        <div class="main__header">
+            <span class="main__logo golden_text">Fairfax</span>
+            <a href="/home" class="main__menu">Home</a>
+            <span class="main__menu" onClick="openModal()">Sign in</span>
+        </div>
+
+        <div class="main__text">
+            <div class="main__title">Claim your <i>Wizard Passport</i></div>
+            <div class="main__description"><i>Fairfax</i> is a new, exciting social experience. Join a coven of wizards, explore a magical city full of mysterious characters and accomplish quests to collect items and uncover secrets.</div>
+            <div class="main__buttons">
+                <button class="signup__button button" onClick="openModal()">Sign up</button>
+                <a href="/home" class="enter__button button">Enter</a>
+            </div>
+        </div>
+    </main>
+
+     <!-- SIGN UP MODAL -->
+    {{ template "login_modal" .User}}
+     <!-- END -->
+
+</body>
+</html>
+
+{{ end }}

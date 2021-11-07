@@ -10,58 +10,55 @@
 </head>
 
 <body style="width:100%">
+    <main>
+        <div class="column">
+            {{ if eq .Bool 0}}
+            <a id='newTicket' href="/newTicket">Create New Ticket</a>
+            {{ range .ticket }}
+            <div id="ticket" class="ticket{{.ID}}">
+                <a href="/ticket?id={{.ID}}"><span>{{.Title}}</span><span class=date>{{.Date}}</span>{{if eq .State 0}}<span>Unresolved</span>{{else}}<span>Resolved</span>{{end}}</a>
+                <p class="date">{{ .Date }}</p>
+                {{ if and (eq .Actual_Admin $.User.ID) (gt $.User.Role 2)}}<div class=mine>Mine</div>{{end}}
+            </div>
+            {{ end }}
+        </div>
+        {{else}}
+            {{ range .ticket }}
+                <div> {{.Author_name}}'s Problem: <br></div>
+                <div style="align:center;"><span>{{.Title}}</span><span class=date>{{.Date}}</span></div>
+                <pre>{{.Content}}</pre>
+                {{ range .Answer }}
+                <div><span>{{.Author_name}}</span><span class=date>{{.Date}}</span></div>
+                <div><pre>{{.Content}}</pre></div>
+                {{end}}
+                {{if eq .State 0}}
+                {{end}}
+            {{end}}
+        </div>
+        <div class="answer">
+            <form action="/ticket-answer" method="POST">
+                <textarea rows="10" name="answer"></textarea>
+                <input type="hidden" name="id" value="{{ (index .ticket 0).ID }}" />
+                <input class="underTextarea" type="submit"/>
+            </form>
+        </div>
+        <div class=resolved>
+            <form action="/ticket" method="POST">
+                <input type="textarea" style="display:none;" name="id" value="{{ (index .ticket 0).ID }}">
+                <input type="submit" value=resolved />
+            </form>
+        </div>
+           {{end}}
+    </main>
 
+    <!-- Le header doît être placé en bas, sous le <main> ! (pour que le modal Login puisse s'ouvrir)  -->
     {{template "header" .User }}
 
-    <div class="column">
-        {{ if eq .Bool 0}}
-        <a id='newTicket' href="/newTicket">Create New Ticket</a>
-        {{ range .ticket }}
-        <div id="ticket" class="ticket{{.ID}}">
-            <a href="/ticket?id={{.ID}}"><span>{{.Title}}</span><span class=date>{{.Date}}</span>{{if eq .State 0}}<span>Unresolved</span>{{else}}<span>Resolved</span>{{end}}</a>
-            <p class="date">{{ .Date }}</p>
-            {{ if and (eq .Actual_Admin $.User.ID) (gt $.User.Role 2)}}<div class=mine>Mine</div>{{end}}
-        </div>
-        {{ end }}
-    </div>
-    {{else}}
-        {{ range .ticket }}
-            <div> {{.Author_name}}'s Problem: <br></div>
-            <div style="align:center;"><span>{{.Title}}</span><span class=date>{{.Date}}</span></div>
-            <pre>{{.Content}}</pre>
-
-
-            {{ range .Answer }}
-            <div><span>{{.Author_name}}</span><span class=date>{{.Date}}</span></div>
-            <div><pre>{{.Content}}</pre></div>
-            {{end}}
-
-            {{if eq .State 0}}
-            {{end}}
-
-
-        {{end}}
-
-    </div>
-    <div class="answer">
-        <form action="/ticket-answer" method="POST">
-            <textarea rows="10" name="answer"></textarea>
-            <input type="hidden" name="id" value="{{ (index .ticket 0).ID }}" />
-            <input class="underTextarea" type="submit"/>
-        </form>
-    </div>
-    <div class=resolved>
-        <form action="/ticket" method="POST">
-            <input type="textarea" style="display:none;" name="id" value="{{ (index .ticket 0).ID }}">
-            <input type="submit" value=resolved />
-        </form>
-    </div>
-   {{end}}
-
-
-    
+    {{template "loading" . }}
 </body>
+
 <script src="../static/js/ticket.js"></script>
 <script src="../static/js/date.js"></script>
+
 </html>
 {{end}}

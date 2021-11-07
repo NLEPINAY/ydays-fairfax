@@ -49,7 +49,7 @@ func Fillhouse() {
 func FillUser(username string, password string, email string, role int, state int, houseID int) {
 	statement, err := Db.Prepare("INSERT OR IGNORE INTO user (username, password, email, role, date_user, state_user, avatar, secretQuestion, secretAnswer, house_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
-		log.Println("❌ ERREUR | Impossible de remplir la table “users” dans la base de données.")
+		log.Println("❌ ERREUR | Impossible de remplir la table “user” dans la base de données.")
 		panic(err)
 	}
 	defer statement.Close()

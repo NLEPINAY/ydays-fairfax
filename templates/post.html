@@ -17,269 +17,221 @@
 </head>
 
 <body>
+    <main>
+        <section id="top-banner">
+            <img src="../static/images/post/banner.webp" class="banner-img" id="banner-img">
+        </section>
+        <section id="book-cover">
+            <div class="cover">
+                <div class="container">
+                    <img src="../static/images/post/ornament.png" id="ornament">
+                    <p class="title">{{ .Post.Title }}</p>
+                    <a class="author" href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
+                        <p>by <span>{{ .Post.Author.Username }}</span>
+                        </p>
+                    </a>
+                    <a class="author" href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
+                        <div class="avatar"><img src="{{ .Post.Author.Avatar }}"></div>
+                    </a>
+        
+                    <div class="trophies">
+                        {{ range .Post.Author.Badges }}
+                        <img src="{{ .Image }}">
+                        {{end}}
+                    </div>
+        
+                    <div class="reactions">
+                        <div class="icons">
+                            <!-- ======== 💖 LIKE 💖 ======== -->
+                            <!-- [1] IF user is logged-in : link enabled -->
+                            {{ if gt .User.Role 0 }}
+                            <!-- [2] IF user has liked the post before : picture full ❤️ -->
+                            {{ if .Post.Liked }}
+                            <a href="/reaction/like/post/{{.Post.ID}}">
+                                <img src="../static/images/like_full.png" title="Number of like">
+                            </a>
+                            <!-- [2] ELSE (user has NOT liked the post) : picture empty 🤍 -->
+                            {{ else }}
+                            <a href="/reaction/like/post/{{.Post.ID}}">
+                                <img src="../static/images/like_empty.png" title="Number of like">
+                            </a>
+                            {{ end }}
+                            <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty 🤍 -->
+                            {{ else }}
+                            <img src="../static/images/like_empty.png" title="Number of like"> {{ end }}
+                            <!-- ======== ✉️ REPLIES ✉️ ======== -->
+                            <img src="../static/images/reply.png" title="Number of replies">
+                            <!-- ======== 💔 DISLIKE 💔 ======== -->
+                            <!-- [1] IF user is logged-in : link enabled -->
+                            {{ if gt .User.Role 0 }}
+                            <!-- [2] IF user has disliked the post before : picture full 💔 -->
+                            {{ if .Post.Disliked }}
+                            <a href="/reaction/dislike/post/{{.Post.ID}}">
+                                <img src="../static/images/dislike_full.png" title="Number of dislike">
+                            </a>
+                            <!-- [2] ELSE (user has NOT liked the post) : picture empty -->
+                            {{ else }}
+                            <a href="/reaction/dislike/post/{{.Post.ID}}">
+                                <img src="../static/images/dislike_empty.png" title="Number of dislike">
+                            </a>
+                            {{ end }}
+                            <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty -->
+                            {{ else }}
+                            <img src="../static/images/dislike_empty.png" title="Number of dislike"> {{ end }}
+                        </div>
+                        <div class="numbers">
+                        </div>
+                    </div>
+                    <p class="date">{{ .Post.Date }}</p>
+                    {{ if ne .Post.Author.House.ID 0 }}
+                    <p class="club">{{ .Post.Author.House.Name }}</p>
+                    {{ else }}
+                    <p class="club">Unaffiliated</p>
+                    {{ end }}
+                    <div class="share">
+                        <button title="Copy link to clipboard" onclick="CopyURL();">
+                            <img src="../static/images/share.png">
+                        </button>
+                        <div class="validation">Link copied</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- GIF IMPLEMENTATION -->
+        <div class="tenorTest Invisible">
+            <label>Search</label>
+            <textarea id="texnor" onkeyup="grab_data(this.value)"></textarea>
+            <img onclick="newGifSelected(this.src)" id="share_gif1" src="" alt="" class="tenorLeft clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif2" src="" alt="" class="tenorRight clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif3" src="" alt="" class="tenorLeft clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif4" src="" alt="" class="tenorRight clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif5" src="" alt="" class="tenorLeft clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif6" src="" alt="" class="tenorRight clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif7" src="" alt="" class="tenorLeft clickable">
+            <img onclick="newGifSelected(this.src)" id="share_gif8" src="" alt="" class="tenorRight clickable">
+        </div>
+        <section id="main">
+            <div class="wrapper">
+                <!-- COLONNE 'POST' -->
+                <div class="column left">
+                    <div class="content">
+                        <a href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
+                            <div class="user">
+                                <img class="avatar-img" src="{{ .Post.Author.Avatar }}"> {{ if eq .Post.Author.Role 1}}
+                                <p class="role">Member</p>
+                                {{ end }} {{ if eq .Post.Author.Role 2}}
+                                <p class="role">Moderator</p>
+                                {{ end }} {{ if eq .Post.Author.Role 3}}
+                                <p class="role">Administrator</p>
+                                {{ end }} {{ if eq .Post.Author.Role 4}}
+                                <p class="role">Developer</p>
+                                {{ end }}
+                                <div class="trophies">
+                                    {{ range .Post.Author.Badges }}
+                                    <img src="{{ .Image }}"> {{end}}
+                                </div>
+                            </div>
+                        </a>
+                        <p id="main-text">
+                            {{.Post.Content}}
+                        </p>
+                        <!-- Si le user est l'auteur du post ou un modo/admin : -->
+                        {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1)}}
+                        <textarea class="Invisible" id="EditArea">{{.Post.Content}}</textarea> {{end}}
+                        <div class="date">{{ .Post.Date }}</div>
+                    </div>
+                    <!-- Si le user est l'auteur du post : -->
+                    {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1) }}
+                    <input type="button" value="Edit" class="white" id=edit onclick="Edit('')" />
+                    <input type="button" value="Edit Fax" id=validate class="Invisible white" onclick="Validate('post', {{ .Post.ID }} , document.getElementById('main-text'))" />
+                    <input type="button" value="Delete Fax" id=delete class="Invisible white" onclick="Delete('post', {{ .Post.ID }} , document.getElementById('main-text'))" /> {{end}}
+                </div>
+                <!-- COLONNE 'comment' -->
+                <div class="column right">
+                    {{ range .Comment }}
+                    <div class="container">
+                        <div class="top">
+                            <a href="/Profile?user={{ .Author.Username }}" target="_blank">
+                                <img src="{{ .Author.Avatar }}" class="avatar">
+                            </a>
+                            <div class="user">
+                                <a href="/Profile?user={{ .Author.Username }}" target="_blank">
+                                    <p class="username">{{ .Author.Username }}</p>
+                                </a>
+                                {{ if eq .Author.Role 1}}
+                                <p class="role">Member</p>
+                                {{ end }} {{ if eq .Author.Role 2}}
+                                <p class="role">Moderator</p>
+                                {{ end }} {{ if eq .Author.Role 3}}
+                                <p class="role">Administrator</p>
+                                {{ end }} {{ if eq .Author.Role 4}}
+                                <p class="role">Developer</p>
+                                {{ end }}
+                            </div>
+                            {{ if ne .Author.House.ID 0 }}
+                            <div class="house">
+                                <img src="{{ .Author.House.Image }}">
+                            </div>
+                            {{end}}
+                            <div class="trophies">
+                                {{ range .Author.Badges }}
+                                <img src="{{ .Image }}"> {{end}}
+                            </div>
+                            <div class="date">{{ .Date }}</div>
+                        </div>
+                        <!-- Si le post est publié (état = 0) ET que le user loggé en est l'auteur OU que le user loggé est un modo/admin/dev : edit de post -->
+                        {{ if and ( eq .State 0) (or (eq .Author.ID $.User.ID) (gt $.User.Role 1)) }}
+                        <textarea class="Invisible" id="EditArea{{.ID}}">{{.Content}}</textarea>
+                        <input type="button" class="whiter white" value="Edit" id="edit{{.ID}}" onclick="Edit({{.ID}})" /> {{if ne .Gif ""}}
+                        <input type="button" value="Delete gif" class="Invisible white" id="deletegif{{.ID}}" onclick="DeleteGif({{.ID}})" /> {{end}}
+                        <input type="button" value="Edit Reply" id="validate{{.ID}}" class="Invisible white" onclick="Validate('comment', {{ .ID }})" />
+                        <input type="button" value="Delete Reply" id="delete{{.ID}}" class="Invisible white" onclick="Delete('comment', {{ .ID }})" />{{end}}
+                        <div class="bottom">
+                            <!-- Si le post n'est pas supprimé : -->
+                            {{ if eq .State 0}}
+                            <p id="content{{.ID}}" class="content">{{ .Content }}</p>
+                            {{ if ne .Gif "" }}
+                            <img id="gif{{.ID}}" src="{{.Gif}}"> {{end}}
+                            <!-- Si le post a été supprimé : -->
+                            {{ else }}
+                            <div class="content-locked">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <p>Deleted</p>
+                            </div>
+                            {{ end }}
+                            <!-- Si l'utilisateur loggé est un modo/admin/dev, on affiche l'ID du comment : -->
+                            {{ if gt $.User.Role 1 }}
+                            <p class="comment-id">#{{ .ID }}</p>
+                            {{ end }}
+                        </div>
+                        <img src="../static/images/post/separator.png" id="separator">
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </section>
+        <!-- Envelope : -->
+        <section id="envelope-form">
+            <!-- SI L'UTILISATEUR EST CONNECTÉ : -->
+            {{if gt .User.Role 0 }}
+            <p>Leave a reply</p>
+            {{template "envelope" . }}
+            <!-- SINON : -->
+            {{ else }}
+            <div class="locked">
+                <div class="reply-locked">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    <p>Leave a reply</p>
+                </div>
+                <a href="/login" class="login-btn">Login</a> {{ end }}
+            </div>
+        </section>
+    </main>
 
     {{template "header" .User }}
 
-    <section id="top-banner">
-        <img src="../static/images/post/banner.webp" class="banner-img" id="banner-img">
-    </section>
-
-    <section id="book-cover">
-
-        <div class="cover">
-            <div class="container">
-                <img src="../static/images/post/ornament.png" id="ornament">
-
-                <p class="title">{{ .Post.Title }}</p>
-
-                <a class="author" href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
-                    <p>by <span>{{ .Post.Author.Username }}</span>
-                    </p>
-                </a>
-
-                <a class="author" href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
-                    <div class="avatar"><img src="{{ .Post.Author.Avatar }}"></div>
-                </a>
-
-                
-                <div class="trophies">
-                    {{ range .Post.Author.Badges }}
-                    <img src="{{ .Image }}">
-                    {{end}}
-                </div>
-                
-
-                <div class="reactions">
-                    <div class="icons">
-                        <!-- ======== 💖 LIKE 💖 ======== -->
-                        <!-- [1] IF user is logged-in : link enabled -->
-                        {{ if gt .User.Role 0 }}
-
-                        <!-- [2] IF user has liked the post before : picture full ❤️ -->
-                        {{ if .Post.Liked }}
-                        <a href="/reaction/like/post/{{.Post.ID}}">
-                            <img src="../static/images/like_full.png" title="Number of like">
-                        </a>
-
-                        <!-- [2] ELSE (user has NOT liked the post) : picture empty 🤍 -->
-                        {{ else }}
-                        <a href="/reaction/like/post/{{.Post.ID}}">
-                            <img src="../static/images/like_empty.png" title="Number of like">
-                        </a>
-                        {{ end }}
-
-                        <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty 🤍 -->
-                        {{ else }}
-                        <img src="../static/images/like_empty.png" title="Number of like"> {{ end }}
-
-                        <!-- ======== ✉️ REPLIES ✉️ ======== -->
-                        <img src="../static/images/reply.png" title="Number of replies">
-
-                        <!-- ======== 💔 DISLIKE 💔 ======== -->
-                        <!-- [1] IF user is logged-in : link enabled -->
-                        {{ if gt .User.Role 0 }}
-
-                        <!-- [2] IF user has disliked the post before : picture full 💔 -->
-                        {{ if .Post.Disliked }}
-                        <a href="/reaction/dislike/post/{{.Post.ID}}">
-                            <img src="../static/images/dislike_full.png" title="Number of dislike">
-                        </a>
-
-                        <!-- [2] ELSE (user has NOT liked the post) : picture empty -->
-                        {{ else }}
-                        <a href="/reaction/dislike/post/{{.Post.ID}}">
-                            <img src="../static/images/dislike_empty.png" title="Number of dislike">
-                        </a>
-                        {{ end }}
-
-                        <!-- [1] ELSE (user NOT logged-in) : link disabled + picture empty -->
-                        {{ else }}
-                        <img src="../static/images/dislike_empty.png" title="Number of dislike"> {{ end }}
-
-
-                    </div>
-                    <div class="numbers">
-
-                    </div>
-                </div>
-
-                <p class="date">{{ .Post.Date }}</p>
-                {{ if ne .Post.Author.House.ID 0 }}
-                <p class="club">{{ .Post.Author.House.Name }}</p>
-                {{ else }}
-                <p class="club">Unaffiliated</p>
-                {{ end }}
-
-                <div class="share">
-                    <button title="Copy link to clipboard" onclick="CopyURL();">
-                        <img src="../static/images/share.png">
-                    </button>
-                    <div class="validation">Link copied</div>
-                </div>
-
-            </div>
-        </div>
-
-    </section>
-    <!-- GIF IMPLEMENTATION -->
-    <div class="tenorTest Invisible">
-
-        <label>Search</label>
-        <textarea id="texnor" onkeyup="grab_data(this.value)"></textarea>
-        <img onclick="newGifSelected(this.src)" id="share_gif1" src="" alt="" class="tenorLeft clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif2" src="" alt="" class="tenorRight clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif3" src="" alt="" class="tenorLeft clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif4" src="" alt="" class="tenorRight clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif5" src="" alt="" class="tenorLeft clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif6" src="" alt="" class="tenorRight clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif7" src="" alt="" class="tenorLeft clickable">
-        <img onclick="newGifSelected(this.src)" id="share_gif8" src="" alt="" class="tenorRight clickable">
-
-    </div>
-
-    <section id="main">
-
-        <div class="wrapper">
-            <!-- COLONNE 'POST' -->
-            <div class="column left">
-                <div class="content">
-
-                    <a href="/Profile?user={{ .Post.Author.Username }}" target="_blank">
-                        <div class="user">
-                            <img class="avatar-img" src="{{ .Post.Author.Avatar }}"> {{ if eq .Post.Author.Role 1}}
-                            <p class="role">Member</p>
-                            {{ end }} {{ if eq .Post.Author.Role 2}}
-                            <p class="role">Moderator</p>
-                            {{ end }} {{ if eq .Post.Author.Role 3}}
-                            <p class="role">Administrator</p>
-                            {{ end }} {{ if eq .Post.Author.Role 4}}
-                            <p class="role">Developer</p>
-                            {{ end }}
-                            <div class="trophies">
-                                {{ range .Post.Author.Badges }}
-                                <img src="{{ .Image }}"> {{end}}
-                            </div>
-
-                        </div>
-                    </a>
-
-                    <p id="main-text">
-                        {{.Post.Content}}
-                    </p>
-                    <!-- Si le user est l'auteur du post ou un modo/admin : -->
-                    {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1)}}
-                    <textarea class="Invisible" id="EditArea">{{.Post.Content}}</textarea> {{end}}
-
-
-                    <div class="date">{{ .Post.Date }}</div>
-                </div>
-
-                <!-- Si le user est l'auteur du post : -->
-                {{ if or (eq .Post.Author.ID .User.ID) (gt .User.Role 1) }}
-                <input type="button" value="Edit" class="white" id=edit onclick="Edit('')" />
-                <input type="button" value="Edit Fax" id=validate class="Invisible white" onclick="Validate('post', {{ .Post.ID }} , document.getElementById('main-text'))" />
-                <input type="button" value="Delete Fax" id=delete class="Invisible white" onclick="Delete('post', {{ .Post.ID }} , document.getElementById('main-text'))" /> {{end}}
-            </div>
-
-            <!-- COLONNE 'comment' -->
-            <div class="column right">
-                {{ range .Comment }}
-                <div class="container">
-                    <div class="top">
-                        <a href="/Profile?user={{ .Author.Username }}" target="_blank">
-                            <img src="{{ .Author.Avatar }}" class="avatar">
-                        </a>
-                        <div class="user">
-                            <a href="/Profile?user={{ .Author.Username }}" target="_blank">
-                                <p class="username">{{ .Author.Username }}</p>
-                            </a>
-
-                            {{ if eq .Author.Role 1}}
-                            <p class="role">Member</p>
-                            {{ end }} {{ if eq .Author.Role 2}}
-                            <p class="role">Moderator</p>
-                            {{ end }} {{ if eq .Author.Role 3}}
-                            <p class="role">Administrator</p>
-                            {{ end }} {{ if eq .Author.Role 4}}
-                            <p class="role">Developer</p>
-                            {{ end }}
-
-                        </div>
-
-                        {{ if ne .Author.House.ID 0 }}
-                        <div class="house">
-                            <img src="{{ .Author.House.Image }}">
-                        </div>
-                        {{end}}
-                        <div class="trophies">
-                            {{ range .Author.Badges }}
-                            <img src="{{ .Image }}"> {{end}}
-                        </div>
-
-                        <div class="date">{{ .Date }}</div>
-                    </div>
-                    <!-- Si le post est publié (état = 0) ET que le user loggé en est l'auteur OU que le user loggé est un modo/admin/dev : edit de post -->
-                    {{ if and ( eq .State 0) (or (eq .Author.ID $.User.ID) (gt $.User.Role 1)) }}
-                    <textarea class="Invisible" id="EditArea{{.ID}}">{{.Content}}</textarea>
-                    <input type="button" class="whiter white" value="Edit" id="edit{{.ID}}" onclick="Edit({{.ID}})" /> {{if ne .Gif ""}}
-                    <input type="button" value="Delete gif" class="Invisible white" id="deletegif{{.ID}}" onclick="DeleteGif({{.ID}})" /> {{end}}
-                    <input type="button" value="Edit Reply" id="validate{{.ID}}" class="Invisible white" onclick="Validate('comment', {{ .ID }})" />
-                    <input type="button" value="Delete Reply" id="delete{{.ID}}" class="Invisible white" onclick="Delete('comment', {{ .ID }})" />{{end}}
-
-                    <div class="bottom">
-                        <!-- Si le post n'est pas supprimé : -->
-                        {{ if eq .State 0}}
-                        <p id="content{{.ID}}" class="content">{{ .Content }}</p>
-                        {{ if ne .Gif "" }}
-                        <img id="gif{{.ID}}" src="{{.Gif}}"> {{end}}
-                        <!-- Si le post a été supprimé : -->
-                        {{ else }}
-
-                        <div class="content-locked">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            <p>Deleted</p>
-                        </div>
-
-                        {{ end }}
-
-                        <!-- Si l'utilisateur loggé est un modo/admin/dev, on affiche l'ID du comment : -->
-                        {{ if gt $.User.Role 1 }}
-                        <p class="comment-id">#{{ .ID }}</p>
-                        {{ end }}
-                    </div>
-                    <img src="../static/images/post/separator.png" id="separator">
-
-                </div>
-                {{ end }}
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Envelope : -->
-
-    <section id="envelope-form">
-
-        <!-- SI L'UTILISATEUR EST CONNECTÉ : -->
-        {{if gt .User.Role 0 }}
-
-        <p>Leave a reply</p>
-        {{template "envelope" . }}
-
-        <!-- SINON : -->
-        {{ else }}
-        <div class="locked">
-            <div class="reply-locked">
-                <i class="fa fa-lock" aria-hidden="true"></i>
-                <p>Leave a reply</p>
-            </div>
-            <a href="/login" class="login-btn">Login</a> {{ end }}
-        </div>
-
-    </section>
-
     {{template "loading" . }}
-
+    
 </body>
 
 <script src="../static/js/date.js"></script>

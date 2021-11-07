@@ -1,5 +1,4 @@
 * {
-  font-family: "Poppins", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -11,10 +10,11 @@ body {
   overflow-x: hidden;
 }
 
-a {
+a, span {
+  cursor: pointer;
   text-decoration: none;
 }
-a.active {
+a.active, span.active {
   padding: 7px 25px;
   background: #6b63b5;
   color: #ffffff;
@@ -24,7 +24,7 @@ a.active {
   border-radius: 3px;
   transition: 0.3s ease-in-out;
 }
-a.active:hover {
+a.active:hover, span.active:hover {
   background: #514a92;
 }
 
@@ -35,9 +35,10 @@ header {
   width: 100%;
   padding: 20px 20px;
   display: flex;
+  font-family: "Poppins", sans-serif;
   justify-content: space-between;
   align-items: center;
-  z-index: 999999;
+  z-index: 1000;
   background: #202335;
   border-bottom: solid 1px #434343;
 }
@@ -82,6 +83,7 @@ header .columnRight {
   align-items: center;
   width: 40vw;
 }
+header .columnRight span,
 header .columnRight a {
   margin: 0 20px 0 20px;
   transition: 0.5s ease-in-out;

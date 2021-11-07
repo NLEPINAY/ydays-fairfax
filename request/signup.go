@@ -49,7 +49,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			verif := validAccount(database.Db, email, username)
 			if verif == "" {
 				//preparation database
-				statement, err := database.Db.Prepare("INSERT INTO users (username,password,email,role,date,state) VALUES (?,?,?,?,?,?)")
+				statement, err := database.Db.Prepare("INSERT INTO user (username,password,email,role,date,state) VALUES (?,?,?,?,?,?)")
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -59,7 +59,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					panic(err)
 				}
-				rows, err := database.Db.Query("SELECT id,password,username,email,date FROM users")
+				rows, err := database.Db.Query("SELECT id,password,username,email,date FROM user")
 				defer rows.Close()
 				if err != nil {
 					panic(err)
@@ -80,7 +80,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			protectedAnswer, _ := bcrypt.GenerateFromPassword([]byte(secretAnswer), 14)
-			_, err = database.Db.Exec("UPDATE users SET secretQuestion = ?,secretAnswer = ? WHERE id=?", secretQuestion, protectedAnswer, id)
+			_, err = database.Db.Exec("UPDATE user SET secretQuestion = ?,secretAnswer = ? WHERE id_user=?", secretQuestion, protectedAnswer, id)
 			if err != nil {
 				panic(err)
 			}
@@ -97,7 +97,7 @@ func validAccount(database *sql.DB, mail string, username string) string {
 	var email string
 	var username2 string
 	var err error
-	rows, err := database.Query("SELECT email FROM users")
+	rows, err := database.Query("SELECT email FROM user")
 	defer rows.Close()
 	if err != nil {
 		return ""
@@ -108,7 +108,7 @@ func validAccount(database *sql.DB, mail string, username string) string {
 			return "mail"
 		}
 	}
-	rows, _ = database.Query("SELECT username FROM users")
+	rows, _ = database.Query("SELECT username FROM user")
 	defer rows.Close()
 	for rows.Next() {
 		rows.Scan(&username2)

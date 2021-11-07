@@ -25,7 +25,7 @@ func MotDePasseOublier(w http.ResponseWriter, r *http.Request) {
 		defer database.Db.Close()
 		if Data.Username != "" {
 			//cherche la question de cet user
-			rows, _ := database.Db.Query("SELECT secretQuestion FROM users WHERE username=?", Data.Username)
+			rows, _ := database.Db.Query("SELECT secretQuestion FROM user WHERE username=?", Data.Username)
 			defer rows.Close()
 			for rows.Next() {
 				rows.Scan(&temp)
@@ -35,12 +35,12 @@ func MotDePasseOublier(w http.ResponseWriter, r *http.Request) {
 			answer := r.Form.Get("answer")
 			psw, _ := bcrypt.GenerateFromPassword([]byte(r.Form.Get("psw")), 14)
 			var realAnswer string
-			rows, _ := database.Db.Query("SELECT secretAnswer FROM users WHERE username=?", Data.Username)
+			rows, _ := database.Db.Query("SELECT secretAnswer FROM user WHERE username=?", Data.Username)
 			defer rows.Close()
 			for rows.Next() {
 				rows.Scan(&realAnswer)
 				if bcrypt.CompareHashAndPassword([]byte(realAnswer), []byte(answer)) == nil {
-					database.Db.Exec("UPDATE users SET password = ? WHERE username=?", psw, Data.Username)
+					database.Db.Exec("UPDATE user SET password = ? WHERE username=?", psw, Data.Username)
 				}
 			}
 		} else {

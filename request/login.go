@@ -16,17 +16,20 @@ func Login(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	// 🍔 Méthode 'GET' — Lorsqu'on arrive sur la page login.html pour la 1ère fois :
 	case "GET":
-		err := MyTemplates.ExecuteTemplate(w, "login", nil)
+		err := MyTemplates.ExecuteTemplate(w, "signin", nil)
 		if err != nil {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+			log.Fatal(err)
 			return
 		}
 
 	// 🍔 Méthode 'POST' — Lorsqu'on sur le bouton 'Login' pour se connecter :
 	case "POST":
 		// Je récupère le username ou email et le mot de passe :
-		identifier := strings.ToLower(r.FormValue("identifier")) // Username or Email
-		password := r.FormValue("password")
+		r.ParseMultipartForm(0)
+
+		identifier := strings.ToLower(r.FormValue("login-identifier")) // Username or Email
+		password := r.FormValue("login-password")
 
 		// Je vérifie que les identifiants saisis ne sont pas vides :
 		if toolbox.IsEmptyString(identifier) || toolbox.IsEmptyString(password) {
@@ -58,7 +61,11 @@ func Login(w http.ResponseWriter, r *http.Request, user database.User) {
 		// (2) Si user.ID == 0 (valeur par défaut), l'utilisateur n'existe pas :
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 		if err != nil || user.ID == 0 {
-			MyTemplates.ExecuteTemplate(w, "login", "No matching account was found.") // On ré-exécute le template avec un div 'No matching account was found'.
+			var message = `{
+				"success": false,
+				"message": "No matching account was found."}`
+
+			w.Write([]byte(message))
 			return
 		}
 
@@ -69,8 +76,13 @@ func Login(w http.ResponseWriter, r *http.Request, user database.User) {
 			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		// Après s'être identifié, on est redirigé vers la page index :
-		http.Redirect(w, r, "/", http.StatusFound)
+
+		// Après s'être identifié, on renvoie la réponse au JS qui nous redirigera vers la page index :
+		var message = `{
+			"success": true,
+			"message": "Logged in successfully."}`
+
+		w.Write([]byte(message))
 		log.Println("✔️ LOGIN | Access granted.")
 		log.Println("Successfully logged in: ", user)
 	}
@@ -89,5 +101,5 @@ func Logout(w http.ResponseWriter, r *http.Request, user database.User) {
 	http.SetCookie(w, cookie) // Suppression du cookie
 
 	// On est redirigé vers la page index :
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/home", http.StatusSeeOther)
 }

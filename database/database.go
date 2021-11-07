@@ -206,7 +206,7 @@ func AddSessionToDatabase(w http.ResponseWriter, r *http.Request, user User) err
 	defer statement.Close()
 	if err != nil {
 		log.Println("❌ ERREUR | Impossible d'insérer la session dans la base de données.")
-		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “INSERT INTO session (user_id, uuid, date) VALUES (", user.ID, sessionID, time.Now().Add(24*time.Hour), ")”")
+		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “INSERT INTO session (user_id, uuid, date_session) VALUES (", user.ID, sessionID, time.Now().Add(24*time.Hour), ")”")
 		return err
 	}
 
@@ -217,7 +217,7 @@ func AddSessionToDatabase(w http.ResponseWriter, r *http.Request, user User) err
 
 func CleanExpiredsession() {
 	for {
-		Db.Exec("DELETE FROM session WHERE date < $1", time.Now())
+		Db.Exec("DELETE FROM session WHERE date_session < $1", time.Now())
 		time.Sleep(10 * time.Minute)
 	}
 }

@@ -86,7 +86,7 @@ func ProfilePage(w http.ResponseWriter, r *http.Request, user database.User) {
 }
 
 func deleteAccount(w http.ResponseWriter, r *http.Request, user database.User, p ReceivedData) {
-	_, err := database.Db.Exec("UPDATE users SET state = 2 WHERE id = ?", p.ID)
+	_, err := database.Db.Exec("UPDATE user SET state = 2 WHERE id_user = ?", p.ID)
 	if err != nil {
 		ERROR, _ := json.Marshal("ERROR WHILE DELETE")
 		w.Write(ERROR)
