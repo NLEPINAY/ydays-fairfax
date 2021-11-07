@@ -1,0 +1,130 @@
+{{define "login_modal" }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/login_modal.css">
+</head>
+
+<body>
+
+<div class="modal__wrapper">
+    <div class="modal__container box_shadow_1" id="modal__container">
+
+        <div class="form__container signup__container">
+            <!-- | FORM SIGN-UP | -->
+            <form method="POST" id="signup-form">
+                <h1 id="register-title" class="modal__title">Register</h1>
+    
+                 <!-- USERNAME INPUT -->
+                <div class="inputWithIcon">
+                    <input id="signup-username" type="text" name="signup-username" placeholder="Choose a username" pattern="^[ a-zA-Z0-9._]{3,20}" title="Only letters, numbers, spaces, dots and underscores. Length required: 3 ~ 20" required>
+                    <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+                </div>
+
+                <span id="signup-error-username" class="warning"></span>
+    
+                <span class="invalid__username warning" style="display:none">Must be 3 to 20 characters.</span>
+                <span class="invalid__username warning" style="display:none">Only letters, numbers, spaces, dots or underscores.</span>
+    
+                 <!-- EMAIL INPUT -->
+                <div class="inputWithIcon">
+                    <input id="signup-email" type="email" name="signup-email" placeholder="Enter your email address" maxlength="40" required>
+                    <i class="fa fa-envelope fa-fw" aria-hidden="true"></i>
+                </div>
+
+                <span id="signup-error-email" class="warning"></span>
+    
+                 <!-- PASSWORD (1) INPUT -->
+                <div class="inputWithIcon">
+                    <input id="signup-password-1" name="signup-password" type="password" placeholder="Choose a password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,30}" title="At least 6 characters, including a number, an uppercase letter and a lowercase letter.">
+                    <i class="fa fa-lock fa-fw" aria-hidden="true"></i>
+                </div>
+    
+                 <!-- PASSWORD (2) INPUT -->
+                <div class="inputWithIcon">
+                    <input id="signup-password-2" name="signup-password" type="password" placeholder="Confirm your password" required>
+                    <i class="fa fa-lock fa-fw" aria-hidden="true"></i>
+                </div>
+    
+                 <!-- AVERTISSEMENT "YOUR PASSWORDS DO NOT MATCH" -->
+                <span class="invalid__password warning" style="display:none">Your passwords do not match.</span>
+    
+                 <!-- INFOS SUR LES CARACTERES OBLIGATOIRES POUR LE MOT DE PASSE -->
+                <div class="info">
+                    <div>Your password must contain the following :</div>
+                    <br>
+                    <div class="requirement">
+                        <svg id="svg-1" height="13" viewBox="0 0 16 13" width="16">
+                            <path fill="#b19f6f" d="m5.6 8-3.2-3.2-2.4 2.4 5.6 5.6 10.4-10.4-2.4-2.4z"></path>
+                        </svg>
+                        <span class="text">A minimum of 6 characters.</span>
+                    </div>
+    
+                    <div class="requirement">
+                        <svg id="svg-2" height="13" viewBox="0 0 16 13" width="16">
+                            <path fill="#b19f6f" d="m5.6 8-3.2-3.2-2.4 2.4 5.6 5.6 10.4-10.4-2.4-2.4z"></path>
+                        </svg>
+                        <span class="text">Uppercase, lowercase, and a number.</span>
+                    </div>
+                </div>
+    
+                <button class="button flat" id="signup-button" type="submit">Continue</button>
+            </form>
+        </div>
+
+        <div class="form__container signin__container">
+            <!-- | FORM LOG-IN | -->
+            <form method="POST" id="login-form">
+                <h1 id="signin-title" class="modal__title">Sign in</h1>
+    
+                 <!-- IDENTIFIER INPUT -->
+                <div class="inputWithIcon">
+                    <input id="login-identifier" name="login-identifier" type="text" placeholder="Username or email address" required>
+                    <i class="fa fa-user fa-fw" aria-hidden="true"></i>
+                </div>
+    
+                 <!-- PASSWORD INPUT -->
+                <div class="inputWithIcon">
+                    <input id="login-password" name="login-password" type="password" placeholder="Enter your password" required>
+                    <i class="fa fa-lock fa-fw" aria-hidden="true"></i>
+                </div>
+
+                <span id="login-error" class="warning"></span>
+    
+                <div class="linkWithIcon">
+                    <i class="fa fa-key" aria-hidden="true"></i>
+                    <a href="/forgotten-password">Forgot your password?</a>
+                </div>
+    
+                <button class="button flat" id="login-button">Continue</button>
+            </form>
+        </div>
+        <div class="overlay__container">
+            <div class="overlay golden__box">
+                <div class="overlay__panel overlay__left">
+                    <h1 class="modal__title"><i>Already a member?</i></h1>
+                    <p>If you already hold a Wizard Passport delivered by the European Covendom, please sign in with your personal information.</p>
+                    <button class="button ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay__panel overlay__right">
+                    <h1 class="modal__title"><i>Not a member yet?</i></h1>
+                    <p>Apply for a Wizard Passport and begin your journey in the city of Fairfax.</p>
+                    <button class="button ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="transparent__overlay" onclick="closeModal()"></div>
+
+<script type="text/javascript" src="static/js/login_modal.js"></script>
+
+</body>
+</html>
+
+{{ end }}

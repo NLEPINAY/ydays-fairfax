@@ -472,13 +472,13 @@ section#newspaper .column:nth-child(7n-1) + .column .media {
   outline: 1px solid #907070;
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-}
-
 body {
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+main {
+  font-family: "Poppins", sans-serif;
 }
 
 section#top-banner {
@@ -534,7 +534,7 @@ section#top-banner #title {
   font-family: "Crimson Text", serif;
   font-size: 90px;
   letter-spacing: 10px;
-  font-weight: 700;
+  font-weight: 600;
   padding-bottom: 10px;
   background-image: radial-gradient(circle, #ded0a0 0%, #a79666 100%);
   background-image: -webkit-radial-gradient(circle, #ded0a0 0%, #a79666 100%);

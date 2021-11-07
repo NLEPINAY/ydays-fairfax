@@ -8,15 +8,14 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request, user database.User) {
-	if r.URL.Path != "/" {
-		err := MyTemplates.ExecuteTemplate(w, "400", user)
-		if err != nil {
-			http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-		return
-		// http.Error(w, "404 NOT FOUND", http.StatusNotFound)
-	}
+	// if r.URL.Path != "/" {
+	// 	err := MyTemplates.ExecuteTemplate(w, "400", user)
+	// 	if err != nil {
+	// 		http.Error(w, "500 Internal Server Error", http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	return
+	// }
 
 	// Remplissage d'une struct Data pour la page d'accueil :
 

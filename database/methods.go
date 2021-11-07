@@ -12,7 +12,7 @@ import (
 // ⭐ Méthode pour insérer un utilisateur dans la base de données :
 func (user *User) InsertIntoDatabase() error {
 
-	addStatement, err := Db.Prepare("INSERT INTO users (username, password, email, role, avatar, date, state, secretQuestion, secretAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
+	addStatement, err := Db.Prepare("INSERT INTO user (username, password, email, role, avatar, date_user, state_user, secretQuestion, secretAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
 
 	defer addStatement.Close()
 
@@ -21,8 +21,8 @@ func (user *User) InsertIntoDatabase() error {
 		log.Println("❌ DATABASE | ERREUR : Impossible d'insérer l'utilisateur dans la base de données.")
 		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite suivant :")
 		fmt.Println("—————————————————————————")
-		fmt.Println("INSERT INTO users")
-		fmt.Println("	(username, password, email, role, avatar, date, state, secretQuestion, secretAnswer)")
+		fmt.Println("INSERT INTO user")
+		fmt.Println("	(username, password, email, role, avatar, date_user, state_user, secretQuestion, secretAnswer)")
 		fmt.Println("VALUES")
 		fmt.Println("	", user.Username, user.Password, user.Email, user.Role, user.Avatar, user.Date, user.State, user.SecretQuestion, user.SecretAnswer)
 		fmt.Println("—————————————————————————")
@@ -41,7 +41,7 @@ func (user *User) InsertIntoDatabase() error {
 	addStatement.Exec(user.Username, user.Password, user.Email, user.Role, user.Avatar, user.Date, user.State, user.SecretQuestion, user.SecretAnswer)
 
 	// ⚠️ IMPORTANT : Envoyer l'ID automatiquement attribué par la base de données à l'intérieur de user.ID :
-	row := Db.QueryRow("SELECT id FROM users WHERE username = ? OR email = ?", user.Username, user.Email)
+	row := Db.QueryRow("SELECT id FROM user WHERE username = ? OR email = ?", user.Username, user.Email)
 	row.Scan(&user.ID)
 	log.Println("✔️ DATABASE | Inserted user “", user.Username, "” into database successfully.")
 	log.Println("User's complete information : ", user)
@@ -69,14 +69,14 @@ func (user *User) IsAuthor(id string, str string) bool {
 // ⭐ Méthode pour modifier un champ de l'utilisateur dans la base de données :
 func (user *User) UpdateInDatabase(column string) error {
 
-	statement := "UPDATE users SET " + column + " = ? WHERE id = ?"
+	statement := "UPDATE user SET " + column + " = ? WHERE id_user = ?"
 	updateStatement, err := Db.Prepare(statement)
 
 	defer updateStatement.Close()
 
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible de mettre à jour la base de données.")
-		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “UPDATE users SET ", column, " WHERE id = ", user.ID, "”")
+		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite “UPDATE user SET ", column, " WHERE id_user = ", user.ID, "”")
 		return err
 	}
 
@@ -93,7 +93,7 @@ func (user *User) UpdateInDatabase(column string) error {
 		updateStatement.Exec(user.Role, user.ID)
 	case "avatar":
 		updateStatement.Exec(user.Avatar, user.ID)
-	case "state":
+	case "state_user":
 		updateStatement.Exec(user.State, user.ID)
 	case "secretAnswer":
 		updateStatement.Exec(user.SecretAnswer, user.ID)
@@ -103,8 +103,8 @@ func (user *User) UpdateInDatabase(column string) error {
 		updateStatement.Exec(user.House.ID, user.ID)
 	default:
 		log.Println("❌ DATABASE | ERREUR : Impossible de mettre à jour la base de données.")
-		log.Println("La colonne “", column, "” n'existe pas dans la table “USERS”.")
-		return errors.New("ERREUR | La colonne à mettre à jour n'existe pas dans la table “USERS”.")
+		log.Println("La colonne “", column, "” n'existe pas dans la table “USER”.")
+		return errors.New("ERREUR | La colonne à mettre à jour n'existe pas dans la table “USER”.")
 	}
 	return nil
 }
@@ -112,14 +112,14 @@ func (user *User) UpdateInDatabase(column string) error {
 // ⭐ Méthode pour insérer un commentaire dans la base de données :
 // Renvoie l'ID du post venant d'être inséré :
 func (comment *Comment) InsertIntoDatabase() error {
-	addStatement, err := Db.Prepare("INSERT INTO comment (author_id, post_id, content, gif, date, state) VALUES (?, ?, ?, ?, ?,?)")
+	addStatement, err := Db.Prepare("INSERT INTO comment (author_id, post_id, content_comment, gif, date_comment, state_comment) VALUES (?, ?, ?, ?, ?, ?)")
 
 	defer addStatement.Close()
 
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible d'insérer le commentaire dans la base de données.")
 		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite suivant :")
-		log.Println("“INSERT INTO comment (author_id, post_id, content, date) VALUES (", comment.AuthorID, comment.PostID, comment.Content, comment.Gif, comment.Date, comment.State, ")”")
+		log.Println("“INSERT INTO comment (author_id, post_id, content_comment, date_comment) VALUES (", comment.AuthorID, comment.PostID, comment.Content, comment.Gif, comment.Date, comment.State, ")”")
 		return err
 	}
 
@@ -129,7 +129,7 @@ func (comment *Comment) InsertIntoDatabase() error {
 
 // ⭐ Méthode pour insérer un post dans la base de données :
 func (ticket *Ticket) InsertIntoDatabase() (int, error) {
-	addStatement, err := Db.Prepare("INSERT INTO ticket (title, author_id,actual_admin, content, date, state) VALUES (?,?, ?, ?, ?, ?)")
+	addStatement, err := Db.Prepare("INSERT INTO ticket (title_ticket, author_id, actual_admin, content_ticket, date_ticket, state_ticket) VALUES (?, ?, ?, ?, ?, ?)")
 
 	defer addStatement.Close()
 
@@ -156,18 +156,18 @@ func (ticket *Ticket) InsertIntoDatabase() (int, error) {
 
 // ⭐ Méthode pour insérer un post dans la base de données :
 func (post *Post) InsertIntoDatabase() (int, error) {
-	addStatement, err := Db.Prepare("INSERT INTO post (title, author_id, content, category_id, date, image, state) VALUES (?, ?, ?, ?, ?, ?, ?)")
+	addStatement, err := Db.Prepare("INSERT INTO post (title_post, author_id, content_post, category_id, date_post, state_post) VALUES (?, ?, ?, ?, ?, ?)")
 
 	defer addStatement.Close()
 
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible d'insérer le post dans la base de données.")
 		log.Println("Hypothèse : Mauvaise syntaxe du statement SQLite suivant :")
-		log.Println("“INSERT INTO post (title, author_id, content, category_id, date, image, state) VALUES (", post.Title, post.AuthorID, post.Content, post.CategoryID, post.Date, post.Image, post.State, ")”")
+		log.Println("“INSERT INTO post (title_post, author_id, content_post, category_id, date_post, state_post) VALUES (", post.Title, post.AuthorID, post.Content, post.CategoryID, post.Date, post.State, ")”")
 		return 0, err
 	}
 
-	execution, err := addStatement.Exec(post.Title, post.AuthorID, post.Content, post.CategoryID, post.Date, post.Image, post.State)
+	execution, err := addStatement.Exec(post.Title, post.AuthorID, post.Content, post.CategoryID, post.Date, post.State)
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible d'insérer le post dans la base de données.")
 		log.Println("Hypothèse : Mauvaise exécution du statement SQLite.")
@@ -183,7 +183,7 @@ func (post *Post) InsertIntoDatabase() (int, error) {
 
 // ⭐ Méthode pour insérer un like de post dans la base de données :
 func (like *PostLike) InsertIntoDatabase() error {
-	addStatement, err := Db.Prepare("INSERT INTO post_like (post_id, user_id, type, date) VALUES (?, ?, ?, ?)")
+	addStatement, err := Db.Prepare("INSERT INTO post_like (post_id, user_id, type, date_post_like) VALUES (?, ?, ?, ?)")
 	defer addStatement.Close()
 	if err != nil {
 		log.Println("❌ DATABASE | ERREUR : Impossible d'insérer le like de post dans la base de données.")
@@ -229,11 +229,11 @@ func (like *CommentLike) DeleteFromDatabase() error {
 	return nil
 }
 
-// ⭐ Méthode pour supprimer une row et toutes ces données si user en fonction de sont ID :
+// ⭐ Méthode pour supprimer une row et toutes ces données si user en fonction de son ID :
 func DeleteFromDatabase(ID int, table string) error {
 	var err error
-	if table == "users" {
-		_, err = Db.Exec("DELETE FROM users WHERE id = $1", ID)
+	if table == "user" {
+		_, err = Db.Exec("DELETE FROM user WHERE id_user = $1", ID)
 		_, err = Db.Exec("DELETE FROM post WHERE author_id = $1", ID)
 		_, err = Db.Exec("DELETE FROM comment WHERE author_id = $1", ID)
 		_, err = Db.Exec("DELETE FROM session WHERE user_id = $1", ID)
@@ -241,7 +241,7 @@ func DeleteFromDatabase(ID int, table string) error {
 		_, err = Db.Exec("DELETE FROM comment_like WHERE user_id = $1", ID)
 		_, err = Db.Exec("DELETE FROM user_badge WHERE user_id = $1", ID)
 	} else {
-		_, err = Db.Exec("DELETE FROM $1 WHERE id = $1", table, ID)
+		_, err = Db.Exec("DELETE FROM $1 WHERE id_user = $1", table, ID)
 	}
 
 	if err != nil {

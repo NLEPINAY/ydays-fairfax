@@ -12,22 +12,27 @@
     <title>New post</title>
 </head>
 
-<body>
+<body>    
+    <main>
+        <div class="inputs">
+            <form action="/newTicket" method="post" enctype="multipart/form-data">
+                <div class="title">
+                    Ticket title: <br>
+                    <input type="text" name="title" id="titleinput" maxlength="30" required> <br>
+                </div>
+                <div class="textarea">
+                    <textarea name="content" cols="30" rows="10" required></textarea> <br>
+                </div>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </main>
 
+    <!-- Le header doît être placé en bas, sous le <main> ! (pour que le modal Login puisse s'ouvrir)  -->
     {{template "header" .User }}
+
+    {{template "loading" . }}
     
-    <div class="inputs">
-        <form action="/newTicket" method="post" enctype="multipart/form-data">
-            <div class="title">
-                Ticket title: <br>
-                <input type="text" name="title" id="titleinput" maxlength="30" required> <br>
-            </div>
-            <div class="textarea">
-                <textarea name="content" cols="30" rows="10" required></textarea> <br>
-            </div>
-            <button type="submit">Send</button>
-        </form>
-    </div>
    </body>
 
 </html>

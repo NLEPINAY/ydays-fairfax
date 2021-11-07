@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "swiper": "^6.7.0"
+    "swiper": "^6.7.0",
+    "syntax-error": "^1.4.0"
   }
 }

@@ -103,8 +103,11 @@ func main() {
 	// ⭐ Accès au questionnaire pour rejoindre une Maison :
 	http.HandleFunc("/join-house", request.Auth(request.JoinHouse, "unaffiliated members only"))
 
-	// ⭐ Accès à la page d'accueil :
-	http.HandleFunc("/", request.Auth(request.Index, "everybody"))
+	// ⭐ Accès à la landing page (login/signup) :
+	http.HandleFunc("/", request.Auth(request.Login, "guests only"))
+
+	// ⭐ Accès à la page d'accueil (home) :
+	http.HandleFunc("/home", request.Auth(request.Index, "everybody"))
 
 	// ⭐ Accès a la messagerie :
 	http.HandleFunc("/messagerie", request.Auth(request.Messagerie, "active members only"))

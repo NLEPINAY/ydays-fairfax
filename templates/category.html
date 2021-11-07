@@ -18,131 +18,112 @@
 </head>
 
 <body>
+    <main>
+        <section class="wrapper">
+            <section id="top-banner">
+                <img src="../static/images/category/banner_category-{{.ID}}.webp" class="banner-img"/>
+            </section>
+            <div class="container">
+                <img src="../static/images/category/panel.png" class="panel-img"/>
+                <div class="title" id="title-{{.ID}}">{{.Name}}</div>
+            </div>
+        </section>
+        <section id="newspaper">
+            <div class="head">
+                <div class="headerobjectswrapper">
+                    <div class="title">The Latest Faxes</div>
+                </div>
+                <div class="today-date">Today</div>
+            </div>
+            <div class="sortContainer">
+                <div class="button-container">
+                    <ul>
+                        <li>
+                            <p onclick="sortByDate()" class="active">Sort By Date</p>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <p onclick="sortByComment()" class="active">Sort By Comment</p>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <p onclick="sortByLike()" class="active">Sort By Like</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="textarea-container">
+                    <input type="textarea" onkeyup="filter(this.value)" placeholder="Search for a title">
+                </div>
+            </div>
+            <div class="container">
+                <div class="columns super">
+                    {{range .Post}} {{ if eq .State 0 }}
+                    <!-- POST PUBLIÉ -->
+                    <div class="column" data-date="{{.Date}}" data-comment="{{len .Comment}}" data-like="{{ len .Like}}" data-content="{{.Content}} {{.Author.Username}} {{.Title}}">
+                        <div class="head"><a href="/post/{{ .ID }}"><span class="headline hl">{{ .Title }}</span></a>
+                            <a class="author" href="/Profile?user={{ .Author.Username }}">
+                                {{ if ne .Author.House.ID 0 }}
+                                <img class="house-img" src="{{.Author.House.Image}}" title="{{.Author.House.Name}}">
+                                {{ end }}
+                                <p><span class="headline hl-author">by <span>{{ .Author.Username }}</span></span>
+                                </p>
+                                <img class="avatar-img "src="{{.Author.Avatar}}" title="{{.Author.Username}}">
+                            </a>
+                        </div>
+                        <p class="content">
+                            {{ .Content }}
+                        </p>
+                        <div class="stats">
+                            <div class="like">
+                                <img src="../static/images/like_empty.png" title="Number of like">
+                                <p>{{ len .Like }}</p>
+                            </div>
+                            <div class="replies">
+                                <img src="../static/images/reply.png" title="Number of replies">
+                                <p> {{ len .Comment }}</p>
+                            </div>
+                            <div class="dislike">
+                                <img src="../static/images/dislike_empty.png" title="Number of dislike">
+                                <p>{{ len .Dislike }}</p>
+                            </div>
+                        </div>
+                        {{ if ne .Author.House.ID 0 }}
+                        <p><span class="house-name__{{ .Author.House.ID }}">{{ .Author.House.Name }}</span></p>
+                        {{ end }}
+                        <p><span class="date">{{ .Date }}</span></p>
+                    </div>
+                    {{ else }}
+                    <!-- POST SUPPRIMÉ -->
+                    <div class="column locked" data-date="{{.Date}}" data-comment="{{len .Comment}}" data-like="{{ len .Like}}">
+                        <div class="head">
+                            <div class="locked-title">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <span class="headline hl locked">Deleted</span>
+                            </div>
+                            <a class="author" href="/Profile?user={{ .Author.Username }}">
+                                {{ if ne .Author.House.ID 0 }}
+                                <img class="house-img" src="{{.Author.House.Image}}" title="{{.Author.House.Name}}">
+                                {{ end }}
+                                <p><span class="headline hl-author">by <span>{{ .Author.Username }}</span></span>
+                                </p>
+                                <img class="avatar-img" src="{{.Author.Avatar}}" title="{{.Author.Username}}">
+        
+                            </a>
+                        </div>
+                        <p class="locked-content">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </p>
+                        <p><span class="date">Date</span></p>
+                    </div>
+                    {{ end }} {{ end }}
+                </div>
+            </div>
+        </section>
+    </main>
 
     {{template "header" .User }}
-
-    <section class="wrapper">
-        <section id="top-banner">
-            <img src="../static/images/category/banner_category-{{.ID}}.webp" class="banner-img">
-        </section>
-        <div class="container">
-            <img src="../static/images/category/panel.png" class="panel-img">
-            <div class="title" id="title-{{.ID}}">{{.Name}}</div>
-        </div>
-    </section>
-
-
-    <section id="newspaper">
-
-        <div class="head">
-            <div class="headerobjectswrapper">
-                <div class="title">The Latest Faxes</div>
-            </div>
-
-            <div class="today-date">Today</div>
-        </div>
-
-        <div class="sortContainer">
-            <div class="button-container">
-                <ul>
-                    <li>
-                        <p onclick="sortByDate()" class="active">Sort By Date</p>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <p onclick="sortByComment()" class="active">Sort By Comment</p>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <p onclick="sortByLike()" class="active">Sort By Like</p>
-                    </li>
-                </ul>
-            </div>
-            <div class="textarea-container">
-                <input type="textarea" onkeyup="filter(this.value)" placeholder="Search for a title">
-            </div>
-
-        </div>
-
-        <div class="container">
-            <div class="columns super">
-                {{range .Post}} {{ if eq .State 0 }}
-                <!-- POST PUBLIÉ -->
-                <div class="column" data-date="{{.Date}}" data-comment="{{len .Comment}}" data-like="{{ len .Like}}" data-content="{{.Content}} {{.Author.Username}} {{.Title}}">
-                    <div class="head"><a href="/post/{{ .ID }}"><span class="headline hl">{{ .Title }}</span></a>
-                        <a class="author" href="/Profile?user={{ .Author.Username }}">
-
-                            {{ if ne .Author.House.ID 0 }}
-                            <img class="house-img" src="{{.Author.House.Image}}" title="{{.Author.House.Name}}"> 
-                            {{ end }}
-
-                            <p><span class="headline hl-author">by <span>{{ .Author.Username }}</span></span>
-                            </p>
-
-                            <img class="avatar-img "src="{{.Author.Avatar}}" title="{{.Author.Username}}"> 
-                        </a>
-
-                    </div>
-                    <p class="content">
-                        {{ .Content }} 
-                    </p>
-                    <div class="stats">
-                        <div class="like">
-                            <img src="../static/images/like_empty.png" title="Number of like">
-                            <p>{{ len .Like }}</p>
-                        </div>
-
-                        <div class="replies">
-                            <img src="../static/images/reply.png" title="Number of replies">
-                            <p> {{ len .Comment }}</p>
-                        </div>
-
-                        <div class="dislike">
-                            <img src="../static/images/dislike_empty.png" title="Number of dislike">
-                            <p>{{ len .Dislike }}</p>
-                        </div>
-                    </div>
-                    {{ if ne .Author.House.ID 0 }}
-                    <p><span class="house-name__{{ .Author.House.ID }}">{{ .Author.House.Name }}</span></p>
-                    {{ end }}
-                    <p><span class="date">{{ .Date }}</span></p>
-
-                </div>
-
-                {{ else }}
-                <!-- POST SUPPRIMÉ -->
-                <div class="column locked" data-date="{{.Date}}" data-comment="{{len .Comment}}" data-like="{{ len .Like}}">
-                    <div class="head">
-                        <div class="locked-title">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                            <span class="headline hl locked">Deleted</span>
-                        </div>
-                        <a class="author" href="/Profile?user={{ .Author.Username }}">
-
-                            {{ if ne .Author.House.ID 0 }}
-                            <img class="house-img" src="{{.Author.House.Image}}" title="{{.Author.House.Name}}"> 
-                            {{ end }}
-
-                            <p><span class="headline hl-author">by <span>{{ .Author.Username }}</span></span>
-                            </p>
-
-                            <img class="avatar-img" src="{{.Author.Avatar}}" title="{{.Author.Username}}"> 
-                 
-                        </a>
-
-                    </div>
-                    <p class="locked-content">
-                        <!-- <i class="fa fa-trash" aria-hidden="true"></i>
-                    </p>
-                    <p><span class="date">Date</span></p> -->
-                </div>
-                {{ end }} {{ end }}
-
-            </div>
-        </div>
-    </section>
 
     {{template "loading" . }}
 

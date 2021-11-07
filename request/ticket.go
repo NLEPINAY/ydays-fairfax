@@ -26,7 +26,7 @@ func Ticket(w http.ResponseWriter, r *http.Request, user database.User) {
 			data.Bool = 1
 			id, _ := strconv.Atoi(particular[0])
 			data.ticket = append(data.ticket, database.GetTicketByID(id))
-			database.Db.QueryRow("SELECT username FROM users WHERE id=?", data.ticket[0].Author_id).Scan(&data.ticket[0].Author_name)
+			database.Db.QueryRow("SELECT username FROM user WHERE id_user=?", data.ticket[0].Author_id).Scan(&data.ticket[0].Author_name)
 		} else {
 			if user.Role < database.ADMIN {
 				data.ticket = database.GetTicketByUserID(user.ID)

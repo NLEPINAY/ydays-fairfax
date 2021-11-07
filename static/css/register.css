@@ -215,6 +215,7 @@ input::placeholder {
 }
 
 svg {
+    color: black;
     position: absolute;
     margin-top: 3px;
 }

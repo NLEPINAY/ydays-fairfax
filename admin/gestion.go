@@ -143,7 +143,7 @@ func GetClientList(Data Data) Data {
 func GetPostOnlyByID(ID int, Data Data) Data {
 	var post database.Post
 	id := ID
-	row := database.Db.QueryRow("SELECT * FROM post INNER JOIN users ON post.author_id = users.id WHERE post.id = ?", id) // id, title, author_id, content, category_id, date, image, state
+	row := database.Db.QueryRow("SELECT * FROM post INNER JOIN user ON post.author_id = user.id_user WHERE post.id_post = ?", id) // id, title, author_id, content, category_id, date, image, state
 	//defer rows.Close()
 	row.Scan(&post.ID, &post.Title, &post.AuthorID, &post.Content, &post.CategoryID, &post.Date, &post.Image, &post.State, &post.Promoted, &post.Author.ID, &post.Author.Username, &post.Author.Password, &post.Author.Email, &post.Author.Role, &post.Author.Avatar, &post.Author.Date, &post.Author.State, &post.Author.SecretQuestion, &post.Author.SecretAnswer, &post.Author.House.ID)
 	//author, _ := GetUserByID(post.AuthorID)
