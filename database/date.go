@@ -100,7 +100,7 @@ func GetMostLikedPostOfTheWeek() (Post, error) {
 	for day := 7; res.Title == ""; day = day + 7 {
 		rows, err = Db.Query(`SELECT *,count(case post_id WHEN l.type = "like" then 1 else 0 end) AS amount FROM posts p 
 							INNER JOIN post_likes l ON l.post_id = p.id
-							WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day')
+							WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state = 0
 							GROUP BY l.post_id
 							ORDER BY amount DESC
 							LIMIT 1`)
@@ -127,7 +127,7 @@ func GetMostCommentedPostOfTheWeek() (Post, error) {
 	for day := 7; res.Title == ""; day = day + 7 {
 		rows, err = Db.Query(`SELECT *,count(post_id) AS amount FROM posts p 
 								INNER JOIN comments c ON c.post_id = p.id
-								WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day')
+								WHERE p.date > datetime('now', '-` + strconv.Itoa(day) + ` day') AND p.state = 0
 								GROUP BY c.post_id
 								ORDER BY amount DESC
 								LIMIT 1`)
@@ -151,7 +151,7 @@ func GetMostCommentedPostOfTheWeek() (Post, error) {
 //Renvoie le post le plus récent, une erreur est fournis si l'appel de Db plante
 func GetMostRecentPost() (Post, error) {
 	var res Post
-	rows, err := Db.Query(`SELECT * FROM posts p 
+	rows, err := Db.Query(`SELECT * FROM posts p WHERE p.state = 0
 	ORDER BY id DESC
 	LIMIT 1 `)
 	defer rows.Close()

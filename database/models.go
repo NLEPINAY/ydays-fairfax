@@ -1,6 +1,8 @@
 package database
 
-import "time"
+import (
+	"time"
+)
 
 // Account roles :
 const GUEST = 0
@@ -43,6 +45,7 @@ type User struct {
 	SecretAnswer   string
 	Badges         []Badge
 	House          House
+	Count          int
 }
 
 type Session struct {
@@ -57,6 +60,7 @@ type Category struct {
 	Name        string
 	Theme       string
 	Description string
+	Count       int
 }
 
 type Post struct {
@@ -75,6 +79,19 @@ type Post struct {
 	Likes      []PostLike
 	Dislikes   []PostLike
 	Reason     string
+	Count      int
+	Category   Category
+}
+
+type CritereChart struct {
+	Count   int
+	Critere int
+}
+
+type CountLike struct {
+	PostId        int
+	CountLikes    int
+	CountDislikes int
 }
 
 type Comment struct {
@@ -93,6 +110,7 @@ type Comment struct {
 	Likes     []CommentLike
 	Dislikes  []CommentLike
 	Reason    string
+	Count     int
 }
 
 // Stocke l'ID et le titre d'un post, et les users l'ayant liké ou disliké :
@@ -197,4 +215,17 @@ type ErrorData struct {
 	Account  error
 	Username error
 	Email    error
+}
+
+//
+type ReceivedData struct {
+	ID       string `json:"id"`
+	Action   string `json:"action"`  //UPDATE/DELETE/CREATE
+	What     string `json:"what"`    //ex:Colonne
+	Value    string `json:"val"`     //Pour chercher une value ou si elle est nécassaire
+	NewValue string `json:"newVal"`  //La nouvelle valeur
+	Table    string `json:"table"`   //Ou sa dans la bdd (table)
+	Reason   string `json:"reason"`  //Si ya une raison
+	Is       string `json:"is"`      //Si c'est une cellule et non une table
+	Message  string `json:"message"` //message
 }
